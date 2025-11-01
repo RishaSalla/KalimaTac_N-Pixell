@@ -79,16 +79,16 @@ body {
     align-items: flex-start; 
     min-height: 100vh;
     transition: background-color 0.3s ease;
-    padding: 20px;
+    padding: 1rem; /* تقليل الحشو للشاشات الصغيرة */
     width: 100%;
 }
 
 /* --- Content Wrapper (To center content) --- */
 .content-wrapper {
     width: 100%;
-    max-width: 800px; 
+    max-width: 900px; /* زيادة العرض الأقصى للهيكل الأفقي */
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0; /* إزالة الحشو الإضافي */
 }
 
 
@@ -98,7 +98,7 @@ body {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 15px; /* تقليل الحشو */
     border: 3px solid var(--border-color);
     background-color: var(--background-color);
     animation: pixel-fade-in 0.3s forwards;
@@ -129,29 +129,19 @@ body {
     width: 128px;
     height: 128px;
     image-rendering: pixelated; 
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
-/* [تم التعديل] التأكد من أن اسم الشعار صحيح (بدون .png.png) */
-img[src="assets/logo.png.png"] {
-    display: none; /* إخفاء الصورة ذات الاسم الخاطئ */
-}
-img[src="assets/logo.png"] {
-    display: block; /* إظهار الصورة ذات الاسم الصحيح */
-}
+/* التأكد من أن اسم الشعار صحيح */
+img[src="assets/logo.png.png"] { display: none; }
+img[src="assets/logo.png"] { display: block; }
 
 
 .screen-header h1 {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    text-shadow: 2px 2px var(--border-color); 
-    font-family: var(--main-font); 
-    line-height: 1.2;
+    display: none; /* إخفاء H1 كما طلبت */
 }
 
 .screen-header p {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    text-shadow: 1px 1px var(--border-color);
+    display: none; /* إخفاء P كما طلبت */
 }
 
 
@@ -159,7 +149,7 @@ img[src="assets/logo.png"] {
 button, .btn, input[type="text"], select, .chip, .switch-toggle {
     font-family: var(--arabic-pixel-font);
     font-size: 1.1rem;
-    padding: 12px 18px;
+    padding: 10px 15px; /* تقليل الحشو قليلاً */
     border: 3px solid var(--border-color);
     background-color: var(--primary-color);
     color: var(--border-color); 
@@ -216,14 +206,7 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 
 
 /* --- Forms & Input Fields --- */
-.form-grid, .settings-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 20px;
-}
+/* [تم الحذف] .form-grid, .settings-grid (تم استبدالها بـ .settings-box) */
 
 .form-group, .team-members-group {
     display: flex;
@@ -237,7 +220,7 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     font-weight: bold;
     color: var(--text-color);
     text-shadow: 1px 1px var(--border-color);
-    text-align: right; /* [تمت الإضافة] ضمان محاذاة النص لليمين */
+    text-align: right; 
 }
 
 input[type="text"], select {
@@ -297,31 +280,58 @@ input[type="text"]::placeholder {
 }
 
 
-/* --- Home Screen Layout --- */
+/* --- [تم التعديل] Home Screen Layout (Box Model) --- */
 #screen-home {
     gap: 20px;
+    display: grid; /* [تم التعديل] استخدام Grid للهيكل */
+    grid-template-columns: 1fr; /* عمود واحد افتراضياً */
+    grid-template-areas: 
+        "header"
+        "player"
+        "settings"
+        "controls";
 }
 
-#screen-home .form-grid {
-    border: 3px solid var(--border-color);
-    padding: 20px;
-    background-color: #00000020;
+@media (min-width: 800px) {
+    #screen-home {
+        grid-template-columns: 1fr 1fr; /* عمودين للشاشات الأكبر */
+        grid-template-areas: 
+            "header header"
+            "player settings"
+            "controls controls";
+        gap: 20px;
+    }
 }
 
-#screen-home .settings-grid {
+#screen-home .screen-header { grid-area: header; }
+
+/* [تمت الإضافة] تنسيق الصناديق */
+.settings-box {
     border: 3px solid var(--border-color);
+    background-color: #00000020; /* خلفية شفافة قليلاً */
+    width: 100%;
+}
+.settings-box-header {
+    padding: 10px;
+    border-bottom: 3px solid var(--border-color);
+    background-color: var(--color-logo-purple); /* لون الهيدر من الشعار */
+}
+.settings-box-header h3 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-shadow: 2px 2px var(--border-color);
+    margin-bottom: 0;
+}
+.settings-box-content {
     padding: 20px;
-    background-color: #00000020;
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-@media (min-width: 600px) {
-    #screen-home .settings-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+.player-box { grid-area: player; }
+.game-settings-box { grid-area: settings; }
+.btn-group-bottom { grid-area: controls; }
 
 
 #mode-selector-wrapper {
@@ -392,6 +402,19 @@ input[type="text"]::placeholder {
     line-height: 1;
 }
 
+.btn-group-bottom {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+.btn-group-bottom .btn {
+    flex-grow: 1;
+    max-width: 250px;
+}
+
+
 /* --- Game Screen Layout --- */
 #screen-game {
     gap: 20px;
@@ -413,13 +436,17 @@ input[type="text"]::placeholder {
 #game-title-info {
     text-align: center;
     flex-grow: 1;
+    display: flex; /* [تم التعديل] لترتيب الشعار والنتائج */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 /* [تم التعديل] هذا سيظهر الشعار الصغير في شاشة اللعب */
 #game-title-info .game-logo.small {
-    width: 80px; /* حجم أصغر */
+    width: 80px; 
     height: 80px;
-    margin-bottom: 5px;
+    margin-bottom: 0;
 }
 /* [تمت الإضافة] إخفاء الشعار الصغير في الشاشة الرئيسية */
 #screen-home .game-logo.small {
@@ -754,8 +781,8 @@ input[type="text"]::placeholder {
     font-size: 4.5rem; 
     color: var(--primary-color);
     text-shadow: 3px 3px var(--border-color);
-    font-family: var(--arabic-pixel-font); /* [تم التعديل] استخدام خط البكسل */
-    font-weight: normal; /* خطوط البكسل لا تحتاج وزن */
+    font-family: var(--arabic-pixel-font); 
+    font-weight: normal; 
     line-height: 1;
 }
 .header-separator {
@@ -766,8 +793,8 @@ input[type="text"]::placeholder {
 #answer-category {
     font-size: 2.5rem; 
     color: var(--text-color);
-    font-family: var(--arabic-pixel-font); /* [تم التعديل] استخدام خط البكسل */
-    font-weight: normal; /* خطوط البكسل لا تحتاج وزن */
+    font-family: var(--arabic-pixel-font); 
+    font-weight: normal; 
     line-height: 1.1;
 }
 #answer-turn-hint {
@@ -861,17 +888,24 @@ input[type="text"]::placeholder {
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    .content-wrapper {
+    #app-container {
         padding: 0.5rem;
+    }
+    .content-wrapper {
+        padding: 0;
     }
     .screen {
         padding: 10px;
     }
-    .screen-header h1 {
-        font-size: 2rem;
-    }
-    #screen-home .form-grid, #screen-home .settings-grid {
-        padding: 15px;
+
+    /* [تم التعديل] تعديل الهيكل الأفقي للشاشات الصغيرة */
+    #screen-home {
+        grid-template-columns: 1fr; /* عمود واحد دائماً */
+        grid-template-areas: 
+            "header"
+            "player"
+            "settings"
+            "controls";
     }
 
     #game-header {
