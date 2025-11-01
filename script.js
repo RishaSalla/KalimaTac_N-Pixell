@@ -409,7 +409,9 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateTeamMemberDisplay();
         
-        $(".screen-header h1").textContent = "كلمتاك"; gameTitle.textContent = "كلمتاك";
+        // [تم التعديل] هذا السطر لم يعد ضرورياً بسبب الشعار
+        // $(".screen-header h1").textContent = "كلمتاك"; 
+        gameTitle.textContent = "كلمتاك";
     }
 
     // (تم التعديل ليطابق الخطة: إضافة اسم اللاعب بجانب اسم الفريق)
@@ -567,9 +569,49 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderBoardAvailability(currentPlayer) { 
            $$(".board-cell").forEach((cellEl, index) => { const cell = state.roundState.board[index]; if (cell.owner || cell.revealed) { cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); } else { if (state.roundState.phase === null) { cellEl.classList.add("available"); cellEl.classList.remove("unavailable"); } else { cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); } } });
     }
+    
+    // [تم التعديل] هذه هي الدالة الرئيسية التي تم تعديلها لعرض الصور
     function renderBoard() { 
-           gameBoard.innerHTML = ''; const oldWinLine = gameBoard.querySelector('.win-line'); if (oldWinLine) oldWinLine.remove(); state.roundState.board.forEach((cell, index) => { const cellEl = document.createElement('div'); cellEl.classList.add('board-cell'); cellEl.dataset.index = index; const letterEl = document.createElement('span'); letterEl.classList.add('cell-letter'); const categoryEl = document.createElement('span'); categoryEl.classList.add('cell-category'); if (cell.owner) { cellEl.classList.add('owned', `player-${cell.owner.toLowerCase()}`); letterEl.textContent = cell.owner; } else { letterEl.textContent = cell.letter; categoryEl.textContent = cell.category; if (cell.revealed) cellEl.classList.add('revealed'); } cellEl.appendChild(letterEl); cellEl.appendChild(categoryEl); cellEl.addEventListener('click', onCellClick); gameBoard.appendChild(cellEl); }); if (state.roundState.winInfo) { drawWinLine(state.roundState.winInfo.line); } renderBoardAvailability(state.roundState.phase || state.roundState.starter);
+           gameBoard.innerHTML = ''; 
+           const oldWinLine = gameBoard.querySelector('.win-line'); 
+           if (oldWinLine) oldWinLine.remove(); 
+           
+           state.roundState.board.forEach((cell, index) => { 
+               const cellEl = document.createElement('div'); 
+               cellEl.classList.add('board-cell'); 
+               cellEl.dataset.index = index; 
+               
+               if (cell.owner) { 
+                   // [التعديل هنا]
+                   // إضافة الكلاسات فقط. CSS سيتولى عرض الصورة
+                   cellEl.classList.add('owned', `player-${cell.owner.toLowerCase()}`); 
+               } else { 
+                   // إذا لم يكن للخلية مالك، اعرض الحرف والفئة
+                   const letterEl = document.createElement('span'); 
+                   letterEl.classList.add('cell-letter'); 
+                   const categoryEl = document.createElement('span'); 
+                   categoryEl.classList.add('cell-category');
+                   
+                   letterEl.textContent = cell.letter; 
+                   categoryEl.textContent = cell.category; 
+                   
+                   if (cell.revealed) cellEl.classList.add('revealed'); 
+                   
+                   cellEl.appendChild(letterEl); 
+                   cellEl.appendChild(categoryEl); 
+               } 
+               
+               cellEl.addEventListener('click', onCellClick); 
+               gameBoard.appendChild(cellEl); 
+           }); 
+           
+           if (state.roundState.winInfo) { 
+               drawWinLine(state.roundState.winInfo.line); 
+           } 
+           
+           renderBoardAvailability(state.roundState.phase || state.roundState.starter);
     }
+    
     function onCellClick(e) { 
            if (!state.roundState.gameActive || state.roundState.phase !== null) { if (state.settings.sounds) sounds.fail(); return; } const cellIndex = parseInt(e.currentTarget.dataset.index, 10); const cell = state.roundState.board[cellIndex]; if (cell.owner) { if (state.settings.sounds) sounds.fail(); return; } if (state.settings.sounds) sounds.click(); stopTimer(); state.roundState.activeCell = cellIndex; state.roundState.phase = state.roundState.starter; cell.revealed = true; cell.tried = new Set(); renderBoard(); updateTurnUI(); answerLetter.textContent = cell.letter; answerCategory.textContent = cell.category; answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`; toggleModal("modal-answer"); startAnswerTimer();
     }
@@ -657,7 +699,9 @@ document.addEventListener("DOMContentLoaded", () => {
             state.match.totalScore[winner]++; 
             state.roundState.winInfo = { winner, line }; 
             roundWinnerMessage.textContent = `الفائز بالجولة: ${state.settings.playerNames[winner]}! 🎉`; 
-            roundWinnerMessage.style.color = (winner === 'X') ? 'var(--primary-color)' : 'var(--secondary-color)';
+            // [تم التعديل] استخدام ألوان اللاعبين
+            roundWinnerMessage.style.color = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
+            roundWinnerMessage.style.borderColor = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
             roundWinnerMessage.style.display = 'block';
 
             renderBoard(); 
@@ -670,6 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (state.settings.sounds) sounds.draw(); 
             roundWinnerMessage.textContent = `تعادل! 🤝`;
             roundWinnerMessage.style.color = 'var(--text-color)';
+            roundWinnerMessage.style.borderColor = 'var(--text-color)';
             roundWinnerMessage.style.display = 'block';
         } 
         
@@ -707,7 +752,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function drawWinLine(line) { 
-        const cellElements = $$(".board-cell"); const startCell = cellElements[line[0]]; const endCell = cellElements[line[2]]; const lineEl = document.createElement('div'); lineEl.classList.add('win-line'); const startX = startCell.offsetLeft + startCell.offsetWidth / 2; const startY = startCell.offsetTop + startCell.offsetHeight / 2; const endX = endCell.offsetLeft + endCell.offsetWidth / 2; const endY = endCell.offsetTop + endCell.offsetHeight / 2; const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI); const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)) + (startCell.offsetWidth * 0.6); lineEl.style.width = `${length}px`; lineEl.style.top = `${startY}px`; lineEl.style.left = `${startX}px`; lineEl.style.transform = `rotate(${angle}deg) translate(-${startCell.offsetWidth * 0.3}px, -50%)`; gameBoard.appendChild(lineEl);
+        const cellElements = $$(".board-cell"); const startCell = cellElements[line[0]]; const endCell = cellElements[line[2]]; const lineEl = document.createElement('div'); lineEl.classList.add('win-line'); const startX = startCell.offsetLeft + startCell.offsetWidth / 2; const startY = startCell.offsetTop + startCell.offsetHeight / 2; const endX = endCell.offsetLeft + endCell.offsetWidth / 2; const endY = endCell.offsetTop + endCell.offsetHeight / 2; const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI); const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)); lineEl.style.width = `${length}px`; lineEl.style.top = `${startY}px`; lineEl.style.left = `${startX}px`; lineEl.style.transform = `rotate(${angle}deg) translateY(-50%)`; gameBoard.appendChild(lineEl);
     }
     function endMatchAndStartNew() { 
         toggleModal(null); 
