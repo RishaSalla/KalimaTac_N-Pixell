@@ -368,9 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateTeamMemberDisplay();
         
-        // [تم التعديل] هذا السطر لم يعد ضرورياً بسبب الشعار
-        // $(".screen-header h1").textContent = "كلمتاك"; 
-        gameTitle.textContent = "كلمتاك";
+        // [تم الحذف] gameTitle.textContent = "كلمتاك";
     }
 
     function updateTurnUI() { 
