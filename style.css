@@ -22,10 +22,7 @@
     --arabic-pixel-font: 'Almarai', sans-serif; /* Almarai as a good modern sans-serif. For true pixel, we'll need to embed */
 }
 
-/* Dark Theme specific adjustments (if needed, currently uses base colors) */
-[data-theme="dark"] {
-    /* Variables are already set for a dark, vibrant pixel theme */
-}
+/* [تم الحذف] تم حذف متغيرات الثيم الغامق */
 
 /* --- Global Reset & Box Sizing --- */
 *, *::before, *::after {
@@ -93,9 +90,7 @@ body {
 }
 
 
-/* [FIXED ID] */
 #app-container[data-view="home"] #screen-home { display: flex; }
-/* [FIXED ID] */
 #app-container[data-view="game"] #screen-game { display: flex; }
 
 /* --- Headers (for all views) --- */
@@ -276,7 +271,7 @@ input[type="text"]::placeholder {
 }
 
 
-/* --- [FIXED ID] Home Screen Layout --- */
+/* --- Home Screen Layout --- */
 #screen-home {
     gap: 20px;
 }
@@ -371,7 +366,7 @@ input[type="text"]::placeholder {
     line-height: 1;
 }
 
-/* --- [FIXED ID] Game Screen Layout --- */
+/* --- Game Screen Layout --- */
 #screen-game {
     gap: 20px;
     width: 100%;
@@ -547,6 +542,7 @@ input[type="text"]::placeholder {
     background-repeat: no-repeat;
 }
 
+/* [تم الإصلاح] التأكد من أن المسارات صحيحة */
 .board-cell.owned.player-x {
     background-image: url('assets/player-x.png');
 }
@@ -567,13 +563,22 @@ input[type="text"]::placeholder {
     line-height: 1.1;
 }
 
+/* [تم الإصلاح] إخفاء التصنيف من اللوحة الرئيسية */
 .board-cell .cell-category {
+    display: none; 
+}
+
+/* [تم الإصلاح] إظهار التصنيف فقط عند الكشف (revealed) */
+.board-cell.revealed .cell-category {
+    display: block; /* إظهاره هنا */
     font-size: 0.9rem; /* Smaller for category */
     opacity: 0.9;
     margin-top: 0px; /* Bring closer to letter */
     line-height: 1;
     color: var(--primary-color);
 }
+/* [نهاية الإصلاح] */
+
 
 .board-cell.unavailable {
     cursor: not-allowed;
@@ -910,3 +915,4 @@ input[type="text"]::placeholder {
 /* Using Google Fonts for a simple, clear Arabic font like Almarai for now */
 @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap'); /* For modal */
+
