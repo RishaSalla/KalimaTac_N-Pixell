@@ -1,62 +1,81 @@
 /* --- [0] Base Styles & Pixel Art Foundation --- */
-:root {
-    /* Pixel Art Palette - Inspired by your colors */
-    --primary-color: #f2bc24; /* Logo Yellow */
-    --secondary-color: #ff675c; /* X/O Reddish */
-    --player-x-color: #ff675c; /* Red for Player X */
-    --player-o-color: #6733f6; /* Purple for Player O */
-    --background-color: #3b2f42; /* Dark Purple-ish, base for pixel grid */
-    --text-color: #fff; /* White */
-    --border-color: #000; /* Black for sharp borders */
-    --accent-color: #a179bb; /* Lighter Purple/Pink for accents */
-    --button-bg-hover: #ff914d; /* Brighter Orange for hover */
-    --button-bg-active: #cc5449; /* Darker Red for active */
 
-    /* Pixel Grid Background */
-    --pixel-size: 2px; /* Adjust for denser/looser pixel effect */
-    --grid-color: rgba(255, 255, 255, 0.05); /* Very light grid for subtle effect */
-
-    /* Font stack */
-    /* Using a pixel-art-friendly font that supports Arabic */
-    --main-font: "Press Start 2P", 'Tajawal', sans-serif; /* Press Start 2P for English, Tajawal for Arabic fallback */
-    --arabic-pixel-font: 'Almarai', sans-serif; /* Almarai as a good modern sans-serif. For true pixel, we'll need to embed */
+/* [تمت الإضافة] ربط خط البكسل المحلي */
+@font-face {
+    font-family: 'PixelAE'; /* أعطيناه اسماً لاستخدامه */
+    src: url('assets/PixelAE-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
 }
 
-/* [تم الحذف] تم حذف متغيرات الثيم الغامق */
+:root {
+    /* [تم التعديل] تطبيق لوحة الألوان التي اخترتها */
+    
+    /* ألوان الشعار */
+    --color-logo-yellow: #f2bc24;
+    --color-logo-purple: #62347c;
+    --color-logo-red: #7b322f;
+
+    /* ألوان X/O */
+    --color-xo-purple: #6733f6;
+    --color-xo-purple-light: #a179bb;
+    --color-xo-pink: #fbbad8;
+    --color-xo-red: #ff675c;
+
+    /* لوحة ألوان اللعبة (مستوحاة من ألوانك) */
+    --primary-color: var(--color-logo-yellow); /* الأصفر للتمييز */
+    --player-x-color: var(--color-xo-red);      /* أحمر مرجاني لـ X */
+    --player-o-color: var(--color-xo-purple);   /* بنفسجي لـ O */
+    
+    --background-color: #2b213f; /* خلفية أغمق قليلاً من الشعار */
+    --text-color: #ffffff;
+    --border-color: #000000;
+    
+    --accent-color: var(--color-xo-purple-light); /* بنفسجي فاتح للأزرار الثانوية */
+    --button-bg-hover: var(--color-logo-red);   /* أحمر داكن عند التمرير */
+    --button-bg-active: var(--color-xo-pink); /* وردي فاتح عند الضغط */
+
+    /* [تم التعديل] استخدام خط البكسل الجديد */
+    --main-font: "Press Start 2P", 'PixelAE', sans-serif;
+    --arabic-pixel-font: 'PixelAE', 'Tajawal', sans-serif; /* استخدام الخط الجديد كاساسي */
+}
 
 /* --- Global Reset & Box Sizing --- */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* Remove all default shadows and rounded corners */
     box-shadow: none !important;
     border-radius: 0 !important;
+    /* [تمت الإضافة] لجعل الخطوط حادة */
+    image-rendering: pixelated; 
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html, body {
-    font-family: var(--arabic-pixel-font); /* Apply Arabic pixel font */
+    font-family: var(--arabic-pixel-font);
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--background-color);
-    overflow-y: auto; /* Allow scrolling if content is long */
+    overflow-y: auto; 
     overflow-x: hidden;
 }
 
-/* --- Pixel Grid Background --- */
+/* --- [تم التعديل] الخلفية البكسلية --- */
 body {
-    background-image: linear-gradient(0deg, var(--grid-color) 1px, transparent 1px),
-                      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: var(--pixel-size) var(--pixel-size);
+    /* هذه هي الخلفية التي أعجبتك في التصور */
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+DQogIDxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMiI+DQogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+DQogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4NCiAgPC9nPg0KPC9zdmc+');
+    background-size: 40px 40px;
     background-position: 0 0;
-    background-color: var(--background-color);
 }
 
 /* --- App Container --- */
 #app-container {
-    display: flex; /* Use flex for basic layout */
+    display: flex; 
     justify-content: center;
-    align-items: flex-start; /* Align screens to the top */
+    align-items: flex-start; 
     min-height: 100vh;
     transition: background-color 0.3s ease;
     padding: 20px;
@@ -66,7 +85,7 @@ body {
 /* --- Content Wrapper (To center content) --- */
 .content-wrapper {
     width: 100%;
-    max-width: 800px; /* Set a max width for the whole app */
+    max-width: 800px; 
     margin: 0 auto;
     padding: 1rem;
 }
@@ -74,7 +93,7 @@ body {
 
 /* --- View Management (Home, Game, etc.) --- */
 .screen {
-    display: none; /* Hide screens by default */
+    display: none; 
     width: 100%;
     flex-direction: column;
     align-items: center;
@@ -97,7 +116,7 @@ body {
 .screen-header {
     width: 100%;
     display: flex;
-    flex-direction: column; /* Stack logo/title and text */
+    flex-direction: column; 
     align-items: center;
     padding: 10px 0;
     margin-bottom: 20px;
@@ -105,20 +124,26 @@ body {
     text-align: center;
 }
 
-/* [NEW] Logo styling */
 .game-logo {
     width: 128px;
     height: 128px;
-    image-rendering: pixelated; /* Keep the pixel art sharp */
+    image-rendering: pixelated; 
     margin-bottom: 15px;
+}
+/* [تم التعديل] التأكد من أن اسم الشعار صحيح (بدون .png.png) */
+img[src="assets/logo.png.png"] {
+    display: none; /* إخفاء الصورة ذات الاسم الخاطئ */
+}
+img[src="assets/logo.png"] {
+    display: block; /* إظهار الصورة ذات الاسم الصحيح */
 }
 
 
 .screen-header h1 {
     font-size: 2.5rem;
     color: var(--primary-color);
-    text-shadow: 2px 2px var(--border-color); /* Pixel text shadow */
-    font-family: var(--main-font); /* Use for game title if it looks better */
+    text-shadow: 2px 2px var(--border-color); 
+    font-family: var(--main-font); 
     line-height: 1.2;
 }
 
@@ -136,10 +161,9 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle {
     padding: 12px 18px;
     border: 3px solid var(--border-color);
     background-color: var(--primary-color);
-    color: var(--border-color); /* Text color inside buttons */
+    color: var(--border-color); 
     cursor: pointer;
     transition: background-color 0.1s ease, transform 0.05s ease;
-    text-shadow: 1px 1px var(--button-bg-hover); /* Subtle text shadow for depth */
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -150,12 +174,12 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle {
 
 button:hover, .btn:hover, .switch-toggle[data-active="true"]:hover {
     background-color: var(--button-bg-hover);
-    transform: translateY(-1px); /* Little "lift" effect */
+    transform: translateY(-1px); 
 }
 
 button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     background-color: var(--button-bg-active);
-    transform: translateY(1px); /* "Press" effect */
+    transform: translateY(1px); 
 }
 
 /* Specific button styles */
@@ -165,7 +189,7 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     flex-grow: 1;
 }
 .mode-btn.active {
-    background-color: var(--player-x-color); /* Active mode button stands out */
+    background-color: var(--player-x-color); 
     color: var(--text-color);
     border: 3px solid var(--border-color);
 }
@@ -215,7 +239,7 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 }
 
 input[type="text"], select {
-    background-color: var(--text-color); /* White background for input fields */
+    background-color: var(--text-color); 
     color: var(--border-color);
     border: 3px solid var(--border-color);
     padding: 10px;
@@ -242,7 +266,7 @@ input[type="text"]::placeholder {
 }
 
 .switch-toggle[data-active="true"] {
-    background-color: var(--player-o-color); /* Active color for toggles */
+    background-color: var(--player-o-color); 
     color: var(--text-color);
 }
 
@@ -300,7 +324,7 @@ input[type="text"]::placeholder {
 
 #mode-selector-wrapper {
     display: flex;
-    flex-direction: row; /* Horizontal mode buttons */
+    flex-direction: row; 
     gap: 10px;
     width: 100%;
 }
@@ -389,11 +413,11 @@ input[type="text"]::placeholder {
     flex-grow: 1;
 }
 
-#game-title {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    text-shadow: 2px 2px var(--border-color);
-    font-family: var(--main-font);
+/* [تم التعديل] هذا سيظهر الشعار الصغير في شاشة اللعب */
+#game-title-info .game-logo {
+    width: 80px; /* حجم أصغر */
+    height: 80px;
+    margin-bottom: 5px;
 }
 
 #game-scores {
@@ -452,10 +476,15 @@ input[type="text"]::placeholder {
 .player-tag.active {
     opacity: 1;
     transform: scale(1.05);
-    box-shadow: 0 0 15px var(--primary-color) !important;
 }
-#player-tag-x.active { border-color: var(--player-x-color); }
-#player-tag-o.active { border-color: var(--player-o-color); }
+#player-tag-x.active { 
+    border-color: var(--player-x-color); 
+    box-shadow: 0 0 15px var(--player-x-color) !important;
+}
+#player-tag-o.active { 
+    border-color: var(--player-o-color); 
+    box-shadow: 0 0 15px var(--player-o-color) !important;
+}
 
 
 .player-tag .player-name-text {
@@ -497,13 +526,13 @@ input[type="text"]::placeholder {
     grid-template-rows: repeat(3, 1fr);
     gap: 5px;
     width: 100%;
-    max-width: 450px; /* Max width for board */
-    aspect-ratio: 1 / 1; /* Keep board square */
+    max-width: 450px; 
+    aspect-ratio: 1 / 1; 
     margin: 10px auto;
-    background-color: var(--border-color); /* Grid lines */
+    background-color: var(--border-color); 
     position: relative;
-    border: 5px solid var(--border-color); /* Outer border */
-    overflow: hidden; /* To keep win-line inside */
+    border: 5px solid var(--border-color); 
+    overflow: hidden; 
 }
 
 .board-cell {
@@ -514,14 +543,14 @@ input[type="text"]::placeholder {
     justify-content: center;
     align-items: center;
     background-color: var(--background-color);
-    border: none; /* Borders are handled by the grid gap */
+    border: none; 
     color: var(--text-color);
     font-size: 2rem;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.1s ease;
     position: relative;
-    image-rendering: pixelated; /* Ensure pixel art images stay pixelated */
+    image-rendering: pixelated; 
     padding: 5px;
     text-align: center;
     overflow: hidden;
@@ -537,12 +566,11 @@ input[type="text"]::placeholder {
 
 .board-cell.owned {
     cursor: default;
-    background-size: 80%; /* Size of X/O image */
+    background-size: 80%; 
     background-position: center;
     background-repeat: no-repeat;
 }
 
-/* [تم الإصلاح] التأكد من أن المسارات صحيحة */
 .board-cell.owned.player-x {
     background-image: url('assets/player-x.png');
 }
@@ -550,35 +578,30 @@ input[type="text"]::placeholder {
     background-image: url('assets/player-o.png');
 }
 
-/* Hide text in owned cells */
 .board-cell.owned .cell-letter,
 .board-cell.owned .cell-category {
     display: none;
 }
 
 .board-cell .cell-letter {
-    font-size: 2.5rem; /* Larger for the main letter */
-    font-family: var(--main-font); /* Pixel font for letter */
+    font-size: 2.5rem; 
+    font-family: var(--main-font); 
     text-shadow: 2px 2px var(--border-color);
     line-height: 1.1;
 }
 
-/* [تم الإصلاح] إخفاء التصنيف من اللوحة الرئيسية */
 .board-cell .cell-category {
     display: none; 
 }
 
-/* [تم الإصلاح] إظهار التصنيف فقط عند الكشف (revealed) */
 .board-cell.revealed .cell-category {
-    display: block; /* إظهاره هنا */
-    font-size: 0.9rem; /* Smaller for category */
+    display: block; 
+    font-size: 0.9rem; 
     opacity: 0.9;
-    margin-top: 0px; /* Bring closer to letter */
+    margin-top: 0px; 
     line-height: 1;
     color: var(--primary-color);
 }
-/* [نهاية الإصلاح] */
-
 
 .board-cell.unavailable {
     cursor: not-allowed;
@@ -586,14 +609,14 @@ input[type="text"]::placeholder {
 }
 
 .board-cell.revealed {
-    background-color: var(--accent-color); /* Highlight revealed cell */
+    background-color: var(--accent-color); 
 }
 
 
 .win-line {
     position: absolute;
-    background-color: var(--primary-color); /* Win line color */
-    height: 8px; /* Thicker line */
+    background-color: var(--primary-color); 
+    height: 8px; 
     z-index: 10;
     transform-origin: 0% 50%;
     box-shadow: 0 0 10px var(--text-color);
@@ -699,7 +722,7 @@ input[type="text"]::placeholder {
     padding: 5px 10px;
     font-size: 1.2rem;
     line-height: 1;
-    min-width: unset; /* Override default button min-width */
+    min-width: unset; 
 }
 .modal-close-btn:hover { background-color: var(--button-bg-hover); }
 .modal-close-btn:active { background-color: var(--button-bg-active); }
@@ -717,11 +740,11 @@ input[type="text"]::placeholder {
     border-bottom: 3px solid var(--border-color);
 }
 #answer-letter {
-    font-size: 4.5rem; /* Resized from plan */
+    font-size: 4.5rem; 
     color: var(--primary-color);
     text-shadow: 3px 3px var(--border-color);
-    font-family: 'Tajawal', 'Reem Kufi', sans-serif; /* From old plan */
-    font-weight: 700;
+    font-family: var(--arabic-pixel-font); /* [تم التعديل] استخدام خط البكسل */
+    font-weight: normal; /* خطوط البكسل لا تحتاج وزن */
     line-height: 1;
 }
 .header-separator {
@@ -730,10 +753,10 @@ input[type="text"]::placeholder {
     background-color: var(--border-color);
 }
 #answer-category {
-    font-size: 2.5rem; /* Resized from plan */
+    font-size: 2.5rem; 
     color: var(--text-color);
-    font-family: 'Tajawal', 'Reem Kufi', sans-serif; /* From old plan */
-    font-weight: 700;
+    font-family: var(--arabic-pixel-font); /* [تم التعديل] استخدام خط البكسل */
+    font-weight: normal; /* خطوط البكسل لا تحتاج وزن */
     line-height: 1.1;
 }
 #answer-turn-hint {
@@ -742,7 +765,7 @@ input[type="text"]::placeholder {
     font-weight: bold;
     margin-bottom: 15px;
 }
-#answer-timer-bar {
+#answer-timer-bar-wrapper { /* [تم التعديل] التأكد من أن الـ ID مطابق لـ HTML */
     width: 100%;
     height: 20px;
     background-color: var(--border-color);
@@ -750,6 +773,11 @@ input[type="text"]::placeholder {
     margin-bottom: 20px;
     position: relative;
     overflow: hidden;
+}
+#answer-timer-bar {
+    height: 100%;
+    width: 100%; /* [تم التعديل] هذا العنصر لا يتحرك */
+    background: transparent; /* الخلفية في الـ wrapper */
 }
 #answer-timer-bar.animating::before {
     content: '';
@@ -806,7 +834,7 @@ input[type="text"]::placeholder {
     border: 2px solid var(--primary-color);
     padding: 10px;
     background-color: #00000030;
-    display: none; /* Hidden by default */
+    display: none; 
 }
 
 /* --- Confetti (already pixel-art friendly by nature) --- */
@@ -897,22 +925,10 @@ input[type="text"]::placeholder {
     #answer-buttons .btn { font-size: 1.1rem; padding: 10px;}
 }
 
-/* --- Custom Arabic Pixel Font Embed --- */
-/* @font-face {
-    font-family: 'YourPixelArabicFont';
-    src: url('assets/YourPixelArabicFont.woff2') format('woff2'),
-         url('assets/YourPixelArabicFont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-:root {
-    --arabic-pixel-font: 'YourPixelArabicFont', 'Almarai', sans-serif;
-}
-*/
-/* Using Google Fonts for 'Press Start 2P' for Latin letters in titles if needed */
+/* --- [تم الحذف] إزالة خطوط جوجل القديمة --- */
+/* @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap'); */
+
+/* [تم الإبقاء] خط بكسل للإنجليزية (مثل 'KalimaTac') */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-/* Using Google Fonts for a simple, clear Arabic font like Almarai for now */
-@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap'); /* For modal */
 
