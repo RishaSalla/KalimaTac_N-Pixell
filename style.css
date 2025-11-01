@@ -36,9 +36,10 @@
     --button-bg-hover: var(--color-logo-red);   /* أحمر داكن عند التمرير */
     --button-bg-active: var(--color-xo-pink); /* وردي فاتح عند الضغط */
 
+
     /* [تم التعديل] استخدام خط البكسل الجديد */
     --main-font: "Press Start 2P", 'PixelAE', sans-serif;
-    --arabic-pixel-font: 'PixelAE', 'Tajawal', sans-serif; /* استخدام الخط الجديد كاساسي */
+    --arabic-pixel-font: 'PixelAE', sans-serif; /* استخدام الخط الجديد كاساسي */
 }
 
 /* --- Global Reset & Box Sizing --- */
@@ -236,6 +237,7 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     font-weight: bold;
     color: var(--text-color);
     text-shadow: 1px 1px var(--border-color);
+    text-align: right; /* [تمت الإضافة] ضمان محاذاة النص لليمين */
 }
 
 input[type="text"], select {
@@ -414,11 +416,20 @@ input[type="text"]::placeholder {
 }
 
 /* [تم التعديل] هذا سيظهر الشعار الصغير في شاشة اللعب */
-#game-title-info .game-logo {
+#game-title-info .game-logo.small {
     width: 80px; /* حجم أصغر */
     height: 80px;
     margin-bottom: 5px;
 }
+/* [تمت الإضافة] إخفاء الشعار الصغير في الشاشة الرئيسية */
+#screen-home .game-logo.small {
+    display: none;
+}
+/* [تمت الإضافة] إخفاء الشعار الكبير في شاشة اللعب */
+#screen-game .game-logo:not(.small) {
+    display: none;
+}
+
 
 #game-scores {
     display: flex;
@@ -765,7 +776,7 @@ input[type="text"]::placeholder {
     font-weight: bold;
     margin-bottom: 15px;
 }
-#answer-timer-bar-wrapper { /* [تم التعديل] التأكد من أن الـ ID مطابق لـ HTML */
+#answer-timer-bar-wrapper { 
     width: 100%;
     height: 20px;
     background-color: var(--border-color);
@@ -776,8 +787,8 @@ input[type="text"]::placeholder {
 }
 #answer-timer-bar {
     height: 100%;
-    width: 100%; /* [تم التعديل] هذا العنصر لا يتحرك */
-    background: transparent; /* الخلفية في الـ wrapper */
+    width: 100%; 
+    background: transparent; 
 }
 #answer-timer-bar.animating::before {
     content: '';
@@ -903,7 +914,7 @@ input[type="text"]::placeholder {
     #game-board {
         width: 100%;
         max-width: none;
-        height: auto; /* Let aspect-ratio control height */
+        height: auto; 
         gap: 3px;
         border-width: 3px;
     }
