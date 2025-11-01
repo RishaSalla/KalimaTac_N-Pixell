@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة كلمتاك</title>
+    <title>كلمتاك - نسخة البكسل</title>
+    
+    <!-- [تم التعديل] إضافة الخطوط الجديدة لنسخة البكسل -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;600;700&family=Tajawal:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Press+Start+2P&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +16,16 @@
     <div id="app-container" data-view="home">
         <div class="content-wrapper">
               <section id="screen-home" class="screen">
-                      <header class="screen-header"><h1>كلمتاك</h1><p>KalimaTac</p></header>
+                      
+                      <!-- [تم التعديل] إضافة الشعار وتغيير الهيدر -->
+                      <header class="screen-header">
+                            <!-- (نفترض أن اسم ملف شعارك هو 'logo.png' وموجود في مجلد 'assets') -->
+                            <img src="assets/logo.png" alt="شعار اللعبة" class="game-logo" 
+                                 onerror="this.style.display='none'; document.getElementById('header-title-text').style.display='block';" />
+                            <!-- (نص احتياطي في حال فشل تحميل الصورة) -->
+                            <h1 id="header-title-text" style="display: none;">كلمتاك</h1>
+                            <p>KalimaTac - Pixel Edition</p>
+                      </header>
                       
                       <div class="form-grid">
                               <div id="mode-selector-wrapper">
@@ -85,11 +96,12 @@
 
               <section id="screen-game" class="screen">
                       <header id="game-header">
-                              <div id="game-title-info"><h2 id="game-title">كلمتاك</h2>
+                              <div id="game-title-info">
+                                  <h2 id="game-title">كلمتاك</h2>
                                   <div id="game-scores"><span id="round-info">الجولة 1</span><span class="score-tag score-x">X: 0 فوز</span><span class="score-tag score-o">O: 0 فوز</span></div>
                               </div>
                               <div id="game-controls-container">
-                                      <span id="round-winner-message"></span>
+                                    <span id="round-winner-message"></span>
                                   <div id="game-controls" class="btn-group" style="justify-content: flex-end; width: 100%;">
                                        <button id="open-instructions-game-btn" class="btn">تعليمات</button>
                                        <button id="restart-round-btn" class="btn btn-danger">إعادة الجولة</button>
@@ -125,7 +137,11 @@
                         <div class="header-separator"></div>
                         <h3 id="answer-category">حيوان</h3>
                   </div>
-                  <div class="modal-body"><div id="answer-timer-bar"></div><p id="answer-turn-hint" class="hint">دور X</p></div>
+                  <!-- [تم التعديل] تحديث بنية المؤقت لتطابق CSS -->
+                  <div class="modal-body">
+                      <div id="answer-timer-bar"></div>
+                      <p id="answer-turn-hint" class="hint">دور X</p>
+                  </div>
                   <div class="modal-footer"><div id="answer-buttons"><button id="answer-correct-btn" class="btn btn-success">✓ صح</button><button id="answer-wrong-btn" class="btn btn-danger">✗ خطأ</button></div></div>
             </div>
         </div>
