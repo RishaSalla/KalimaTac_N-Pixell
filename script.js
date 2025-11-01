@@ -23,18 +23,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const chipContainerCatsHome = $("#chip-container-cats-home");
 
     const soundsToggleHome = $("#toggle-sounds-home");
-    // [تم الحذف] themeToggleHome, themeToggleTextHome
     
     const startGameBtn = $("#start-game-btn"); const resumeGameBtn = $("#resume-game-btn");
     const instructionsBtnHome = $("#open-instructions-home-btn"); 
-    const gameTitle = $("#game-title"); const roundInfo = $("#round-info");
+    
+    // [تم الحذف] gameTitle (لم نعد بحاجة إليه)
+    const roundInfo = $("#round-info");
     const scoreXDisplay = $("#game-scores .score-tag.score-x"); 
     const scoreODisplay = $("#game-scores .score-tag.score-o");
     
     const instructionsBtnGame = $("#open-instructions-game-btn");
     const restartRoundBtn = $("#restart-round-btn"); const endMatchBtn = $("#end-match-btn"); 
     const newRoundBtn = $("#new-round-btn"); 
-    // [تم الحذف] themeToggleGame, themeToggleTextGame
     
     const playerTagX = $("#player-tag-x");
     const playerTagO = $("#player-tag-o"); const timerText = $("#timer-text"); const timerHint = $("#timer-hint");
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         settings: { 
             secs: 10, 
             sounds: true, 
-            theme: "dark", // [ملاحظة] يبقى هذا المتغير ليتم حفظه، لكن لا يؤثر على التصميم
+            theme: "dark", // (يبقى هذا المتغير ليتم حفظه، لكن لا يؤثر على التصميم)
             extraCats: [], 
             playerNames: { X: "فريق X", O: "فريق O" },
             playMode: "team",
@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isX = group.querySelector('#player-name-x');
                 const nameInput = isX ? playerNameXInput : playerNameOInput;
                 const labelText = isX ? `اسم ${isTeam ? 'فريق' : 'فرد'} X` : `اسم ${isTeam ? 'فريق' : 'فرد'} O`;
-                const placeholderText = isX ? `اسم فريق X (مثال: النمور)` : `اسم فريق O (مثال: التماسيح)`;
+                const placeholderText = isX ? `اسم فريق X` : `اسم فريق O`;
                 
                 group.querySelector('label').textContent = labelText;
                 nameInput.placeholder = isTeam ? placeholderText : 'اسم اللاعب';
@@ -361,14 +361,13 @@ document.addEventListener("DOMContentLoaded", () => {
            playerOMemberDisplay.textContent = memberO ? `(${memberO})` : '';
     }
 
+    // [تم التعديل] حذف الأسطر الخاصة بعناوين اللعبة النصية
     function updatePlayerTags() { 
         const isTeam = state.settings.playMode === 'team';
-        playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
-        playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
+        if (playerTagX) playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
+        if (playerTagO) playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
         
         updateTeamMemberDisplay();
-        
-        // [تم الحذف] gameTitle.textContent = "كلمتاك";
     }
 
     function updateTurnUI() { 
@@ -386,8 +385,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
            timerText.textContent = memberName ? `دور ${teamName} (${memberName})` : `دور ${teamName}`;
            
-           playerTagX.classList.toggle("active", currentPlayer === "X"); 
-           playerTagO.classList.toggle("active", currentPlayer === "O"); 
+           if (playerTagX) playerTagX.classList.toggle("active", currentPlayer === "X"); 
+           if (playerTagO) playerTagO.classList.toggle("active", currentPlayer === "O"); 
            
            updateTeamMemberDisplay(); 
            
@@ -515,36 +514,36 @@ document.addEventListener("DOMContentLoaded", () => {
            if (oldWinLine) oldWinLine.remove(); 
            
            state.roundState.board.forEach((cell, index) => { 
-               const cellEl = document.createElement('div'); 
-               cellEl.classList.add('board-cell'); 
-               cellEl.dataset.index = index; 
-               
-               if (cell.owner) { 
-                   // [التعديل هنا]
-                   // إضافة الكلاسات فقط. CSS سيتولى عرض الصورة
-                   cellEl.classList.add('owned', `player-${cell.owner.toLowerCase()}`); 
-               } else { 
-                   // إذا لم يكن للخلية مالك، اعرض الحرف والفئة
-                   const letterEl = document.createElement('span'); 
-                   letterEl.classList.add('cell-letter'); 
-                   const categoryEl = document.createElement('span'); 
-                   categoryEl.classList.add('cell-category');
-                   
-                   letterEl.textContent = cell.letter; 
-                   categoryEl.textContent = cell.category; 
-                   
-                   if (cell.revealed) cellEl.classList.add('revealed'); 
-                   
-                   cellEl.appendChild(letterEl); 
-                   cellEl.appendChild(categoryEl); 
-               } 
-               
-               cellEl.addEventListener('click', onCellClick); 
-               gameBoard.appendChild(cellEl); 
+                const cellEl = document.createElement('div'); 
+                cellEl.classList.add('board-cell'); 
+                cellEl.dataset.index = index; 
+                
+                if (cell.owner) { 
+                    // [التعديل هنا]
+                    // إضافة الكلاسات فقط. CSS سيتولى عرض الصورة
+                    cellEl.classList.add('owned', `player-${cell.owner.toLowerCase()}`); 
+                } else { 
+                    // إذا لم يكن للخلية مالك، اعرض الحرف والفئة
+                    const letterEl = document.createElement('span'); 
+                    letterEl.classList.add('cell-letter'); 
+                    const categoryEl = document.createElement('span'); 
+                    categoryEl.classList.add('cell-category');
+                    
+                    letterEl.textContent = cell.letter; 
+                    categoryEl.textContent = cell.category; 
+                    
+                    if (cell.revealed) cellEl.classList.add('revealed'); 
+                    
+                    cellEl.appendChild(letterEl); 
+                    cellEl.appendChild(categoryEl); 
+                } 
+                
+                cellEl.addEventListener('click', onCellClick); 
+                gameBoard.appendChild(cellEl); 
            }); 
            
            if (state.roundState.winInfo) { 
-               drawWinLine(state.roundState.winInfo.line); 
+                drawWinLine(state.roundState.winInfo.line); 
            } 
            
            renderBoardAvailability(state.roundState.phase || state.roundState.starter);
