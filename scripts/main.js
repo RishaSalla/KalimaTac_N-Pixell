@@ -54,14 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const backToHomeBtn = $("#back-to-home-btn"); 
     const modalConfirmRestart = $("#modal-confirm-restart"); const confirmRestartBtn = $("#confirm-restart-btn");
     const modalCloseBtns = $$(".modal-close-btn"); const confettiCanvas = $("#confetti-canvas");
-    const confettiCtx = confettiCanvas.getContext("2d"); let confettiParticles = [];
+    // [تم التعديل] التأكد من أن confettiCanvas موجود قبل استخدامه
+    const confettiCtx = confettiCanvas ? confettiCanvas.getContext("2d") : null; 
+    let confettiParticles = [];
     const roundWinnerMessage = $("#round-winner-message");
     const playerXMemberDisplay = $("#player-x-member");
     const playerOMemberDisplay = $("#player-o-member");
-
-
-    // --- [2] حالة اللعبة (State Model) ---
-    // [تم الحذف] تم نقل كل هذا إلى 'state.js'
 
     // --- [3] نظام الصوت (Audio Engine) ---
     let audioCtx;
@@ -71,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function initAudio() {
-        const state = getState(); // [تم التعديل]
+        const state = getState();
         if (audioCtx || !state.settings.sounds) return;
         try {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -99,19 +97,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (e) {
             console.error("Web Audio API not supported.", e);
-            state.settings.sounds = false; // [تم التعديل]
+            state.settings.sounds = false; 
             updateSoundToggles();
         }
     }
 
     function playSound(freq, gain, duration, type = "sine", delay = 0) { 
-        if (!audioCtx || !getState().settings.sounds) return; // [تم التعديل]
+        if (!audioCtx || !getState().settings.sounds) return; 
         const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.type = type; oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + delay); gainNode.gain.setValueAtTime(gain, audioCtx.currentTime + delay); gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); oscillator.start(audioCtx.currentTime + delay); oscillator.stop(audioCtx.currentTime + delay + duration);
     }
 
     // --- [4] نظام الكونفيتي (Confetti Engine) ---
     function runConfetti() { 
-         if (!confettiCanvas) return; confettiParticles = []; confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; const colors = [ getComputedStyle(document.documentElement).getPropertyValue('--player-x-color'), getComputedStyle(document.documentElement).getPropertyValue('--player-o-color'), "#faf089" ]; for (let i = 0; i < 200; i++) { confettiParticles.push({ x: Math.random() * confettiCanvas.width, y: Math.random() * confettiCanvas.height - confettiCanvas.height, size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], speedX: Math.random() * 6 - 3, speedY: Math.random() * 5 + 2, angle: Math.random() * 2 * Math.PI, spin: Math.random() * 0.2 - 0.1 }); } let startTime = Date.now(); function animateConfetti() { if (Date.now() - startTime > 2500) { confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); return; } confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); confettiParticles.forEach(p => { p.x += p.speedX; p.y += p.speedY; p.angle += p.spin; p.speedY += 0.05; confettiCtx.save(); confettiCtx.fillStyle = p.color; confettiCtx.translate(p.x + p.size / 2, p.y + p.size / 2); confettiCtx.rotate(p.angle); confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); confettiCtx.restore(); if (p.y > confettiCanvas.height) { p.y = -p.size; p.x = Math.random() * confettiCanvas.width; } }); requestAnimationFrame(animateConfetti); } animateConfetti();
+         if (!confettiCtx) return; // [تم التعديل] استخدام Ctx للتحقق
+         confettiParticles = []; 
+         confettiCanvas.width = window.innerWidth; 
+         confettiCanvas.height = window.innerHeight; 
+         const colors = [ getComputedStyle(document.documentElement).getPropertyValue('--player-x-color'), getComputedStyle(document.documentElement).getPropertyValue('--player-o-color'), "#faf089" ]; 
+         for (let i = 0; i < 200; i++) { 
+             confettiParticles.push({ x: Math.random() * confettiCanvas.width, y: Math.random() * confettiCanvas.height - confettiCanvas.height, size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], speedX: Math.random() * 6 - 3, speedY: Math.random() * 5 + 2, angle: Math.random() * 2 * Math.PI, spin: Math.random() * 0.2 - 0.1 }); 
+         } 
+         let startTime = Date.now(); 
+         function animateConfetti() { 
+             if (Date.now() - startTime > 2500) { 
+                 confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); 
+                 return; 
+             } 
+             confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); 
+             confettiParticles.forEach(p => { 
+                 p.x += p.speedX; p.y += p.speedY; p.angle += p.spin; p.speedY += 0.05; 
+                 confettiCtx.save(); 
+                 confettiCtx.fillStyle = p.color; 
+                 confettiCtx.translate(p.x + p.size / 2, p.y + p.size / 2); 
+                 confettiCtx.rotate(p.angle); 
+                 confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); 
+                 confettiCtx.restore(); 
+                 if (p.y > confettiCanvas.height) { 
+                     p.y = -p.size; p.x = Math.random() * confettiCanvas.width; 
+                 } 
+             }); 
+             requestAnimationFrame(animateConfetti); 
+         } 
+         animateConfetti();
     }
     
     // --- [4.5] إدارة شرائح الإدخال (Chips) ---
@@ -124,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         removeBtn.classList.add('chip-remove');
         removeBtn.textContent = '×';
         removeBtn.onclick = () => {
-            const state = getState(); // [تم التعديل]
+            const state = getState(); 
             const index = state.settings.teamMembers[team].indexOf(name);
             if (index > -1) {
                 state.settings.teamMembers[team].splice(index, 1);
@@ -149,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.querySelectorAll('.chip').forEach(chip => chip.remove());
         
-        getState().settings.teamMembers[team].forEach(name => { // [تم التعديل]
+        getState().settings.teamMembers[team].forEach(name => { 
             if (inputEl) {
                 container.insertBefore(createChip(name, team), inputEl);
             }
@@ -160,16 +187,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    window.handleChipInput = function(event, team, isHome_ignored, isButton = false) {
+    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    function handleChipInput(event, team, isButton = false) {
         const inputEl = isButton ? document.getElementById(`input-team-${team.toLowerCase()}-home`) : event.target;
         
         if (!inputEl) return; 
         
         const name = inputEl.value.trim();
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
 
         if (isButton || event.key === 'Enter' || event.type === 'blur') {
-            event.preventDefault();
+            if (event) event.preventDefault();
             if (name && state.settings.teamMembers[team].indexOf(name) === -1) {
                 state.settings.teamMembers[team].push(name);
                 inputEl.value = ''; 
@@ -193,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         removeBtn.classList.add('chip-remove');
         removeBtn.textContent = '×';
         removeBtn.onclick = () => {
-            const state = getState(); // [تم التعديل]
+            const state = getState(); 
             const index = state.settings.extraCats.indexOf(name);
             if (index > -1) {
                 state.settings.extraCats.splice(index, 1);
@@ -213,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputEl = chipContainerCatsHome.querySelector('#input-cats-home');
         chipContainerCatsHome.querySelectorAll('.chip').forEach(chip => chip.remove());
         
-        getState().settings.extraCats.forEach(name => { // [تم التعديل]
+        getState().settings.extraCats.forEach(name => { 
             if (inputEl) {
                 chipContainerCatsHome.insertBefore(createChipCategory(name), inputEl);
             }
@@ -224,11 +252,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    window.handleChipInputCategories = function(isButton = false, event = null) {
+    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    function handleChipInputCategories(isButton = false, event = null) {
         const inputEl = $("#input-cats-home");
         if (!inputEl) return;
         const name = inputEl.value.trim();
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
 
         if (isButton || (event && (event.key === 'Enter' || event.type === 'blur'))) {
             if (event) event.preventDefault();
@@ -247,9 +276,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- [5] إدارة الحالة والواجهة (State & UI Management) ---
     
-    // [تم التعديل] إضافة إصلاح السكرول
     function switchView(viewName) { 
-        window.scrollTo(0, 0); // <-- هذا هو الإصلاح لمشكلة السكرول
+        window.scrollTo(0, 0); 
         appContainer.setAttribute("data-view", viewName); 
     }
 
@@ -265,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function loadFinalScores() { 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         if (finalWinnerText) finalWinnerText.textContent = "إنهاء اللعبة"; 
         if (finalWinsX) finalWinsX.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X} فوز`; 
         if (finalWinsO) finalWinsO.textContent = `${state.settings.playerNames.O}: ${state.match.totalScore.O} فوز`;
@@ -290,19 +318,20 @@ document.addEventListener("DOMContentLoaded", () => {
            renderChips('O'); 
     }
     
-    window.togglePlayMode = function(isModal_ignored, specificMode = null) {
+    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    function togglePlayMode(specificMode = null) {
             initAudio(); 
 
             const teamBtn = document.getElementById('mode-team-home');
             const individualBtn = document.getElementById('mode-individual-home');
             
-            const state = getState(); // [تم التعديل]
+            const state = getState(); 
             const currentMode = state.settings.playMode;
             const newMode = specificMode || (currentMode === 'team' ? 'individual' : 'team');
             
             if (currentMode === newMode && specificMode !== null) return; 
 
-            state.settings.playMode = newMode; // [تم التعديل]
+            state.settings.playMode = newMode; 
             
             [teamBtn, individualBtn].forEach(btn => {
                  if (btn) btn.classList.remove('active');
@@ -315,11 +344,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (state.settings.sounds) sounds.click();
     }
     
-    // [تم الحذف] applyTheme()
-    // [تم الحذف] toggleTheme()
-
     function updateSoundToggles() { 
-        const active = getState().settings.sounds; // [تم التعديل]
+        const active = getState().settings.sounds; 
         const text = active ? "مفعلة" : "معطلة"; 
         if (soundsToggleHome) {
             soundsToggleHome.setAttribute("data-active", active); 
@@ -329,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     function toggleSounds() { 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         initAudio(); 
         state.settings.sounds = !state.settings.sounds; 
         updateSoundToggles(); 
@@ -337,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveStateToLocalStorage();
     }
     function updateScoreboard() { 
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            const totalRounds = state.match.totalRounds || 3;
            if (roundInfo) roundInfo.textContent = `الجولة ${state.match.round} (الأفضل من ${totalRounds})`; 
            if (scoreXDisplay) scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X} فوز`; 
@@ -345,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function updateTeamMemberDisplay() {
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            const isTeam = state.settings.playMode === 'team';
            if (!isTeam) {
                 if (playerXMemberDisplay) playerXMemberDisplay.textContent = "";
@@ -361,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updatePlayerTags() { 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         const isTeam = state.settings.playMode === 'team';
         if (playerTagX && playerTagX.querySelector('.player-name-text')) playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
         if (playerTagO && playerTagO.querySelector('.player-name-text')) playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
@@ -370,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateTurnUI() { 
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            const currentPlayer = state.roundState.phase || state.roundState.starter; 
            const teamName = state.settings.playerNames[currentPlayer]; 
            
@@ -394,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function advanceTeamMember(player) {
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         const members = state.settings.teamMembers[player];
         if (members && members.length > 0) {
             let currentIndex = state.roundState.teamMemberIndex[player];
@@ -409,11 +435,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- [6] منطق اللعبة الأساسي (Game Logic) ---
     
     function getNewCombination(retries = 50) {
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         if (!state.match.usedCombinations) state.match.usedCombinations = [];
         
         const allCats = [...BASE_CATEGORIES, ...state.settings.extraCats];
-        if (allCats.length === 0) allCats.push("إنسان", "حيوان", "جماد"); // احتياطي
+        if (allCats.length === 0) allCats.push("إنسان", "حيوان", "جماد"); 
         
         for (let i = 0; i < retries; i++) {
             const letter = ARABIC_LETTERS[Math.floor(Math.random() * ARABIC_LETTERS.length)];
@@ -444,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function startNewMatch() { 
         initAudio(); 
         
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         state.settings.secs = parseInt(timerSelectHome.value, 10); 
         state.match.totalRounds = parseInt(roundsSelectHome.value, 10);
         
@@ -461,8 +487,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (nameX === nameO) nameO = `${nameO} (2)`; 
         state.settings.playerNames.X = nameX; state.settings.playerNames.O = nameO; 
         
-        resetState(); // [تم التعديل]
-        getState().match.totalRounds = parseInt(roundsSelectHome.value, 10); // [تم التعديل]
+        resetState(); 
+        getState().match.totalRounds = parseInt(roundsSelectHome.value, 10); 
 
         if (timerHint) timerHint.textContent = `${getState().settings.secs} ثوانٍ`; 
         initNewRound(); 
@@ -473,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initNewRound(isRestart = false) { 
            stopTimer(); 
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            if (roundWinnerMessage) roundWinnerMessage.style.display = 'none'; 
            if (!isRestart) { state.roundState.starter = (state.match.round % 2 === 1) ? "X" : "O"; } 
            state.roundState.phase = null; state.roundState.activeCell = null; state.roundState.gameActive = true; 
@@ -493,10 +519,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function generateBoard() { 
-        getState().roundState.board = []; // [تم التعديل]
+        getState().roundState.board = []; 
         for (let i = 0; i < 9; i++) { 
             const { letter, category } = getNewCombination(); 
-            getState().roundState.board.push({ // [تم التعديل]
+            getState().roundState.board.push({ 
                 letter: letter, 
                 category: category, 
                 owner: null, 
@@ -507,11 +533,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function renderBoardAvailability(currentPlayer) { 
            $$(".board-cell").forEach((cellEl, index) => { 
-               const cell = getState().roundState.board[index]; // [تم التعديل]
+               const cell = getState().roundState.board[index]; 
                if (cell.owner || cell.revealed) { 
                    cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); 
                } else { 
-                   if (getState().roundState.phase === null) { // [تم التعديل]
+                   if (getState().roundState.phase === null) { 
                        cellEl.classList.add("available"); cellEl.classList.remove("unavailable"); 
                    } else { 
                        cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); 
@@ -526,7 +552,7 @@ document.addEventListener("DOMContentLoaded", () => {
            const oldWinLine = gameBoard.querySelector('.win-line'); 
            if (oldWinLine) oldWinLine.remove(); 
            
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            
            state.roundState.board.forEach((cell, index) => { 
                 const cellEl = document.createElement('div'); 
@@ -562,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function onCellClick(e) { 
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            if (!state.roundState.gameActive || state.roundState.phase !== null) { if (state.settings.sounds) sounds.fail(); return; } 
            const cellIndex = parseInt(e.currentTarget.dataset.index, 10); 
            const cell = state.roundState.board[cellIndex]; 
@@ -582,7 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleAnswer(isCorrect) { 
         stopTimer(); 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         const cellIndex = state.roundState.activeCell;
         if (cellIndex === null || !state.roundState.board[cellIndex]?.revealed) return; 
         const cell = state.roundState.board[cellIndex];
@@ -648,7 +674,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function checkWinCondition() { 
-        const board = getState().roundState.board; // [تم التعديل]
+        const board = getState().roundState.board; 
         const winLines = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]; 
         for (const line of winLines) { 
             const [a, b, c] = line; 
@@ -657,12 +683,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return { isWin: false, line: null };
     }
     function checkDrawCondition() { 
-        return getState().roundState.board.every(cell => cell.owner); // [تم التعديل]
+        return getState().roundState.board.every(cell => cell.owner); 
     }
     
     function endRound(winner, line = null) { 
         stopTimer(); 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         state.roundState.gameActive = false; 
         
         if (winner) { 
@@ -723,8 +749,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function endMatchAndStartNew() { 
         toggleModal(null); 
-        resetState(); // [تم التعديل]
-        const state = getState(); // [تم التعديل]
+        resetState(); 
+        const state = getState(); 
         
         if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X;
         if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O;
@@ -754,29 +780,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- [7] نظام المؤقت (Timer System) ---
     function startAnswerTimer() { 
         stopTimer(); 
-        const duration = getState().settings.secs * 1000; // [تم التعديل]
-        getState().timer.deadline = Date.now() + duration; // [تم التعديل]
+        const duration = getState().settings.secs * 1000; 
+        getState().timer.deadline = Date.now() + duration; 
         if (answerTimerBar) { 
-            answerTimerBar.style.setProperty('--timer-duration', `${getState().settings.secs}s`); // [تم التعديل]
+            answerTimerBar.style.setProperty('--timer-duration', `${getState().settings.secs}s`); 
             answerTimerBar.classList.remove("animating"); 
             void answerTimerBar.offsetWidth; 
             answerTimerBar.classList.add("animating"); 
         } 
-        getState().timer.intervalId = setInterval(() => { // [تم التعديل]
-            const remaining = getState().timer.deadline - Date.now(); // [تم التعديل]
+        getState().timer.intervalId = setInterval(() => { 
+            const remaining = getState().timer.deadline - Date.now(); 
             if (remaining <= 0) { 
                 stopTimer(); 
                 if (modalAnswer && modalAnswer.classList.contains("visible")) { 
-                    if (getState().settings.sounds) sounds.fail(); // [تم التعديل]
+                    if (getState().settings.sounds) sounds.fail(); 
                     handleAnswer(false); 
                 } 
             } else if (remaining <= 3000 && (remaining % 1000 < 100)) { 
-                if (getState().settings.sounds) sounds.timerTick(); // [تم التعديل]
+                if (getState().settings.sounds) sounds.timerTick(); 
             } 
         }, 100);
     }
     function stopTimer() { 
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         if (state.timer.intervalId) { 
             clearInterval(state.timer.intervalId); 
             state.timer.intervalId = null; 
@@ -786,7 +812,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- [8] الحفظ والاستئناف (Persistence) ---
     function saveStateToLocalStorage() { 
-           const state = getState(); // [تم التعديل]
+           const state = getState(); 
            const stateToSave = JSON.parse(JSON.stringify(state)); 
            stateToSave.timer = DEFAULT_STATE.timer; 
            stateToSave.roundState.activeCell = null; 
@@ -824,7 +850,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    if (!mergedState.match.totalScore) { 
                         mergedState.match.totalScore = { X: 0, O: 0 }; 
                    } 
-                   loadState(mergedState); // [تم التعديل]
+                   loadState(mergedState); 
                    return true; 
                } catch (e) { 
                    console.error("Failed to parse saved state:", e); 
@@ -839,7 +865,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initAudio(); 
         updateSoundToggles(); 
         
-        const state = getState(); // [تم التعديل]
+        const state = getState(); 
         
         if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
         if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
@@ -873,42 +899,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // --- [9] ربط الأحداث (Event Listeners) ---
+    // [تم التعديل] هذه هي الدالة الرئيسية لإصلاح مشكلة "الصفحة البيضاء"
     function initEventListeners() { 
+           
+           // الأزرار الرئيسية
            if (startGameBtn) startGameBtn.addEventListener("click", startNewMatch); 
            if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); 
            if (soundsToggleHome) soundsToggleHome.addEventListener("click", toggleSounds); 
-           if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); // [تم التعديل]
+           if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
            
-           if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); // [تم التعديل]
-           if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.click(); initNewRound(false); }); // [تم التعديل]
-           if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); // [تم التعديل]
-           if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); // [تم التعديل]
+           // أزرار شاشة اللعب
+           if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
+           if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.click(); initNewRound(false); }); 
+           if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
+           if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
+           
+           // أزرار نافذة الإجابة
            if (answerCorrectBtn) answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
            if (answerWrongBtn) answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
            
+           // أزرار النوافذ المنبثقة
            if (newMatchBtn) newMatchBtn.addEventListener("click", endMatchAndStartNew); 
-           
            if (backToHomeBtn) {
                 backToHomeBtn.addEventListener("click", backToHomeWithSave);
            }
+           if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (getState().settings.sounds) sounds.click(); initNewRound(true); }); 
            
-           if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (getState().settings.sounds) sounds.click(); initNewRound(true); }); // [تم التعديل]
-           modalCloseBtns.forEach(btn => { btn.addEventListener("click", (e) => { const modalId = e.currentTarget.dataset.modal; if (modalId) { toggleModal(null); if (getState().settings.sounds) sounds.click(); } }); }); // [تم التعديل]
-           $$(".modal-overlay").forEach(modal => { modal.addEventListener("click", (e) => { if (e.target === modal) { if (modal.id !== 'modal-answer') { toggleModal(null); if (getState().settings.sounds) sounds.click(); } } }); }); // [تم التعديل]
+           // إغلاق النوافذ
+           modalCloseBtns.forEach(btn => { btn.addEventListener("click", (e) => { const modalId = e.currentTarget.dataset.modal; if (modalId) { toggleModal(null); if (getState().settings.sounds) sounds.click(); } }); }); 
+           $$(".modal-overlay").forEach(modal => { modal.addEventListener("click", (e) => { if (e.target === modal) { if (modal.id !== 'modal-answer') { toggleModal(null); if (getState().settings.sounds) sounds.click(); } } }); });
            
-           if (inputTeamXHome) inputTeamXHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') window.handleChipInput(e, 'X', true, false); });
-           if (inputTeamXHome) inputTeamXHome.addEventListener('blur', (e) => window.handleChipInput(e, 'X', true, false));
-           if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') window.handleChipInput(e, 'O', true, false); });
-           if (inputTeamOHome) inputTeamOHome.addEventListener('blur', (e) => window.handleChipInput(e, 'O', true, false));
+           // [تمت الإضافة] ربط الأحداث التي كانت "onclick"
+           if (modeBtnTeamHome) modeBtnTeamHome.addEventListener("click", () => togglePlayMode('team'));
+           if (modeBtnIndividualHome) modeBtnIndividualHome.addEventListener("click", () => togglePlayMode('individual'));
 
-           if (inputCatsHome) inputCatsHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') window.handleChipInputCategories(false, e); });
-           if (inputCatsHome) inputCatsHome.addEventListener('blur', (e) => window.handleChipInputCategories(false, e));
+           // ربط أحداث شرائح "أعضاء الفريق"
+           const chipBtnX = chipContainerXHome ? chipContainerXHome.nextElementSibling : null;
+           if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput(null, 'X', true));
+           if (inputTeamXHome) inputTeamXHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'X', false); });
+           if (inputTeamXHome) inputTeamXHome.addEventListener('blur', (e) => handleChipInput(e, 'X', false));
+
+           const chipBtnO = chipContainerOHome ? chipContainerOHome.nextElementSibling : null;
+           if (chipBtnO) chipBtnO.addEventListener("click", () => handleChipInput(null, 'O', true));
+           if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'O', false); });
+           if (inputTeamOHome) inputTeamOHome.addEventListener('blur', (e) => handleChipInput(e, 'O', false));
+
+           // ربط أحداث شرائح "الفئات"
+           const chipBtnCats = chipContainerCatsHome ? chipContainerCatsHome.nextElementSibling : null;
+           if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
+           if (inputCatsHome) inputCatsHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInputCategories(false, e); });
+           if (inputCatsHome) inputCatsHome.addEventListener('blur', (e) => handleChipInputCategories(false, e));
     }
 
     // --- [10] بدء تشغيل اللعبة ---
     function initializeGame() { 
         if (loadStateFromLocalStorage()) { 
-            const state = getState(); // [تم التعديل]
+            const state = getState(); 
             if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex"; 
             if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X; 
             if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O; 
@@ -933,7 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateSoundToggles(); 
         updatePlayerTags(); 
-        initEventListeners();
+        initEventListeners(); // [تم التعديل] الآن هذه الدالة تربط كل شيء
     }
     initializeGame();
 });
