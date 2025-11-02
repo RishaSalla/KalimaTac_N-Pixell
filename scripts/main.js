@@ -54,8 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const backToHomeBtn = $("#back-to-home-btn"); 
     const modalConfirmRestart = $("#modal-confirm-restart"); const confirmRestartBtn = $("#confirm-restart-btn");
     const modalCloseBtns = $$(".modal-close-btn"); 
-    const confettiCanvas = $("#confetti-canvas");
-    // [تم التعديل] لا نستخدم الكانفاس، لذا حذفنا الكونفيتي للحفاظ على نظافة الكود.
+    // [تم الحذف] إزالة متغيرات الكانفاس لضمان النظافة
     
     const roundWinnerMessage = $("#round-winner-message");
     const playerXMemberDisplay = $("#player-x-member");
@@ -159,9 +158,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // [تم التعديل] هذه الدالة لم تعد window.handleChipInput
+    // [تم التعديل] هذه الدالة أصبحت داخلية
     function handleChipInput(event, team, isButton = false) {
-        // هذه الدالة ستُستدعى فقط من خلال event listeners الآن
         const inputEl = event ? event.target : document.getElementById(`input-team-${team.toLowerCase()}-home`);
         
         // إذا جاء الاستدعاء من الزر، نستخدم Input ID
@@ -236,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // [تم التعديل] هذه الدالة لم تعد window.handleChipInputCategories
+    // [تم التعديل] هذه الدالة أصبحت داخلية
     function handleChipInputCategories(isButton = false, event = null) {
         const inputEl = $("#input-cats-home");
         if (!inputEl) return;
@@ -302,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
            renderChips('O'); 
     }
     
-    // [تم التعديل] هذه الدالة لم تعد window.togglePlayMode
+    // [تم التعديل] هذه الدالة أصبحت داخلية
     function togglePlayMode(specificMode = null) {
             initAudio(); 
 
@@ -906,32 +904,28 @@ document.addEventListener("DOMContentLoaded", () => {
            modalCloseBtns.forEach(btn => { btn.addEventListener("click", (e) => { const modalId = e.currentTarget.dataset.modal; if (modalId) { toggleModal(null); if (getState().settings.sounds) sounds.click(); } }); }); 
            $$(".modal-overlay").forEach(modal => { modal.addEventListener("click", (e) => { if (e.target === modal) { if (modal.id !== 'modal-answer') { toggleModal(null); if (getState().settings.sounds) sounds.click(); } } }); });
            
-           // ربط أحداث الأزرار الجديدة (التي كانت onclick)
+           // [تم التعديل] ربط أحداث الأزرار الجديدة (التي كانت onclick)
            
            if (modeBtnTeamHome) modeBtnTeamHome.addEventListener("click", () => togglePlayMode('team'));
            if (modeBtnIndividualHome) modeBtnIndividualHome.addEventListener("click", () => togglePlayMode('individual'));
 
-           const chipBtnX = chipContainerXHome ? chipContainerXHome.nextElementSibling : null;
-           if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput(null, 'X', true));
+           const chipBtnX = document.getElementById("add-chip-x-home");
+           if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput({target: inputTeamXHome, key: 'Enter'}, 'X', false));
+
+           const chipBtnO = document.getElementById("add-chip-o-home");
+           if (chipBtnO) chipBtnO.addEventListener("click", () => handleChipInput({target: inputTeamOHome, key: 'Enter'}, 'O', false));
+           
+           const chipBtnCats = document.getElementById("add-chip-cats-home");
+           if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
+
+
            if (inputTeamXHome) inputTeamXHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'X', false); });
            if (inputTeamXHome) inputTeamXHome.addEventListener('blur', (e) => handleChipInput(e, 'X', false));
-
-           const chipBtnO = chipContainerOHome ? chipContainerOHome.nextElementSibling : null;
-           if (chipBtnO) chipBtnO.addEventListener("click", () => handleChipInput(null, 'O', true));
            if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'O', false); });
            if (inputTeamOHome) inputTeamOHome.addEventListener('blur', (e) => handleChipInput(e, 'O', false));
 
-           const chipBtnCats = chipContainerCatsHome ? chipContainerCatsHome.nextElementSibling : null;
-           if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
            if (inputCatsHome) inputCatsHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInputCategories(false, e); });
            if (inputCatsHome) inputCatsHome.addEventListener('blur', (e) => handleChipInputCategories(false, e));
-
-           // ربط أحداث الأزرار في mode-selector-wrapper (هذه كانت onclick)
-           const modeBtns = $$('#mode-selector-wrapper .mode-btn');
-           modeBtns.forEach(btn => {
-               const mode = btn.getAttribute('data-mode');
-               btn.addEventListener('click', () => togglePlayMode(mode));
-           });
     }
 
     // --- [10] بدء تشغيل اللعبة ---
