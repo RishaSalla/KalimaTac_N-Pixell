@@ -46,6 +46,7 @@
     --arabic-pixel-font: 'PixelAE', sans-serif;          /* الخط الأساسي للعربية */
 }
 
+/* ... (كود سابق) ... */
 /* --- Global Reset & Box Sizing: إعدادات البكسل --- */
 *, *::before, *::after {
     box-sizing: border-box;
