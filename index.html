@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
-    <!-- [الشغل الصح]: استدعاء الملفات المقسمة مباشرة (لحل مشكلة الصفحة البيضاء) -->
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/components.css">
@@ -94,17 +93,25 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>فئات إضافية</label>
+                                <label>الأصوات</label>
+                                <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
+                            </div>
+                        </div>
+                  </div>
+                  
+                  <div class="settings-box category-settings-box">
+                        <div class="settings-box-header">
+                            <h3>الفئات الإضافية</h3>
+                        </div>
+                        <div class="settings-box-content">
+                             <div class="form-group" style="width: 100%;">
+                                <label>إضافة فئات</label>
                                 <div class="chip-input-control">
                                     <div id="chip-container-cats-home" class="chip-input-container home-chip-container">
                                         <input type="text" id="input-cats-home" class="chip-input" placeholder="اضغط Enter أو +">
                                     </div>
                                     <button type="button" class="btn-add-chip" id="add-chip-cats-home">+</button>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label>الأصوات</label>
-                                <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
                             </div>
                         </div>
                   </div>
