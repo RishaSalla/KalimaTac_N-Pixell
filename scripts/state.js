@@ -49,4 +49,3 @@ export function resetState() {
 export function loadState(newState) {
     currentState = newState;
 }
-
