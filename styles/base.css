@@ -70,7 +70,8 @@ html, body {
 
 /* --- الخلفية البكسلية المتكررة (Pixelated Background) --- */
 body {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+DQogIDxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMiI+DQogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+DQogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4NCiAgPC9nPg0KPC9zdmc+');
-    background-size: 40px 40px;
+    /* [تعديل الخلفية] تطبيق نمط مربعات أكبر وأكثر وضوحاً (80x80) */
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+DQogIDxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMjIiPg0KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PC9yZWN0Pg0KICAgIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj48L3JlY3Q+DQogIDwvZz4NCjwvc3ZnPg==');
+    background-size: 80px 80px;
     background-position: 0 0;
 }
