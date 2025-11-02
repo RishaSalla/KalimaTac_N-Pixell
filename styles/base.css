@@ -1,56 +1,57 @@
-/* --- [0] الأساسيات: الخطوط، الألوان، الخلفية --- */
+/* --- [0] الأساسيات: الخطوط، الألوان، الخلفية (Base: Fonts, Colors, Background) --- */
 
-/* ربط خط البكسل المحلي الذي رفعته */
+/* ربط خط البكسل المحلي للعربية */
 @font-face {
     font-family: 'PixelAE';
-    src: url('../assets/PixelAE-Bold.ttf') format('truetype'); /* (تم تعديل المسار ليناسب المجلد) */
+    src: url('../assets/PixelAE-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 
-/* ربط خط بكسل للإنجليزية (مثل 'KalimaTac') */
+/* ربط خط البكسل للإنجليزية/اللاتينية */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-    /* ألوان الشعار */
+    /* ألوان الشعار الأساسية */
     --color-logo-yellow: #f2bc24;
     --color-logo-purple: #62347c;
     --color-logo-red: #7b322f;
 
-    /* ألوان X/O */
+    /* ألوان X/O والألوان الثانوية */
     --color-xo-purple: #6733f6;
     --color-xo-purple-light: #a179bb;
     --color-xo-pink: #fbbad8;
     --color-xo-red: #ff675c;
 
-    /* لوحة ألوان اللعبة */
-    --primary-color: var(--color-logo-yellow); 
-    --player-x-color: var(--color-xo-red);      
-    --player-o-color: var(--color-xo-purple);   
+    /* لوحة الألوان الرئيسية للتطبيق */
+    --primary-color: var(--color-logo-yellow);       /* اللون الأصفر الرئيسي (للتمييز) */
+    --player-x-color: var(--color-xo-red);           /* لون اللاعب X (أحمر) */
+    --player-o-color: var(--color-xo-purple);        /* لون اللاعب O (بنفسجي غامق) */
     
-    --background-color: #2b213f; 
-    --text-color: #ffffff;
+    --background-color: #2b213f;                     /* خلفية التطبيق (بنفسجي غامق) */
+    --text-color: #ffffff;                           /* لون النص الأبيض */
     
-    /* ألوان الحدود ثلاثية الأبعاد */
-    --border-color-dark: #000000; /* الظل */
-    --border-color-light: #5a487a; /* الإضاءة (أفتح من الخلفية) */
-    --border-width: 3px;
+    /* ألوان الحدود ثلاثية الأبعاد (3D Bevel) */
+    --border-color-dark: #000000;                    /* الظل/العمق (أسود) */
+    --border-color-light: #5a487a;                   /* الإضاءة (أفتح من الخلفية) */
+    --border-width: 3px;                             /* عرض الحدود */
 
-    --accent-color: var(--color-xo-purple-light); 
-    --button-bg-hover: var(--color-logo-red);   
-    --button-bg-active: var(--color-xo-pink); 
+    --accent-color: var(--color-xo-purple-light);    /* لون التظليل/التركيز الثانوي */
+    --button-bg-hover: var(--color-logo-red);        /* خلفية الأزرار عند التحويم */
+    --button-bg-active: var(--color-xo-pink);        /* خلفية الأزرار عند الضغط */
 
     /* تطبيق الخطوط */
-    --main-font: "Press Start 2P", 'PixelAE', sans-serif;
-    --arabic-pixel-font: 'PixelAE', sans-serif; 
+    --main-font: "Press Start 2P", 'PixelAE', sans-serif; /* الخط الرئيسي (للاتينية أولاً) */
+    --arabic-pixel-font: 'PixelAE', sans-serif;          /* الخط الأساسي للعربية */
 }
 
-/* --- Global Reset & Box Sizing --- */
+/* --- Global Reset & Box Sizing: إعدادات البكسل --- */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* قواعد لضمان مظهر البكسل النظيف */
     box-shadow: none !important;
     border-radius: 0 !important;
     image-rendering: pixelated; 
@@ -67,7 +68,7 @@ html, body {
     overflow-x: hidden;
 }
 
-/* --- الخلفية البكسلية --- */
+/* --- الخلفية البكسلية المتكررة (Pixelated Background) --- */
 body {
     background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+DQogIDxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMiI+DQogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+DQogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4NCiAgPC9nPg0KPC9zdmc+');
     background-size: 40px 40px;
