@@ -1,2 +1,4 @@
-@import 'styles/_base.css';
+body {
+    background-color: #FF0000 !important; /* (أحمر فاقع) */
+}
 
