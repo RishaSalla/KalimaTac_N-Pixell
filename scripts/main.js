@@ -53,10 +53,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const newMatchBtn = $("#new-match-btn"); 
     const backToHomeBtn = $("#back-to-home-btn"); 
     const modalConfirmRestart = $("#modal-confirm-restart"); const confirmRestartBtn = $("#confirm-restart-btn");
-    const modalCloseBtns = $$(".modal-close-btn"); const confettiCanvas = $("#confetti-canvas");
-    // [تم التعديل] التأكد من أن confettiCanvas موجود قبل استخدامه
-    const confettiCtx = confettiCanvas ? confettiCanvas.getContext("2d") : null; 
-    let confettiParticles = [];
+    const modalCloseBtns = $$(".modal-close-btn"); 
+    const confettiCanvas = $("#confetti-canvas");
+    // [تم التعديل] لا نستخدم الكانفاس، لذا حذفنا الكونفيتي للحفاظ على نظافة الكود.
+    
     const roundWinnerMessage = $("#round-winner-message");
     const playerXMemberDisplay = $("#player-x-member");
     const playerOMemberDisplay = $("#player-o-member");
@@ -108,37 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- [4] نظام الكونفيتي (Confetti Engine) ---
-    function runConfetti() { 
-         if (!confettiCtx) return; // [تم التعديل] استخدام Ctx للتحقق
-         confettiParticles = []; 
-         confettiCanvas.width = window.innerWidth; 
-         confettiCanvas.height = window.innerHeight; 
-         const colors = [ getComputedStyle(document.documentElement).getPropertyValue('--player-x-color'), getComputedStyle(document.documentElement).getPropertyValue('--player-o-color'), "#faf089" ]; 
-         for (let i = 0; i < 200; i++) { 
-             confettiParticles.push({ x: Math.random() * confettiCanvas.width, y: Math.random() * confettiCanvas.height - confettiCanvas.height, size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)], speedX: Math.random() * 6 - 3, speedY: Math.random() * 5 + 2, angle: Math.random() * 2 * Math.PI, spin: Math.random() * 0.2 - 0.1 }); 
-         } 
-         let startTime = Date.now(); 
-         function animateConfetti() { 
-             if (Date.now() - startTime > 2500) { 
-                 confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); 
-                 return; 
-             } 
-             confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); 
-             confettiParticles.forEach(p => { 
-                 p.x += p.speedX; p.y += p.speedY; p.angle += p.spin; p.speedY += 0.05; 
-                 confettiCtx.save(); 
-                 confettiCtx.fillStyle = p.color; 
-                 confettiCtx.translate(p.x + p.size / 2, p.y + p.size / 2); 
-                 confettiCtx.rotate(p.angle); 
-                 confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); 
-                 confettiCtx.restore(); 
-                 if (p.y > confettiCanvas.height) { 
-                     p.y = -p.size; p.x = Math.random() * confettiCanvas.width; 
-                 } 
-             }); 
-             requestAnimationFrame(animateConfetti); 
-         } 
-         animateConfetti();
+    // [تم الحذف] حذف دالة runConfetti لأننا حذفنا الكانفاس
+    function runConfetti() {
+        // لا شيء يحدث الآن
     }
     
     // --- [4.5] إدارة شرائح الإدخال (Chips) ---
@@ -187,17 +159,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    // [تم التعديل] هذه الدالة لم تعد window.handleChipInput
     function handleChipInput(event, team, isButton = false) {
-        const inputEl = isButton ? document.getElementById(`input-team-${team.toLowerCase()}-home`) : event.target;
+        // هذه الدالة ستُستدعى فقط من خلال event listeners الآن
+        const inputEl = event ? event.target : document.getElementById(`input-team-${team.toLowerCase()}-home`);
+        
+        // إذا جاء الاستدعاء من الزر، نستخدم Input ID
+        if (isButton && !event) {
+             const inputId = `input-team-${team.toLowerCase()}-home`;
+             const button = document.getElementById(`add-chip-${team.toLowerCase()}-home`);
+             if (button) {
+                 const input = button.previousElementSibling.querySelector(`#${inputId}`);
+                 if (input) inputEl = input;
+             }
+        }
         
         if (!inputEl) return; 
         
         const name = inputEl.value.trim();
         const state = getState(); 
 
-        if (isButton || event.key === 'Enter' || event.type === 'blur') {
+        if (isButton || (event && (event.key === 'Enter' || event.type === 'blur'))) {
             if (event) event.preventDefault();
+            
             if (name && state.settings.teamMembers[team].indexOf(name) === -1) {
                 state.settings.teamMembers[team].push(name);
                 inputEl.value = ''; 
@@ -252,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    // [تم التعديل] هذه الدالة لم تعد window.handleChipInputCategories
     function handleChipInputCategories(isButton = false, event = null) {
         const inputEl = $("#input-cats-home");
         if (!inputEl) return;
@@ -318,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
            renderChips('O'); 
     }
     
-    // [تم التعديل] هذه الدالة أصبحت داخلية (ليست window.)
+    // [تم التعديل] هذه الدالة لم تعد window.togglePlayMode
     function togglePlayMode(specificMode = null) {
             initAudio(); 
 
@@ -705,7 +689,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => { 
                 drawWinLine(line);
                 if (state.settings.sounds) sounds.win(); 
-                setTimeout(runConfetti, 500); 
+                // [تم الحذف] إزالة runConfetti
             }, 50); 
         } else { 
             if (state.settings.sounds) sounds.draw(); 
@@ -899,41 +883,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // --- [9] ربط الأحداث (Event Listeners) ---
-    // [تم التعديل] هذه هي الدالة الرئيسية لإصلاح مشكلة "الصفحة البيضاء"
     function initEventListeners() { 
-           
-           // الأزرار الرئيسية
            if (startGameBtn) startGameBtn.addEventListener("click", startNewMatch); 
-           if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); 
+           if (resumeGameBtn) resumeGame.addEventListener("click", resumeGame); 
            if (soundsToggleHome) soundsToggleHome.addEventListener("click", toggleSounds); 
            if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
            
-           // أزرار شاشة اللعب
            if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
            if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.click(); initNewRound(false); }); 
            if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
            if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
-           
-           // أزرار نافذة الإجابة
            if (answerCorrectBtn) answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
            if (answerWrongBtn) answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
            
-           // أزرار النوافذ المنبثقة
            if (newMatchBtn) newMatchBtn.addEventListener("click", endMatchAndStartNew); 
+           
            if (backToHomeBtn) {
                 backToHomeBtn.addEventListener("click", backToHomeWithSave);
            }
-           if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (getState().settings.sounds) sounds.click(); initNewRound(true); }); 
            
-           // إغلاق النوافذ
+           if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (getState().settings.sounds) sounds.click(); initNewRound(true); }); 
            modalCloseBtns.forEach(btn => { btn.addEventListener("click", (e) => { const modalId = e.currentTarget.dataset.modal; if (modalId) { toggleModal(null); if (getState().settings.sounds) sounds.click(); } }); }); 
            $$(".modal-overlay").forEach(modal => { modal.addEventListener("click", (e) => { if (e.target === modal) { if (modal.id !== 'modal-answer') { toggleModal(null); if (getState().settings.sounds) sounds.click(); } } }); });
            
-           // [تمت الإضافة] ربط الأحداث التي كانت "onclick"
+           // ربط أحداث الأزرار الجديدة (التي كانت onclick)
+           
            if (modeBtnTeamHome) modeBtnTeamHome.addEventListener("click", () => togglePlayMode('team'));
            if (modeBtnIndividualHome) modeBtnIndividualHome.addEventListener("click", () => togglePlayMode('individual'));
 
-           // ربط أحداث شرائح "أعضاء الفريق"
            const chipBtnX = chipContainerXHome ? chipContainerXHome.nextElementSibling : null;
            if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput(null, 'X', true));
            if (inputTeamXHome) inputTeamXHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'X', false); });
@@ -944,11 +921,17 @@ document.addEventListener("DOMContentLoaded", () => {
            if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'O', false); });
            if (inputTeamOHome) inputTeamOHome.addEventListener('blur', (e) => handleChipInput(e, 'O', false));
 
-           // ربط أحداث شرائح "الفئات"
            const chipBtnCats = chipContainerCatsHome ? chipContainerCatsHome.nextElementSibling : null;
            if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
            if (inputCatsHome) inputCatsHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInputCategories(false, e); });
            if (inputCatsHome) inputCatsHome.addEventListener('blur', (e) => handleChipInputCategories(false, e));
+
+           // ربط أحداث الأزرار في mode-selector-wrapper (هذه كانت onclick)
+           const modeBtns = $$('#mode-selector-wrapper .mode-btn');
+           modeBtns.forEach(btn => {
+               const mode = btn.getAttribute('data-mode');
+               btn.addEventListener('click', () => togglePlayMode(mode));
+           });
     }
 
     // --- [10] بدء تشغيل اللعبة ---
@@ -979,8 +962,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateSoundToggles(); 
         updatePlayerTags(); 
-        initEventListeners(); // [تم التعديل] الآن هذه الدالة تربط كل شيء
+        initEventListeners(); 
     }
     initializeGame();
 });
-
