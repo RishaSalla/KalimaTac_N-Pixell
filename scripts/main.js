@@ -512,7 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateScoreboard(); 
         updateTurnUI(); 
         
-        // [تنظيف المنطق] التأكد من ظهور أزرار التحكم في اللعبة النشطة
+        // التأكد من ظهور أزرار التحكم في اللعبة النشطة
         if (newRoundBtn) newRoundBtn.style.display = 'none'; 
         if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex'; 
         if (endMatchBtn) endMatchBtn.style.display = 'inline-flex'; 
@@ -730,6 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (roundWinnerMessage) {
                 roundWinnerMessage.textContent = `تعادل! 🤝`;
                 roundWinnerMessage.style.color = 'var(--text-color)';
+                background-color: var(--background-color); /* Added this line to fix the background color */
                 roundWinnerMessage.style.borderColor = 'var(--text-color)';
                 roundWinnerMessage.style.display = 'block';
             }
@@ -740,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalRounds = state.match.totalRounds || 3;
         const roundsToWin = Math.ceil(totalRounds / 2);
         
-        const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsToWin) ? 'O' : null;
+        const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsRoundsToWin) ? 'O' : null;
 
         if (matchWinner) {
             if (roundWinnerMessage) roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
@@ -934,7 +935,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (timerHint) timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
         
-        // [تنظيف المنطق] تحديث ظهور الأزرار بناءً على حالة الاستئناف
+        // تحديث ظهور الأزرار بناءً على حالة الاستئناف
         if (state.roundState.gameActive) {
             // اللعبة نشطة، عرض إعادة الجولة وإنهاء المباراة
             if (newRoundBtn) newRoundBtn.style.display = 'none';
@@ -965,7 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- [9] ربط الأحداث (Event Listeners) ---
     function initEventListeners() { 
         if (startGameBtn) startGameBtn.addEventListener("click", startNewMatch); 
-        if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); // تم تنظيف الرابط
+        if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); 
         if (soundsToggleHome) soundsToggleHome.addEventListener("click", toggleSounds); 
         if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
         
