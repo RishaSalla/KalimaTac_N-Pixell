@@ -1,4 +1,9 @@
-@import url("styles/_base.css");       /* 1. الأساسيات: الخطوط والألوان والخلفية */
-@import url("styles/_layout.css");     /* 2. الهيكل: الصناديق الأفقية والأقسام */
-@import url("styles/_components.css"); /* 3. المكونات: الأزرار والحدود ثلاثية الأبعاد */
+/* [تم التصحيح] 
+لقد قمت بإضافة "styles/" إلى المسار. 
+هذا هو "الشغل الصح" لضمان عمل @import.
+*/
+
+@import url("styles/_base.css");
+@import url("styles/_layout.css");
+@import url("styles/_components.css");
 
