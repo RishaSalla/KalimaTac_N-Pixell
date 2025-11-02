@@ -9,10 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
-    <!-- [تم التعديل] 
-         تم حذف 'style.css' واستبداله بالملفات المقسمة مباشرة.
-         هذا هو "الشغل الصح" لإصلاح الصفحة البيضاء. 
-    -->
     <link rel="stylesheet" href="styles/_base.css">
     <link rel="stylesheet" href="styles/_layout.css">
     <link rel="stylesheet" href="styles/_components.css">
@@ -34,8 +30,8 @@
                         </div>
                         <div class="settings-box-content">
                             <div id="mode-selector-wrapper">
-                                <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team" onclick="togglePlayMode(false, 'team')">فريق</button>
-                                <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual" onclick="togglePlayMode(false, 'individual')">فردي</button>
+                                <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team">فريق</button>
+                                <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual">فردي</button>
                             </div>
                     
                             <div class="team-name-group">
@@ -49,7 +45,7 @@
                                         <div id="chip-container-x-home" class="chip-input-container home-chip-container">
                                             <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter أو +">
                                         </div>
-                                        <button type="button" class="btn-add-chip" onclick="window.handleChipInput({target: document.getElementById('input-team-x-home'), key: 'Enter', preventDefault: ()=>{}}, 'X', true, true)">+</button>
+                                        <button type="button" class="btn-add-chip" id="add-chip-x-home">+</button>
                                    </div>
                                 </div>
                             </div>
@@ -65,7 +61,7 @@
                                         <div id="chip-container-o-home" class="chip-input-container home-chip-container">
                                             <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter أو +">
                                         </div>
-                                        <button type="button" class="btn-add-chip" onclick="window.handleChipInput({target: document.getElementById('input-team-o-home'), key: 'Enter', preventDefault: ()=>{}}, 'O', true, true)">+</button>
+                                        <button type="button" class="btn-add-chip" id="add-chip-o-home">+</button>
                                    </div>
                                 </div>
                             </div>
@@ -102,7 +98,7 @@
                                     <div id="chip-container-cats-home" class="chip-input-container home-chip-container">
                                         <input type="text" id="input-cats-home" class="chip-input" placeholder="اضغط Enter أو +">
                                     </div>
-                                    <button type="button" class="btn-add-chip" onclick="window.handleChipInputCategories(true)">+</button>
+                                    <button type="button" class="btn-add-chip" id="add-chip-cats-home">+</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -186,4 +182,3 @@
 
 </body>
 </html>
-
