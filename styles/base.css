@@ -46,7 +46,6 @@
     --arabic-pixel-font: 'PixelAE', sans-serif;          /* الخط الأساسي للعربية */
 }
 
-/* ... (كود سابق) ... */
 /* --- Global Reset & Box Sizing: إعدادات البكسل --- */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -69,10 +68,12 @@ html, body {
     overflow-x: hidden;
 }
 
-/* --- الخلفية البكسلية المتكررة (Pixelated Background) --- */
+/* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
 body {
-    /* [تعديل الخلفية] تطبيق نمط مربعات أكبر وأكثر وضوحاً (80x80) */
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+DQogIDxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMjIiPg0KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PC9yZWN0Pg0KICAgIDxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj48L3JlY3Q+DQogIDwvZz4NCjwvc3ZnPg==');
-    background-size: 80px 80px;
-    background-position: 0 0;
+    /* [تعديل]: استخدام الصورة pixel_background.png التي رفعتها */
+    background-image: url('../assets/pixel_background.png'); 
+    background-size: cover;          /* لضمان تغطية الشاشة بالكامل دون تكرار الصورة */
+    background-position: center center; /* لتركيز الصورة في المنتصف */
+    background-repeat: no-repeat;    /* لمنع تكرار الصورة */
+    background-attachment: fixed;    /* لتثبيت الخلفية عند التمرير */
 }
