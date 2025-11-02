@@ -1,8 +1,7 @@
 /* --- [0] Base Styles & Pixel Art Foundation --- */
 
-/* [تمت الإضافة] ربط خط البكسل المحلي */
 @font-face {
-    font-family: 'PixelAE'; /* أعطيناه اسماً لاستخدامه */
+    font-family: 'PixelAE';
     src: url('assets/PixelAE-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
@@ -10,8 +9,6 @@
 }
 
 :root {
-    /* [تم التعديل] تطبيق لوحة الألوان التي اخترتها */
-    
     /* ألوان الشعار */
     --color-logo-yellow: #f2bc24;
     --color-logo-purple: #62347c;
@@ -23,23 +20,25 @@
     --color-xo-pink: #fbbad8;
     --color-xo-red: #ff675c;
 
-    /* لوحة ألوان اللعبة (مستوحاة من ألوانك) */
-    --primary-color: var(--color-logo-yellow); /* الأصفر للتمييز */
-    --player-x-color: var(--color-xo-red);      /* أحمر مرجاني لـ X */
-    --player-o-color: var(--color-xo-purple);   /* بنفسجي لـ O */
+    /* لوحة ألوان اللعبة */
+    --primary-color: var(--color-logo-yellow); 
+    --player-x-color: var(--color-xo-red);      
+    --player-o-color: var(--color-xo-purple);   
     
-    --background-color: #2b213f; /* خلفية أغمق قليلاً من الشعار */
+    --background-color: #2b213f; 
     --text-color: #ffffff;
-    --border-color: #000000;
     
-    --accent-color: var(--color-xo-purple-light); /* بنفسجي فاتح للأزرار الثانوية */
-    --button-bg-hover: var(--color-logo-red);   /* أحمر داكن عند التمرير */
-    --button-bg-active: var(--color-xo-pink); /* وردي فاتح عند الضغط */
+    /* [تم التعديل] ألوان الحدود ثلاثية الأبعاد */
+    --border-color-dark: #000000; /* الظل */
+    --border-color-light: #5a487a; /* الإضاءة (أفتح من الخلفية) */
+    --border-width: 3px;
 
+    --accent-color: var(--color-xo-purple-light); 
+    --button-bg-hover: var(--color-logo-red);   
+    --button-bg-active: var(--color-xo-pink); 
 
-    /* [تم التعديل] استخدام خط البكسل الجديد */
     --main-font: "Press Start 2P", 'PixelAE', sans-serif;
-    --arabic-pixel-font: 'PixelAE', sans-serif; /* استخدام الخط الجديد كاساسي */
+    --arabic-pixel-font: 'PixelAE', sans-serif; 
 }
 
 /* --- Global Reset & Box Sizing --- */
@@ -49,7 +48,6 @@
     padding: 0;
     box-shadow: none !important;
     border-radius: 0 !important;
-    /* [تمت الإضافة] لجعل الخطوط حادة */
     image-rendering: pixelated; 
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
@@ -64,9 +62,8 @@ html, body {
     overflow-x: hidden;
 }
 
-/* --- [تم التعديل] الخلفية البكسلية --- */
+/* --- الخلفية البكسلية --- */
 body {
-    /* هذه هي الخلفية التي أعجبتك في التصور */
     background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+DQogIDxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMiI+DQogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+DQogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4NCiAgPC9nPg0KPC9zdmc+');
     background-size: 40px 40px;
     background-position: 0 0;
@@ -78,19 +75,16 @@ body {
     justify-content: center;
     align-items: flex-start; 
     min-height: 100vh;
-    transition: background-color 0.3s ease;
-    padding: 1rem; /* تقليل الحشو للشاشات الصغيرة */
+    padding: 1rem; 
     width: 100%;
 }
 
-/* --- Content Wrapper (To center content) --- */
 .content-wrapper {
     width: 100%;
-    max-width: 900px; /* زيادة العرض الأقصى للهيكل الأفقي */
+    max-width: 900px; 
     margin: 0 auto;
-    padding: 0; /* إزالة الحشو الإضافي */
+    padding: 0; 
 }
-
 
 /* --- View Management (Home, Game, etc.) --- */
 .screen {
@@ -98,8 +92,12 @@ body {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    padding: 15px; /* تقليل الحشو */
-    border: 3px solid var(--border-color);
+    padding: 15px; 
+    /* [تم التعديل] حدود ثلاثية الأبعاد */
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
     background-color: var(--background-color);
     animation: pixel-fade-in 0.3s forwards;
 }
@@ -108,7 +106,6 @@ body {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
 
 #app-container[data-view="home"] #screen-home { display: flex; }
 #app-container[data-view="game"] #screen-game { display: flex; }
@@ -119,9 +116,10 @@ body {
     display: flex;
     flex-direction: column; 
     align-items: center;
-    padding: 10px 0;
+    padding-bottom: 20px;
     margin-bottom: 20px;
-    border-bottom: 3px solid var(--border-color);
+    /* [تم التعديل] حد سفلي فقط */
+    border-bottom: var(--border-width) solid var(--border-color-dark);
     text-align: center;
 }
 
@@ -131,27 +129,18 @@ body {
     image-rendering: pixelated; 
     margin-bottom: 10px;
 }
-/* التأكد من أن اسم الشعار صحيح */
 img[src="assets/logo.png.png"] { display: none; }
 img[src="assets/logo.png"] { display: block; }
 
-
-.screen-header h1 {
-    display: none; /* إخفاء H1 كما طلبت */
+.screen-header h1, .screen-header p {
+    display: none; 
 }
-
-.screen-header p {
-    display: none; /* إخفاء P كما طلبت */
-}
-
 
 /* --- Buttons & Inputs - Pixel Art Styling --- */
-button, .btn, input[type="text"], select, .chip, .switch-toggle {
+button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-container {
     font-family: var(--arabic-pixel-font);
     font-size: 1.1rem;
-    padding: 10px 15px; /* تقليل الحشو قليلاً */
-    border: 3px solid var(--border-color);
-    background-color: var(--primary-color);
+    padding: 10px 15px; 
     color: var(--border-color); 
     cursor: pointer;
     transition: background-color 0.1s ease, transform 0.05s ease;
@@ -161,6 +150,13 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle {
     justify-content: center;
     text-align: center;
     line-height: 1.2;
+
+    /* [تم التعديل] حدود ثلاثية الأبعاد للأزرار */
+    background-color: var(--primary-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
 button:hover, .btn:hover, .switch-toggle[data-active="true"]:hover {
@@ -171,6 +167,11 @@ button:hover, .btn:hover, .switch-toggle[data-active="true"]:hover {
 button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     background-color: var(--button-bg-active);
     transform: translateY(1px); 
+    /* [تم التعديل] عكس الحدود عند الضغط */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 /* Specific button styles */
@@ -182,7 +183,11 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 .mode-btn.active {
     background-color: var(--player-x-color); 
     color: var(--text-color);
-    border: 3px solid var(--border-color);
+    /* [تم التعديل] عكس الحدود للزر النشط */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 .mode-btn:hover:not(.active) {
     background-color: var(--player-o-color);
@@ -199,15 +204,17 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 .btn-success {
     background-color: #4CAF50;
     color: var(--text-color);
-    border-color: #2e7d32;
+    border-color: #2e7d32; /* الحفاظ على ألوان الحدود الخاصة به */
+    border-top: var(--border-width) solid #66bb6a;
+    border-left: var(--border-width) solid #66bb6a;
+    border-bottom: var(--border-width) solid #388e3c;
+    border-right: var(--border-width) solid #388e3c;
 }
 .btn-success:hover { background-color: #66bb6a; }
 .btn-success:active { background-color: #388e3c; }
 
 
 /* --- Forms & Input Fields --- */
-/* [تم الحذف] .form-grid, .settings-grid (تم استبدالها بـ .settings-box) */
-
 .form-group, .team-members-group {
     display: flex;
     flex-direction: column;
@@ -219,17 +226,21 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     font-size: 1rem;
     font-weight: bold;
     color: var(--text-color);
-    text-shadow: 1px 1px var(--border-color);
+    text-shadow: 1px 1px #00000080;
     text-align: right; 
 }
 
 input[type="text"], select {
     background-color: var(--text-color); 
     color: var(--border-color);
-    border: 3px solid var(--border-color);
     padding: 10px;
     width: 100%;
     font-size: 1.1rem;
+    /* [تم التعديل] حدود ثلاثية الأبعاد غائرة (Inset) */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 input[type="text"]::placeholder {
@@ -239,20 +250,19 @@ input[type="text"]::placeholder {
 
 /* --- Toggle Switches --- */
 .switch-toggle {
-    min-width: unset;
-    padding: 10px 15px;
     background-color: var(--background-color);
     color: var(--text-color);
-    border: 3px solid var(--border-color);
-    display: flex;
-    gap: 10px;
-    align-items: center;
     justify-content: space-between;
+    border-color: var(--border-color-dark); /* جعل المفتاح يبدو غائراً */
 }
 
 .switch-toggle[data-active="true"] {
     background-color: var(--player-o-color); 
     color: var(--text-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
 .switch-toggle .switch-text {
@@ -263,7 +273,10 @@ input[type="text"]::placeholder {
     width: 44px;
     height: 24px;
     background: var(--border-color);
-    border: 2px solid var(--border-color);
+    border-top: 1px solid var(--border-color-dark);
+    border-left: 1px solid var(--border-color-dark);
+    border-bottom: 1px solid var(--border-color-light);
+    border-right: 1px solid var(--border-color-light);
     padding: 2px;
 }
 .switch-slider {
@@ -271,6 +284,10 @@ input[type="text"]::placeholder {
     height: 16px;
     background: var(--text-color);
     transition: transform 0.2s ease;
+    border-top: 1px solid var(--border-color-light);
+    border-left: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-dark);
+    border-right: 1px solid var(--border-color-dark);
 }
 .switch-toggle[data-active="true"] .switch {
     background: var(--primary-color);
@@ -280,11 +297,11 @@ input[type="text"]::placeholder {
 }
 
 
-/* --- [تم التعديل] Home Screen Layout (Box Model) --- */
+/* --- Home Screen Layout (Box Model) --- */
 #screen-home {
     gap: 20px;
-    display: grid; /* [تم التعديل] استخدام Grid للهيكل */
-    grid-template-columns: 1fr; /* عمود واحد افتراضياً */
+    display: grid; 
+    grid-template-columns: 1fr; 
     grid-template-areas: 
         "header"
         "player"
@@ -294,7 +311,7 @@ input[type="text"]::placeholder {
 
 @media (min-width: 800px) {
     #screen-home {
-        grid-template-columns: 1fr 1fr; /* عمودين للشاشات الأكبر */
+        grid-template-columns: 1fr 1fr; 
         grid-template-areas: 
             "header header"
             "player settings"
@@ -303,23 +320,31 @@ input[type="text"]::placeholder {
     }
 }
 
-#screen-home .screen-header { grid-area: header; }
+#screen-home .screen-header { 
+    grid-area: header; 
+    border-bottom: none; /* إزالة الحد لجعله خارج الصندوق */
+    margin-bottom: 10px;
+    padding-bottom: 0;
+}
 
-/* [تمت الإضافة] تنسيق الصناديق */
+/* [تم التعديل] تنسيق الصناديق بالحدود ثلاثية الأبعاد */
 .settings-box {
-    border: 3px solid var(--border-color);
-    background-color: #00000020; /* خلفية شفافة قليلاً */
+    background-color: #00000020; 
     width: 100%;
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 .settings-box-header {
     padding: 10px;
-    border-bottom: 3px solid var(--border-color);
-    background-color: var(--color-logo-purple); /* لون الهيدر من الشعار */
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    background-color: var(--color-logo-purple); 
 }
 .settings-box-header h3 {
     font-size: 1.2rem;
     color: var(--text-color);
-    text-shadow: 2px 2px var(--border-color);
+    text-shadow: 2px 2px var(--border-color-dark);
     margin-bottom: 0;
 }
 .settings-box-content {
@@ -353,12 +378,16 @@ input[type="text"]::placeholder {
     flex-wrap: wrap;
     gap: 5px;
     background-color: var(--text-color);
-    border: 3px solid var(--border-color);
     padding: 5px;
     min-height: 50px;
     width: 100%;
     align-items: center;
     flex-grow: 1;
+    /* حدود غائرة */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 .chip-input {
     flex-grow: 1;
@@ -372,7 +401,10 @@ input[type="text"]::placeholder {
 .chip {
     background-color: var(--player-o-color);
     color: var(--text-color);
-    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--border-color-light);
+    border-left: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-dark);
     padding: 5px 10px;
     font-size: 0.9rem;
     display: inline-flex;
@@ -384,15 +416,21 @@ input[type="text"]::placeholder {
 .chip-remove {
     background-color: var(--player-x-color);
     color: var(--text-color);
-    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--border-color-light);
+    border-left: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-dark);
     padding: 0 5px;
     cursor: pointer;
     font-size: 1rem;
     line-height: 1;
     font-weight: bold;
 }
-.chip-remove:hover {
-    background-color: var(--button-bg-hover);
+.chip-remove:active {
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 .btn-add-chip {
     padding: 10px;
@@ -424,35 +462,37 @@ input[type="text"]::placeholder {
 
 #game-header {
     display: flex;
+    flex-direction: column; /* [تم التعديل] عمودي للهيدر */
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
     width: 100%;
-    border-bottom: 3px solid var(--border-color);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
 }
 
+/* [تم التعديل] نقل الشعار ليكون بجانب النتائج */
 #game-title-info {
     text-align: center;
     flex-grow: 1;
-    display: flex; /* [تم التعديل] لترتيب الشعار والنتائج */
-    flex-direction: column;
+    display: flex; 
+    flex-direction: row; /* [تم التعديل] أفقي */
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap; /* للسماح بالالتفاف في الشاشات الصغيرة */
 }
 
-/* [تم التعديل] هذا سيظهر الشعار الصغير في شاشة اللعب */
 #game-title-info .game-logo.small {
-    width: 80px; 
-    height: 80px;
+    width: 64px; 
+    height: 64px;
     margin-bottom: 0;
 }
-/* [تمت الإضافة] إخفاء الشعار الصغير في الشاشة الرئيسية */
 #screen-home .game-logo.small {
     display: none;
 }
-/* [تمت الإضافة] إخفاء الشعار الكبير في شاشة اللعب */
 #screen-game .game-logo:not(.small) {
     display: none;
 }
@@ -469,13 +509,17 @@ input[type="text"]::placeholder {
     background-color: var(--background-color);
     color: var(--text-color);
     padding: 8px 12px;
-    border: 2px solid var(--border-color);
     font-size: 0.9rem;
     font-weight: bold;
     text-shadow: 1px 1px var(--border-color);
+    /* حدود ثلاثية الأبعاد غائرة */
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
-.score-tag.score-x { border-color: var(--player-x-color); color: var(--player-x-color); }
-.score-tag.score-o { border-color: var(--player-o-color); color: var(--player-o-color); }
+.score-tag.score-x { color: var(--player-x-color); }
+.score-tag.score-o { color: var(--player-o-color); }
 
 #round-info {
     font-size: 1rem;
@@ -483,7 +527,10 @@ input[type="text"]::placeholder {
     text-shadow: 1px 1px var(--border-color);
     background-color: #00000030;
     padding: 8px 12px;
-    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 
 #player-turn-bar {
@@ -494,10 +541,8 @@ input[type="text"]::placeholder {
     align-items: center;
 }
 
-
 .player-tag {
     background-color: var(--background-color);
-    border: 3px solid var(--border-color);
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -509,6 +554,10 @@ input[type="text"]::placeholder {
     position: relative;
     transition: all 0.2s ease;
     opacity: 0.6;
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
 .player-tag.active {
@@ -524,12 +573,10 @@ input[type="text"]::placeholder {
     box-shadow: 0 0 15px var(--player-o-color) !important;
 }
 
-
 .player-tag .player-name-text {
     font-weight: bold;
     text-shadow: 1px 1px var(--border-color);
 }
-
 .player-tag .player-tag-details {
     font-size: 0.9rem;
     opacity: 0.8;
@@ -544,11 +591,14 @@ input[type="text"]::placeholder {
     color: var(--text-color);
     background-color: #00000030;
     padding: 8px 12px;
-    border: 2px solid var(--border-color);
     text-align: center;
     margin-bottom: 5px;
     text-shadow: 1px 1px var(--border-color);
     font-weight: bold;
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 
 #timer-hint {
@@ -569,7 +619,12 @@ input[type="text"]::placeholder {
     margin: 10px auto;
     background-color: var(--border-color); 
     position: relative;
-    border: 5px solid var(--border-color); 
+    /* [تم التعديل] خلفية أغمق للوحة + حدود ثلاثية الأبعاد */
+    background-color: #1a142c; /* خلفية أغمق */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
     overflow: hidden; 
 }
 
@@ -580,7 +635,8 @@ input[type="text"]::placeholder {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--background-color);
+    /* [تم التعديل] خلفية الخلية هي نفسها خلفية اللوحة */
+    background-color: #1a142c;
     border: none; 
     color: var(--text-color);
     font-size: 2rem;
@@ -600,7 +656,6 @@ input[type="text"]::placeholder {
 .board-cell.available:active {
     transform: scale(0.98);
 }
-
 
 .board-cell.owned {
     cursor: default;
@@ -712,13 +767,17 @@ input[type="text"]::placeholder {
 
 .modal-content {
     background-color: var(--background-color);
-    border: 5px solid var(--border-color);
     padding: 20px;
     text-align: center;
     position: relative;
     max-width: 500px;
     width: 90%;
     animation: modalPopIn 0.2s forwards;
+    /* حدود ثلاثية الأبعاد */
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
 @keyframes modalPopIn {
@@ -756,14 +815,11 @@ input[type="text"]::placeholder {
     right: 5px;
     background-color: var(--player-x-color);
     color: var(--text-color);
-    border: 2px solid var(--border-color);
     padding: 5px 10px;
     font-size: 1.2rem;
     line-height: 1;
     min-width: unset; 
 }
-.modal-close-btn:hover { background-color: var(--button-bg-hover); }
-.modal-close-btn:active { background-color: var(--button-bg-active); }
 
 
 /* Modal Answer specific styles */
@@ -775,7 +831,7 @@ input[type="text"]::placeholder {
     gap: 15px;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 3px solid var(--border-color);
+    border-bottom: 3px solid var(--border-color-dark);
 }
 #answer-letter {
     font-size: 4.5rem; 
@@ -788,7 +844,7 @@ input[type="text"]::placeholder {
 .header-separator {
     width: 3px;
     height: 3rem;
-    background-color: var(--border-color);
+    background-color: var(--border-color-dark);
 }
 #answer-category {
     font-size: 2.5rem; 
@@ -806,11 +862,14 @@ input[type="text"]::placeholder {
 #answer-timer-bar-wrapper { 
     width: 100%;
     height: 20px;
-    background-color: var(--border-color);
-    border: 3px solid var(--border-color);
     margin-bottom: 20px;
     position: relative;
     overflow: hidden;
+    /* حدود غائرة */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 #answer-timer-bar {
     height: 100%;
@@ -869,11 +928,22 @@ input[type="text"]::placeholder {
     margin-top: 5px;
     text-shadow: 2px 2px var(--border-color);
     font-family: var(--arabic-pixel-font);
-    border: 2px solid var(--primary-color);
     padding: 10px;
     background-color: #00000030;
     display: none; 
+    /* حدود ثلاثية الأبعاد */
+    border-top: 2px solid var(--border-color-light);
+    border-left: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-dark);
 }
+#round-winner-message[style*="var(--player-x-color)"] {
+    border-color: var(--player-x-color);
+}
+#round-winner-message[style*="var(--player-o-color)"] {
+    border-color: var(--player-o-color);
+}
+
 
 /* --- Confetti (already pixel-art friendly by nature) --- */
 #confetti-canvas {
@@ -900,7 +970,7 @@ input[type="text"]::placeholder {
 
     /* [تم التعديل] تعديل الهيكل الأفقي للشاشات الصغيرة */
     #screen-home {
-        grid-template-columns: 1fr; /* عمود واحد دائماً */
+        grid-template-columns: 1fr; 
         grid-template-areas: 
             "header"
             "player"
@@ -912,6 +982,11 @@ input[type="text"]::placeholder {
         flex-direction: column;
         text-align: center;
         gap: 15px;
+    }
+    /* [تم التعديل] تعديل هيدر شاشة اللعب للموبايل */
+    #game-title-info {
+        flex-direction: column;
+        gap: 10px;
     }
     #game-scores {
         justify-content: center;
