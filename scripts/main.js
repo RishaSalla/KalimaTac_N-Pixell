@@ -730,7 +730,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (roundWinnerMessage) {
                 roundWinnerMessage.textContent = `تعادل! 🤝`;
                 roundWinnerMessage.style.color = 'var(--text-color)';
-                background-color: var(--background-color); /* Added this line to fix the background color */
                 roundWinnerMessage.style.borderColor = 'var(--text-color)';
                 roundWinnerMessage.style.display = 'block';
             }
@@ -741,7 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalRounds = state.match.totalRounds || 3;
         const roundsToWin = Math.ceil(totalRounds / 2);
         
-        const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsRoundsToWin) ? 'O' : null;
+        const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsToWin) ? 'O' : null;
 
         if (matchWinner) {
             if (roundWinnerMessage) roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
