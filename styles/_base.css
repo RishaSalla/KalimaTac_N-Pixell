@@ -1,0 +1,75 @@
+/* --- [0] الأساسيات: الخطوط، الألوان، الخلفية --- */
+
+/* ربط خط البكسل المحلي الذي رفعته */
+@font-face {
+    font-family: 'PixelAE';
+    src: url('../assets/PixelAE-Bold.ttf') format('truetype'); /* (تم تعديل المسار ليناسب المجلد) */
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ربط خط بكسل للإنجليزية (مثل 'KalimaTac') */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    /* ألوان الشعار */
+    --color-logo-yellow: #f2bc24;
+    --color-logo-purple: #62347c;
+    --color-logo-red: #7b322f;
+
+    /* ألوان X/O */
+    --color-xo-purple: #6733f6;
+    --color-xo-purple-light: #a179bb;
+    --color-xo-pink: #fbbad8;
+    --color-xo-red: #ff675c;
+
+    /* لوحة ألوان اللعبة */
+    --primary-color: var(--color-logo-yellow); 
+    --player-x-color: var(--color-xo-red);      
+    --player-o-color: var(--color-xo-purple);   
+    
+    --background-color: #2b213f; 
+    --text-color: #ffffff;
+    
+    /* ألوان الحدود ثلاثية الأبعاد */
+    --border-color-dark: #000000; /* الظل */
+    --border-color-light: #5a487a; /* الإضاءة (أفتح من الخلفية) */
+    --border-width: 3px;
+
+    --accent-color: var(--color-xo-purple-light); 
+    --button-bg-hover: var(--color-logo-red);   
+    --button-bg-active: var(--color-xo-pink); 
+
+    /* تطبيق الخطوط */
+    --main-font: "Press Start 2P", 'PixelAE', sans-serif;
+    --arabic-pixel-font: 'PixelAE', sans-serif; 
+}
+
+/* --- Global Reset & Box Sizing --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    image-rendering: pixelated; 
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+    font-family: var(--arabic-pixel-font);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    overflow-y: auto; 
+    overflow-x: hidden;
+}
+
+/* --- الخلفية البكسلية --- */
+body {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+DQogIDxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzJiMjEzZiI+PC9yZWN0Pg0KICA8ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMiI+DQogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+DQogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjwvcmVjdD4NCiAgPC9nPg0KPC9zdmc+');
+    background-size: 40px 40px;
+    background-position: 0 0;
+}
