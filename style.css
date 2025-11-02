@@ -1,4 +1,10 @@
-body {
-    background-color: #FF0000 !important; /* (أحمر فاقع) */
-}
+/* "الشغل الصح"
+  1. الأساسيات: الخطوط والألوان والخلفية
+  2. الهيكل: الصناديق الأفقية والأقسام
+  3. المكونات: الأزرار والحدود ثلاثية الأبعاد
+*/
+
+@import url("styles/_base.css");
+@import url("styles/_layout.css");
+@import url("styles/_components.css");
 
