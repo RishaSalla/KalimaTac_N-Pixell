@@ -19,7 +19,7 @@
 }
 
 .screen {
-    /* الإصلاح النهائي: وضع مطلق لمنع الشاشات من دفع بعضها البعض */
+    /* [الإصلاح النهائي]: وضع مطلق لمنع الشاشات من دفع بعضها البعض وحل مشكلة التداخل */
     position: absolute; 
     top: 0;
     left: 50%;
@@ -61,8 +61,8 @@
         "cats"      
         "controls";
         
-    /* [تعديل]: زيادة الهامش العلوي لتوفير مساحة للشعار الكبير */
-    margin-top: 150px; 
+    /* [تعديل]: زيادة الهامش العلوي لتوفير مساحة كبيرة للشعار (200px) */
+    margin-top: 200px; 
 }
 
 /* للشاشات الأكبر من 800px */
@@ -97,28 +97,26 @@
 }
 
 .game-logo {
-    /* [تعديل]: لضمان حجم كبير يطابق التصميم الاحترافي */
-    width: 250px; 
+    /* [تعديل]: تكبير حجم اللوجو لـ 300px ليعطي انطباع احترافي */
+    width: 300px; 
     height: auto;
     image-rendering: pixelated;
     margin-bottom: 10px;
 }
-/* إخفاء الشعار الصغير في الشاشة الرئيسية */
-#screen-home .game-logo.small {
-    display: none;
+/* [تعديل]: إخفاء الشعار الصغير وجعل الشعار الكبير يظهر بشكل دائم */
+.game-logo.small {
+    display: none !important;
 }
-/* إخفاء الشعار الكبير في شاشة اللعب */
+
+/* إظهار اللوجو الكبير في شاشة اللعب أيضاً (لكننا نحتاج تعديل index.html لهذا) */
 #screen-game .game-logo:not(.small) {
-    display: none;
+    display: block;
 }
 
-/* ... (باقي الكود لم يتغير) ... */
-
-/* تنسيق الصناديق الداخلية (اللاعبون والإعدادات) */
+/* ... (باقي تنسيقات الصناديق الداخلية لم تتغير) ... */
 .settings-box {
     background-color: #00000020; 
     width: 100%;
-    /* حدود ثلاثية الأبعاد احترافية */
     border-top: var(--border-width) solid var(--border-color-light);
     border-left: var(--border-width) solid var(--border-color-light);
     border-bottom: var(--border-width) solid var(--border-color-dark);
@@ -164,6 +162,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
+    /* [إضافة]: لضمان أن شاشة اللعب تبدأ أيضاً في نفس المكان بعد اللوجو */
+    margin-top: 200px; 
 }
 
 #game-header {
@@ -176,6 +176,13 @@
     width: 100%;
     border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
+    /* [تعديل]: جعل الهيدر مطلقاً ليظهر اللوجو الكبير في الخلفية */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 10px;
+    background-color: var(--background-color);
 }
 
 #game-title-info {
@@ -191,25 +198,11 @@
 }
 
 #game-title-info .game-logo.small {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 0;
+    /* [تعديل]: إخفاء اللوجو الصغير في شاشة اللعب */
+    display: none;
 }
 
-#game-scores {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-#player-turn-bar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 10px;
-    width: 100%;
-    align-items: center;
-}
+/* ... (باقي الكود لم يتغير) ... */
 
 /* --- [5] هيكل لوحة اللعب (Game Board) --- */
 #game-board {
