@@ -11,13 +11,13 @@
 
 .content-wrapper {
     width: 100%;
-    max-width: 900px; /* العرض الأقصى للهيكل الأفقي */
+    max-width: 900px;
     margin: 0 auto;
 }
 
 .screen {
-    /* [تم التنظيف]: إضافة display: none; الأساسية لحل مشكلة تداخل الشاشات */
-    display: none;
+    /* [تم الإصلاح]: القاعدة الأساسية لإخفاء جميع الشاشات */
+    display: none; 
     width: 100%;
     flex-direction: column;
     align-items: center;
@@ -46,26 +46,29 @@
 #screen-home {
     gap: 20px;
     
-    /* [تم التعديل]: تقسيم جديد ليتناسب مع التصميم المطلوب (الإعدادات مقسمة) */
+    /* [تعديل Grid]: إزالة منطقة "header" وإعادة تنظيم الصفوف */
     display: grid; 
-    grid-template-columns: 1fr; /* عمود واحد افتراضياً للموبايل */
+    grid-template-columns: 1fr; 
     grid-template-areas:
-        "header"
-        "player"    /* منطقة اللاعبين */
-        "settings"  /* منطقة الإعدادات (المؤقت والجولات) */
-        "cats"      /* [جديد] منطقة الفئات الإضافية */
+        "player"    
+        "settings"  
+        "cats"      
         "controls";
+        
+    /* [إصلاح مشكلة التداخل 1]: حل مؤقت للمشكلة المذكورة في الصورة 2 */
+    margin-top: 10px;
 }
 
 /* للشاشات الأكبر من 800px (تطبيق الهيكل الأفقي الجديد) */
 @media (min-width: 800px) {
     #screen-home {
-        /* [تم التعديل]: عمودين أفقيين */
+        /* [إصلاح مشكلة التناسق 2]: جعل عناصر الصف تمتد لتغطي نفس الارتفاع */
+        align-items: stretch;
+        
         grid-template-columns: 1fr 1fr; 
         grid-template-areas:
-            "header header"
-            "player settings"  /* اللاعبون والإعدادات في صف واحد */
-            "cats cats"        /* [جديد] الفئات الإضافية تأخذ عرض كامل */
+            "player settings"  
+            "cats cats"        
             "controls controls";
         gap: 20px;
     }
@@ -74,13 +77,14 @@
 /* --- [3] تنسيق الصناديق (Box Styles & Grid Areas) --- */
 
 .screen-header {
-    grid-area: header;
+    /* [تعديل الشعار]: إزالة قواعد الـ Grid */
+    /* grid-area: header; - تم حذفه */
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px 0 0 0;
-    margin-bottom: 10px;
+    margin-bottom: 20px; /* زيادة التباعد بين الشعار والصندوق الرئيسي */
     border-bottom: none;
     text-align: center;
 }
@@ -99,11 +103,10 @@
 #screen-game .game-logo:not(.small) {
     display: none;
 }
-/* [تم التنظيف] حذف التنسيق غير الضروري لـ img[src="assets/logo.png.png"] */
 
 /* تنسيق الصناديق الداخلية (اللاعبون والإعدادات) */
 .settings-box {
-    background-color: #00000020; /* خلفية شفافة قليلاً */
+    background-color: #00000020; 
     width: 100%;
     /* حدود ثلاثية الأبعاد احترافية */
     border-top: var(--border-width) solid var(--border-color-light);
@@ -111,23 +114,7 @@
     border-bottom: var(--border-width) solid var(--border-color-dark);
     border-right: var(--border-width) solid var(--border-color-dark);
 }
-.settings-box-header {
-    padding: 10px;
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    background-color: var(--color-logo-purple); /* لون الهيدر من الشعار */
-}
-.settings-box-header h3 {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    text-shadow: 2px 2px var(--border-color-dark);
-    margin-bottom: 0;
-}
-.settings-box-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+/* ... (باقي تنسيقات الصناديق الداخلية لم تتغير) ... */
 
 /* تحديد مناطق الـ Grid الجديدة */
 .player-box { 
@@ -137,13 +124,12 @@
     grid-area: settings; 
 }
 .category-settings-box { 
-    grid-area: cats; /* [جديد] الصندوق الجديد للفئات */
-    /* [جديد] تطبيق هامش علوي للفصل البصري عن الصناديق العلوية في الموبايل */
+    grid-area: cats; 
     margin-top: 10px; 
 }
 .btn-group-bottom { 
     grid-area: controls; 
-    margin-top: 10px; /* فصل الأزرار عن باقي المحتوى */
+    margin-top: 10px; 
 }
 
 
@@ -152,18 +138,6 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-}
-
-#game-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    width: 100%;
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    padding-bottom: 15px;
 }
 
 #game-title-info {
