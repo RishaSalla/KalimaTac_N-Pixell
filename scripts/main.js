@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerXMemberDisplay = $("#player-x-member");
     const playerOMemberDisplay = $("#player-o-member");
 
+
     // --- [2] حالة اللعبة (State Model) ---
     // [تم الحذف] تم نقل كل هذا إلى 'state.js'
 
@@ -246,8 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- [5] إدارة الحالة والواجهة (State & UI Management) ---
     
+    // [تم التعديل] إضافة إصلاح السكرول
     function switchView(viewName) { 
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0); // <-- هذا هو الإصلاح لمشكلة السكرول
         appContainer.setAttribute("data-view", viewName); 
     }
 
@@ -313,6 +315,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (state.settings.sounds) sounds.click();
     }
     
+    // [تم الحذف] applyTheme()
+    // [تم الحذف] toggleTheme()
+
     function updateSoundToggles() { 
         const active = getState().settings.sounds; // [تم التعديل]
         const text = active ? "مفعلة" : "معطلة"; 
@@ -932,3 +937,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     initializeGame();
 });
+
