@@ -1,8 +1,8 @@
-// --- [1] الثوابت الأساسية ---
+// --- [1] الثوابت الأساسية (Constants) ---
 export const BASE_CATEGORIES = ["إنسان", "حيوان", "جماد", "نبات", "بلاد"];
 export const ARABIC_LETTERS = ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'هـ', 'و', 'ي'];
 
-// --- [2] الحالة الافتراضية ---
+// --- [2] الحالة الافتراضية (Default State) ---
 export const DEFAULT_STATE = {
     settings: { 
         secs: 10, 
@@ -20,32 +20,39 @@ export const DEFAULT_STATE = {
         usedCombinations: [] 
     }, 
     roundState: { 
-        board: [], scores: { X: 0, O: 0 }, 
-        starter: "X", phase: null, 
-        activeCell: null, gameActive: true, winInfo: null,
+        board: [], 
+        scores: { X: 0, O: 0 }, 
+        starter: "X", 
+        phase: null, 
+        activeCell: null, 
+        gameActive: true, 
+        winInfo: null,
         teamMemberIndex: { X: 0, O: 0 } 
     },
-    timer: { intervalId: null, deadline: 0 }
+    timer: { 
+        intervalId: null, 
+        deadline: 0 
+    }
 };
 
-// --- [3] الحالة الحالية (التي سيتم تعديلها) ---
+// --- [3] إدارة الحالة (State Management) ---
 
-// نقوم بإنشاء نسخة عميقة (deep copy) من الحالة الافتراضية
+// الحالة الحالية (يتم إنشاء نسخة عميقة من الحالة الافتراضية)
 let currentState = JSON.parse(JSON.stringify(DEFAULT_STATE)); 
 
-// هذه الدالة هي الطريقة الوحيدة للحصول على الحالة
+// دالة للحصول على الحالة الحالية
 export function getState() {
     return currentState;
 }
 
-// هذه الدالة هي الطريقة الوحيدة لإعادة تعيين الحالة (عند بدء لعبة جديدة)
+// دالة لإعادة تعيين الحالة (لعبة جديدة)، مع الحفاظ على الإعدادات القديمة
 export function resetState() {
     const oldSettings = JSON.parse(JSON.stringify(currentState.settings));
     currentState = JSON.parse(JSON.stringify(DEFAULT_STATE));
-    currentState.settings = oldSettings; // نحتفظ بالإعدادات القديمة
+    currentState.settings = oldSettings; 
 }
 
-// هذه الدالة هي الطريقة الوحيدة لتحديث الحالة عند تحميلها من الذاكرة
+// دالة لتحميل حالة محفوظة من الذاكرة
 export function loadState(newState) {
     currentState = newState;
 }
