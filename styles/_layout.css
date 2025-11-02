@@ -1,0 +1,277 @@
+/* --- [1] هيكل التطبيق والشاشات --- */
+
+#app-container {
+    display: flex; 
+    justify-content: center;
+    align-items: flex-start; 
+    min-height: 100vh;
+    padding: 1rem; 
+    width: 100%;
+}
+
+.content-wrapper {
+    width: 100%;
+    max-width: 900px; /* العرض الأقصى للهيكل الأفقي */
+    margin: 0 auto;
+    padding: 0; 
+}
+
+.screen {
+    display: none; 
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px; 
+    
+    /* [تم التعديل] حدود ثلاثية الأبعاد احترافية للصندوق الرئيسي */
+    background-color: var(--background-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
+    animation: pixel-fade-in 0.3s forwards;
+}
+
+@keyframes pixel-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#app-container[data-view="home"] #screen-home { display: grid; } /* [تم التعديل] استخدام Grid هنا */
+#app-container[data-view="game"] #screen-game { display: flex; }
+
+/* --- [2] هيكل شاشة البداية (الهيكل الأفقي) --- */
+
+#screen-home {
+    gap: 20px;
+    display: grid; /* استخدام Grid للهيكل */
+    grid-template-columns: 1fr; /* عمود واحد افتراضياً للموبايل */
+    grid-template-areas: 
+        "header"
+        "player"
+        "settings"
+        "controls";
+}
+
+/* للشاشات الأكبر من 800px */
+@media (min-width: 800px) {
+    #screen-home {
+        grid-template-columns: 1fr 1fr; /* عمودين (أفقي) */
+        grid-template-areas: 
+            "header header"
+            "player settings"  /* <-- هذا هو الهيكل الأفقي */
+            "controls controls";
+        gap: 20px;
+    }
+}
+
+/* --- [3] تنسيق الصناديق (Boxes) --- */
+
+.screen-header { 
+    grid-area: header; /* وضع الهيدر (الشعار) في مكانه */
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    padding: 10px 0 0 0; /* إزالة الحشو السفلي */
+    margin-bottom: 10px;
+    border-bottom: none; /* إزالة الحد ليكون الشعار "خارج" الصندوق */
+    text-align: center;
+}
+
+.game-logo {
+    width: 128px;
+    height: 128px;
+    image-rendering: pixelated; 
+    margin-bottom: 10px;
+}
+/* إخفاء الشعار الصغير في الشاشة الرئيسية */
+#screen-home .game-logo.small {
+    display: none;
+}
+/* إخفاء الشعار الكبير في شاشة اللعب */
+#screen-game .game-logo:not(.small) {
+    display: none;
+}
+/* التأكد من أن اسم الشعار صحيح */
+img[src="assets/logo.png.png"] { display: none; }
+img[src="assets/logo.png"] { display: block; }
+
+/* تنسيق الصناديق الداخلية (اللاعبون والإعدادات) */
+.settings-box {
+    background-color: #00000020; /* خلفية شفافة قليلاً */
+    width: 100%;
+    /* حدود ثلاثية الأبعاد احترافية */
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
+}
+.settings-box-header {
+    padding: 10px;
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    background-color: var(--color-logo-purple); /* لون الهيدر من الشعار */
+}
+.settings-box-header h3 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-shadow: 2px 2px var(--border-color-dark);
+    margin-bottom: 0;
+}
+.settings-box-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.player-box { grid-area: player; }
+.game-settings-box { grid-area: settings; }
+.btn-group-bottom { grid-area: controls; }
+
+
+/* --- [4] هيكل شاشة اللعب --- */
+#screen-game {
+    gap: 20px;
+    width: 100%;
+    padding: 15px;
+}
+
+#game-header {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    width: 100%;
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    padding-bottom: 15px;
+}
+
+/* [تم التعديل] نقل الشعار ليكون بجانب النتائج */
+#game-title-info {
+    text-align: center;
+    flex-grow: 1;
+    display: flex; 
+    flex-direction: row; /* أفقي */
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap; 
+}
+
+#game-title-info .game-logo.small {
+    width: 64px; 
+    height: 64px;
+    margin-bottom: 0;
+}
+
+#game-scores {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#player-turn-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+/* --- [5] هيكل لوحة اللعب (Game Board) --- */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+    max-width: 450px; 
+    aspect-ratio: 1 / 1; 
+    margin: 10px auto;
+    position: relative;
+    overflow: hidden; 
+    
+    /* [تم التعديل] خلفية أغمق للوحة + حدود ثلاثية الأبعاد */
+    background-color: #1a142c; /* خلفية أغمق */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
+}
+
+.board-cell {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a142c; /* نفس خلفية اللوحة */
+    border: none; 
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    position: relative;
+    image-rendering: pixelated; 
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* --- [6] تعديلات الاستجابة (Responsive) للهيكل --- */
+@media (max-width: 768px) {
+    #app-container {
+        padding: 0.5rem;
+    }
+    .content-wrapper {
+        padding: 0;
+    }
+    .screen {
+        padding: 10px;
+    }
+
+    /* تعديل الهيكل الأفقي للشاشات الصغيرة */
+    #screen-home {
+        grid-template-columns: 1fr; /* عمود واحد دائماً */
+        grid-template-areas: 
+            "header"
+            "player"
+            "settings"
+            "controls";
+    }
+
+    #game-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    #game-title-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #player-turn-bar {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    .player-tag {
+        width: 100%;
+        order: 2;
+    }
+    #timer-display {
+        order: 1;
+        width: 100%;
+    }
+
+    #game-board {
+        width: 100%;
+        max-width: none;
+        height: auto; 
+        gap: 3px;
+        border-width: 3px;
+    }
+}
