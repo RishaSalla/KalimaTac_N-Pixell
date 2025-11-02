@@ -1,63 +1,49 @@
-/* ... [القسم 1: الأزرار والمدخلات] ... */
+/* --- [1] الأزرار والمدخلات (الحدود ثلاثية الأبعاد) --- */
 
-/* [تعديل الزوايا] التأكيد على أن جميع الزوايا حادة (صفر) */
+/* دمج وتنسيق العناصر الأساسية */
 button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-control, 
 .score-tag, #timer-text, .player-tag, .modal-content, #round-winner-message,
 #answer-timer-bar-wrapper {
-    /* ... (التنسيقات الأخرى لم تتغير) ... */
-    border-radius: 0 !important; /* التأكيد على حواف حادة */
+    font-family: var(--arabic-pixel-font);
+    font-size: 1.1rem;
+    padding: 10px 15px; 
+    color: var(--border-color); 
+    cursor: pointer;
+    transition: background-color 0.1s ease, transform 0.05s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+
+    /* [تعديل]: التأكيد على حواف حادة (صفر) لتطابق التصميم البكسلي */
+    border-radius: 0 !important;
+    
+    /* حدود ثلاثية الأبعاد بارزة (Bevel Out) */
+    background-color: var(--primary-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
-/* ... [القسم 2: تخصيص الأزرار] ... */
-/* ... (لم يتغير هذا القسم) ... */
-
-/* ... [القسم 3: حقول الإدخال والشرائح] ... */
-
-.chip-input-control {
-    /* [إضافة]: مسافة بين حاوية الشرائح والزر */
-    gap: 5px; 
-    align-items: stretch; /* التأكيد على امتداد الارتفاع */
-    /* ... (التنسيقات الأخرى لم تتغير) ... */
+button:hover, .btn:hover, .switch-toggle[data-active="true"]:hover {
+    background-color: var(--button-bg-hover);
+    transform: translateY(-1px); 
 }
 
-.chip-input-container {
-    /* [إضافة]: للتأكد من امتداد الارتفاع في Flexbox */
-    height: 50px; 
-    align-self: stretch; /* التأكد من امتداد الارتفاع */
-    /* ... (التنسيقات الأخرى لم تتغير) ... */
-}
-
-.btn-add-chip {
-    height: 50px; 
-    align-self: stretch; /* [تعديل] امتداد الزر ليتطابق مع الحاوية */
-    /* ... (التنسيقات الأخرى لم تتغير) ... */
-}
-
-/* ... [القسم 7: مكونات النوافذ المنبثقة (Modals)] ... */
-
-/* نافذة الإجابة */
-#modal-answer .modal-header {
-    /* ... (التنسيقات الأخرى) ... */
-    margin-bottom: 25px; /* زيادة التباعد السفلي */
-    padding-bottom: 18px;
-}
-#answer-letter {
-    font-size: 5rem; /* تكبير الحرف */
-    /* ... (التنسيقات الأخرى) ... */
-}
-#answer-category {
-    font-size: 3rem; /* تكبير الفئة */
-    /* ... (التنسيقات الأخرى) ... */
-}
-#answer-turn-hint {
-    margin-bottom: 25px; /* زيادة التباعد السفلي */
-}
-#answer-timer-bar-wrapper { 
-    margin-bottom: 25px;
+button:active, .btn:active, .switch-toggle[data-active="true"]:active {
+    background-color: var(--button-bg-active);
+    transform: translateY(1px); 
+    /* عكس الحدود عند الضغط (Bevel In) */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 /* --- [2] تخصيص الأزرار --- */
-/* (لم يتغير هذا القسم) */
 .mode-btn {
     background-color: var(--accent-color);
     color: var(--border-color);
@@ -135,17 +121,16 @@ input[type="text"]::placeholder {
     opacity: 1;
 }
 
-/* [التعديل الرئيسي] - الحاوية الخارجية لإدخال الشرائح والزر */
+/* [تعديل]: الحاوية الخارجية لإدخال الشرائح والزر */
 .chip-input-control {
-    display: flex; /* لترتيب حقل الإدخال والزر جنباً إلى جنب */
-    align-items: stretch; /* لضمان تساوي ارتفاع الحقل والزر */
-    gap: 0; 
+    display: flex; 
+    align-items: stretch; 
+    gap: 5px; /* زيادة المسافة بين الحقل والزر */
     width: 100%; 
     border: none !important; 
     padding: 0 !important;
     background: transparent !important;
     
-    /* منع الـ chip-input-control من الحصول على حدود ثلاثية الأبعاد بارزة */
     border-top: none;
     border-left: none;
     border-bottom: none;
@@ -159,9 +144,11 @@ input[type="text"]::placeholder {
     background-color: var(--text-color);
     padding: 5px;
     min-height: 50px;
+    height: 50px; /* [تعديل]: تحديد الارتفاع لتناسق Flexbox */
     width: 100%;
     align-items: center;
     flex-grow: 1;
+    align-self: stretch; /* [تعديل]: للتأكد من امتداد الارتفاع */
     
     /* حدود غائرة (Inset) */
     border-top: var(--border-width) solid var(--border-color-dark);
@@ -171,8 +158,8 @@ input[type="text"]::placeholder {
 }
 .chip-input {
     flex-grow: 1;
-    border: none !important; /* إزالة الحدود */
-    background: transparent !important; /* إزالة الخلفية */
+    border: none !important; 
+    background: transparent !important; 
     padding: 5px !important;
     min-width: 100px;
     font-size: 1.1rem !important;
@@ -222,12 +209,11 @@ input[type="text"]::placeholder {
     flex-shrink: 0;
     font-size: 1.5rem;
     line-height: 1;
-    height: 50px; 
-    align-self: flex-start; 
+    height: 50px; /* [تعديل]: تحديد الارتفاع لتناسق Flexbox */
+    align-self: stretch; /* [تعديل]: امتداد الزر ليطابق الحاوية */
 }
 
 /* --- [4] مفاتيح التبديل (Switches) --- */
-/* (لم يتغير هذا القسم) */
 .switch-toggle {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -279,7 +265,6 @@ input[type="text"]::placeholder {
 }
 
 /* --- [5] مكونات شاشة اللعب (Game Screen Components) --- */
-/* (لم يتغير هذا القسم) */
 .score-tag {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -370,7 +355,6 @@ input[type="text"]::placeholder {
 }
 
 /* --- [6] مكونات لوحة اللعب (Game Board Components) --- */
-/* (لم يتغير هذا القسم) */
 .board-cell .cell-letter {
     font-size: 2.5rem; 
     font-family: var(--main-font); 
@@ -447,7 +431,6 @@ input[type="text"]::placeholder {
 }
 
 /* --- [7] مكونات النوافذ المنبثقة (Modals) --- */
-/* (لم يتغير هذا القسم) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -478,6 +461,7 @@ input[type="text"]::placeholder {
     max-width: 500px;
     width: 90%;
     animation: modalPopIn 0.2s forwards;
+    border-radius: 0 !important; /* التأكيد على حواف حادة */
 }
 
 @keyframes modalPopIn {
@@ -526,12 +510,12 @@ input[type="text"]::placeholder {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
+    padding-bottom: 18px; /* [تعديل]: زيادة التباعد */
     border-bottom: 3px solid var(--border-color-dark);
 }
 #answer-letter {
-    font-size: 4.5rem; 
+    font-size: 5rem; /* [تعديل]: تكبير الحرف */
     color: var(--primary-color);
     text-shadow: 3px 3px var(--border-color);
     font-family: var(--arabic-pixel-font); 
@@ -544,7 +528,7 @@ input[type="text"]::placeholder {
     background-color: var(--border-color-dark);
 }
 #answer-category {
-    font-size: 2.5rem; 
+    font-size: 3rem; /* [تعديل]: تكبير الفئة */
     color: var(--text-color);
     font-family: var(--arabic-pixel-font); 
     font-weight: normal; 
@@ -554,12 +538,12 @@ input[type="text"]::placeholder {
     font-size: 1.2rem;
     color: var(--text-color);
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
 }
 #answer-timer-bar-wrapper { 
     width: 100%;
     height: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
     position: relative;
     overflow: hidden;
 }
