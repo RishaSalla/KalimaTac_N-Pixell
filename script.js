@@ -264,7 +264,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // --- [5] إدارة الحالة والواجهة (State & UI Management) ---
-    function switchView(viewName) { appContainer.setAttribute("data-view", viewName); }
+    
+    // [تم التعديل] إضافة إصلاح السكرول
+    function switchView(viewName) { 
+        window.scrollTo(0, 0); // <-- هذا هو الإصلاح لمشكلة السكرول
+        appContainer.setAttribute("data-view", viewName); 
+    }
+
     function toggleModal(modalId) { 
         $$(".modal-overlay.visible").forEach(modal => modal.classList.remove("visible")); 
         if (modalId) { 
@@ -293,8 +299,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const labelText = isX ? `اسم ${isTeam ? 'فريق' : 'فرد'} X` : `اسم ${isTeam ? 'فريق' : 'فرد'} O`;
                 const placeholderText = isX ? `اسم فريق X` : `اسم فريق O`;
                 
-                group.querySelector('label').textContent = labelText;
-                nameInput.placeholder = isTeam ? placeholderText : 'اسم اللاعب';
+                if (group.querySelector('label')) group.querySelector('label').textContent = labelText;
+                if (nameInput) nameInput.placeholder = isTeam ? placeholderText : 'اسم اللاعب';
            });
            
            renderChips('X'); 
@@ -332,7 +338,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const active = state.settings.sounds; const text = active ? "مفعلة" : "معطلة"; 
         if (soundsToggleHome) {
             soundsToggleHome.setAttribute("data-active", active); 
-            soundsToggleHome.querySelector(".switch-text").textContent = text; 
+            if (soundsToggleHome.querySelector(".switch-text")) {
+                soundsToggleHome.querySelector(".switch-text").textContent = text; 
+            }
         }
     }
     function toggleSounds() { 
@@ -340,32 +348,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function updateScoreboard() { 
            const totalRounds = state.match.totalRounds || 3;
-           roundInfo.textContent = `الجولة ${state.match.round} (الأفضل من ${totalRounds})`; 
-           const scoreX = state.match.totalScore.X; const scoreO = state.match.totalScore.O; 
-           scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${scoreX} فوز`; 
-           scoreODisplay.textContent = `${state.settings.playerNames.O}: ${scoreO} فوز`;
+           if (roundInfo) roundInfo.textContent = `الجولة ${state.match.round} (الأفضل من ${totalRounds})`; 
+           if (scoreXDisplay) scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X} فوز`; 
+           if (scoreODisplay) scoreODisplay.textContent = `${state.settings.playerNames.O}: ${state.match.totalScore.O} فوز`;
     }
     
     function updateTeamMemberDisplay() {
            const isTeam = state.settings.playMode === 'team';
            if (!isTeam) {
-                playerXMemberDisplay.textContent = "";
-                playerOMemberDisplay.textContent = "";
+                if (playerXMemberDisplay) playerXMemberDisplay.textContent = "";
+                if (playerOMemberDisplay) playerOMemberDisplay.textContent = "";
                 return;
            }
            
            const memberX = state.settings.teamMembers.X[state.roundState.teamMemberIndex.X] || '';
            const memberO = state.settings.teamMembers.O[state.roundState.teamMemberIndex.O] || '';
 
-           playerXMemberDisplay.textContent = memberX ? `(${memberX})` : '';
-           playerOMemberDisplay.textContent = memberO ? `(${memberO})` : '';
+           if (playerXMemberDisplay) playerXMemberDisplay.textContent = memberX ? `(${memberX})` : '';
+           if (playerOMemberDisplay) playerOMemberDisplay.textContent = memberO ? `(${memberO})` : '';
     }
 
-    // [تم التعديل] حذف الأسطر الخاصة بعناوين اللعبة النصية
     function updatePlayerTags() { 
         const isTeam = state.settings.playMode === 'team';
-        if (playerTagX) playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
-        if (playerTagO) playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
+        if (playerTagX && playerTagX.querySelector('.player-name-text')) playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
+        if (playerTagO && playerTagO.querySelector('.player-name-text')) playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
         
         updateTeamMemberDisplay();
     }
@@ -383,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
                }
            }
 
-           timerText.textContent = memberName ? `دور ${teamName} (${memberName})` : `دور ${teamName}`;
+           if (timerText) timerText.textContent = memberName ? `دور ${teamName} (${memberName})` : `دور ${teamName}`;
            
            if (playerTagX) playerTagX.classList.toggle("active", currentPlayer === "X"); 
            if (playerTagO) playerTagO.classList.toggle("active", currentPlayer === "O"); 
@@ -463,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.settings = oldSettings; 
         state.match.totalRounds = parseInt(roundsSelectHome.value, 10); 
 
-        timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
+        if (timerHint) timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
         initNewRound(); 
         updatePlayerTags(); 
         switchView("game"); 
@@ -472,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initNewRound(isRestart = false) { 
            stopTimer(); 
-           roundWinnerMessage.style.display = 'none'; 
+           if (roundWinnerMessage) roundWinnerMessage.style.display = 'none'; 
            if (!isRestart) { state.roundState.starter = (state.match.round % 2 === 1) ? "X" : "O"; } 
            state.roundState.phase = null; state.roundState.activeCell = null; state.roundState.gameActive = true; 
            state.roundState.winInfo = null; state.roundState.scores = { X: 0, O: 0 }; 
@@ -483,9 +489,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
            generateBoard(); renderBoard(); updateScoreboard(); updateTurnUI(); 
            
-           newRoundBtn.style.display = 'none'; 
-           restartRoundBtn.style.display = 'inline-flex'; 
-           endMatchBtn.style.display = 'inline-flex'; 
+           if (newRoundBtn) newRoundBtn.style.display = 'none'; 
+           if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex'; 
+           if (endMatchBtn) endMatchBtn.style.display = 'inline-flex'; 
 
            saveStateToLocalStorage();
     }
@@ -507,8 +513,8 @@ document.addEventListener("DOMContentLoaded", () => {
            $$(".board-cell").forEach((cellEl, index) => { const cell = state.roundState.board[index]; if (cell.owner || cell.revealed) { cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); } else { if (state.roundState.phase === null) { cellEl.classList.add("available"); cellEl.classList.remove("unavailable"); } else { cellEl.classList.remove("available"); cellEl.classList.add("unavailable"); } } });
     }
     
-    // [تم التعديل] هذه هي الدالة الرئيسية التي تم تعديلها لعرض الصور
     function renderBoard() { 
+           if (!gameBoard) return;
            gameBoard.innerHTML = ''; 
            const oldWinLine = gameBoard.querySelector('.win-line'); 
            if (oldWinLine) oldWinLine.remove(); 
@@ -519,11 +525,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 cellEl.dataset.index = index; 
                 
                 if (cell.owner) { 
-                    // [التعديل هنا]
-                    // إضافة الكلاسات فقط. CSS سيتولى عرض الصورة
                     cellEl.classList.add('owned', `player-${cell.owner.toLowerCase()}`); 
                 } else { 
-                    // إذا لم يكن للخلية مالك، اعرض الحرف والفئة
                     const letterEl = document.createElement('span'); 
                     letterEl.classList.add('cell-letter'); 
                     const categoryEl = document.createElement('span'); 
@@ -550,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function onCellClick(e) { 
-           if (!state.roundState.gameActive || state.roundState.phase !== null) { if (state.settings.sounds) sounds.fail(); return; } const cellIndex = parseInt(e.currentTarget.dataset.index, 10); const cell = state.roundState.board[cellIndex]; if (cell.owner) { if (state.settings.sounds) sounds.fail(); return; } if (state.settings.sounds) sounds.click(); stopTimer(); state.roundState.activeCell = cellIndex; state.roundState.phase = state.roundState.starter; cell.revealed = true; cell.tried = new Set(); renderBoard(); updateTurnUI(); answerLetter.textContent = cell.letter; answerCategory.textContent = cell.category; answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`; toggleModal("modal-answer"); startAnswerTimer();
+           if (!state.roundState.gameActive || state.roundState.phase !== null) { if (state.settings.sounds) sounds.fail(); return; } const cellIndex = parseInt(e.currentTarget.dataset.index, 10); const cell = state.roundState.board[cellIndex]; if (cell.owner) { if (state.settings.sounds) sounds.fail(); return; } if (state.settings.sounds) sounds.click(); stopTimer(); state.roundState.activeCell = cellIndex; state.roundState.phase = state.roundState.starter; cell.revealed = true; cell.tried = new Set(); renderBoard(); updateTurnUI(); if (answerLetter) answerLetter.textContent = cell.letter; if (answerCategory) answerCategory.textContent = cell.category; if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`; toggleModal("modal-answer"); startAnswerTimer();
     }
 
     function handleAnswer(isCorrect) { 
@@ -585,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 state.roundState.phase = (currentPlayer === "X") ? "O" : "X";
                 cell.revealed = true; 
                 updateTurnUI(); 
-                answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`;
+                if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`;
                 closeModalNow = false; 
                 startAnswerTimer(); 
             } else {
@@ -631,10 +634,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (winner) { 
             state.match.totalScore[winner]++; 
             state.roundState.winInfo = { winner, line }; 
-            roundWinnerMessage.textContent = `الفائز بالجولة: ${state.settings.playerNames[winner]}! 🎉`; 
-            roundWinnerMessage.style.color = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
-            roundWinnerMessage.style.borderColor = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
-            roundWinnerMessage.style.display = 'block';
+            if (roundWinnerMessage) {
+                roundWinnerMessage.textContent = `الفائز بالجولة: ${state.settings.playerNames[winner]}! 🎉`; 
+                roundWinnerMessage.style.color = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
+                roundWinnerMessage.style.borderColor = (winner === 'X') ? 'var(--player-x-color)' : 'var(--player-o-color)';
+                roundWinnerMessage.style.display = 'block';
+            }
 
             renderBoard(); 
             setTimeout(() => { 
@@ -644,10 +649,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 50); 
         } else { 
             if (state.settings.sounds) sounds.draw(); 
-            roundWinnerMessage.textContent = `تعادل! 🤝`;
-            roundWinnerMessage.style.color = 'var(--text-color)';
-            roundWinnerMessage.style.borderColor = 'var(--text-color)';
-            roundWinnerMessage.style.display = 'block';
+            if (roundWinnerMessage) {
+                roundWinnerMessage.textContent = `تعادل! 🤝`;
+                roundWinnerMessage.style.color = 'var(--text-color)';
+                roundWinnerMessage.style.borderColor = 'var(--text-color)';
+                roundWinnerMessage.style.display = 'block';
+            }
         } 
         
         updateScoreboard(); 
@@ -658,10 +665,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsToWin) ? 'O' : null;
 
         if (matchWinner) {
-            roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
-            newRoundBtn.style.display = 'none';
-            restartRoundBtn.style.display = 'none';
-            endMatchBtn.style.display = 'none';
+            if (roundWinnerMessage) roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
+            if (newRoundBtn) newRoundBtn.style.display = 'none';
+            if (restartRoundBtn) restartRoundBtn.style.display = 'none';
+            if (endMatchBtn) endMatchBtn.style.display = 'none';
             
             setTimeout(() => {
                 toggleModal("modal-final-score");
@@ -669,16 +676,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } else {
             state.match.round++; 
-            newRoundBtn.style.display = 'inline-flex'; 
-            restartRoundBtn.style.display = 'none'; 
-            endMatchBtn.style.display = 'none'; 
+            if (newRoundBtn) newRoundBtn.style.display = 'inline-flex'; 
+            if (restartRoundBtn) restartRoundBtn.style.display = 'none'; 
+            if (endMatchBtn) endMatchBtn.style.display = 'none'; 
         }
         
         saveStateToLocalStorage();
     }
 
     function drawWinLine(line) { 
-        const cellElements = $$(".board-cell"); const startCell = cellElements[line[0]]; const endCell = cellElements[line[2]]; const lineEl = document.createElement('div'); lineEl.classList.add('win-line'); const startX = startCell.offsetLeft + startCell.offsetWidth / 2; const startY = startCell.offsetTop + startCell.offsetHeight / 2; const endX = endCell.offsetLeft + endCell.offsetWidth / 2; const endY = endCell.offsetTop + endCell.offsetHeight / 2; const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI); const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)); lineEl.style.width = `${length}px`; lineEl.style.top = `${startY}px`; lineEl.style.left = `${startX}px`; lineEl.style.transform = `rotate(${angle}deg) translateY(-50%)`; gameBoard.appendChild(lineEl);
+        const cellElements = $$(".board-cell"); if (!cellElements || cellElements.length === 0) return; const startCell = cellElements[line[0]]; const endCell = cellElements[line[2]]; const lineEl = document.createElement('div'); lineEl.classList.add('win-line'); const startX = startCell.offsetLeft + startCell.offsetWidth / 2; const startY = startCell.offsetTop + startCell.offsetHeight / 2; const endX = endCell.offsetLeft + endCell.offsetWidth / 2; const endY = endCell.offsetTop + endCell.offsetHeight / 2; const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI); const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)); lineEl.style.width = `${length}px`; lineEl.style.top = `${startY}px`; lineEl.style.left = `${startX}px`; lineEl.style.transform = `rotate(${angle}deg) translateY(-50%)`; if (gameBoard) gameBoard.appendChild(lineEl);
     }
     function endMatchAndStartNew() { 
         toggleModal(null); 
@@ -686,38 +693,37 @@ document.addEventListener("DOMContentLoaded", () => {
         state = JSON.parse(JSON.stringify(DEFAULT_STATE)); 
         state.settings = oldSettings; 
         
-        playerNameXInput.value = state.settings.playerNames.X;
-        playerNameOInput.value = state.settings.playerNames.O;
-        timerSelectHome.value = state.settings.secs;
-        roundsSelectHome.value = state.match.totalRounds || 3;
+        if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X;
+        if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O;
+        if (timerSelectHome) timerSelectHome.value = state.settings.secs;
+        if (roundsSelectHome) roundsSelectHome.value = state.match.totalRounds || 3;
         
         renderChipsCategories(); 
         
-        // [تم الحذف] applyTheme()
         updateSoundToggles(); 
         switchView("home"); 
         
-        document.getElementById('mode-team-home').classList.toggle('active', state.settings.playMode === 'team');
-        document.getElementById('mode-individual-home').classList.toggle('active', state.settings.playMode === 'individual');
+        if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
+        if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
 
         updatePlayerInputLabels(state.settings.playMode);
 
-        playerNameXInput.value = ""; 
-        playerNameOInput.value = ""; 
+        if (playerNameXInput) playerNameXInput.value = ""; 
+        if (playerNameOInput) playerNameOInput.value = ""; 
         
         localStorage.removeItem("ticTacCategoriesGameState"); 
-        resumeGameBtn.style.display = "none";
+        if (resumeGameBtn) resumeGameBtn.style.display = "none";
     }
     function backToHomeWithSave() { 
-           toggleModal(null); switchView("home"); resumeGameBtn.style.display = "inline-flex";
+           toggleModal(null); switchView("home"); if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex";
     }
 
     // --- [7] نظام المؤقت (Timer System) ---
     function startAnswerTimer() { 
-        stopTimer(); const duration = state.settings.secs * 1000; state.timer.deadline = Date.now() + duration; answerTimerBar.style.setProperty('--timer-duration', `${state.settings.secs}s`); answerTimerBar.classList.remove("animating"); void answerTimerBar.offsetWidth; answerTimerBar.classList.add("animating"); state.timer.intervalId = setInterval(() => { const remaining = state.timer.deadline - Date.now(); if (remaining <= 0) { stopTimer(); if (modalAnswer.classList.contains("visible")) { if (state.settings.sounds) sounds.fail(); handleAnswer(false); } } else if (remaining <= 3000 && (remaining % 1000 < 100)) { if (state.settings.sounds) sounds.timerTick(); } }, 100);
+        stopTimer(); const duration = state.settings.secs * 1000; state.timer.deadline = Date.now() + duration; if (answerTimerBar) { answerTimerBar.style.setProperty('--timer-duration', `${state.settings.secs}s`); answerTimerBar.classList.remove("animating"); void answerTimerBar.offsetWidth; answerTimerBar.classList.add("animating"); } state.timer.intervalId = setInterval(() => { const remaining = state.timer.deadline - Date.now(); if (remaining <= 0) { stopTimer(); if (modalAnswer && modalAnswer.classList.contains("visible")) { if (state.settings.sounds) sounds.fail(); handleAnswer(false); } } else if (remaining <= 3000 && (remaining % 1000 < 100)) { if (state.settings.sounds) sounds.timerTick(); } }, 100);
     }
     function stopTimer() { 
-        if (state.timer.intervalId) { clearInterval(state.timer.intervalId); state.timer.intervalId = null; } answerTimerBar.classList.remove("animating");
+        if (state.timer.intervalId) { clearInterval(state.timer.intervalId); state.timer.intervalId = null; } if (answerTimerBar) answerTimerBar.classList.remove("animating");
     }
     
     // --- [8] الحفظ والاستئناف (Persistence) ---
@@ -771,34 +777,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function resumeGame() { 
         initAudio(); 
-        // [تم الحذف] applyTheme()
         updateSoundToggles(); 
         
-        document.getElementById('mode-team-home').classList.toggle('active', state.settings.playMode === 'team');
-        document.getElementById('mode-individual-home').classList.toggle('active', state.settings.playMode === 'individual');
+        if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
+        if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
 
         updatePlayerInputLabels(state.settings.playMode);
         
         updatePlayerTags(); updateScoreboard(); renderBoard(); updateTurnUI(); updateTeamMemberDisplay();
-        timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
+        if (timerHint) timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
         
         if (state.roundState.gameActive) {
-            newRoundBtn.style.display = 'none';
-            restartRoundBtn.style.display = 'inline-flex';
-            endMatchBtn.style.display = 'inline-flex';
+            if (newRoundBtn) newRoundBtn.style.display = 'none';
+            if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex';
+            if (endMatchBtn) endMatchBtn.style.display = 'inline-flex';
         } else {
             const totalRounds = state.match.totalRounds || 3;
             const roundsToWin = Math.ceil(totalRounds / 2);
             const matchOver = (state.match.totalScore.X === roundsToWin || state.match.totalScore.O === roundsToWin);
 
             if (matchOver) {
-                newRoundBtn.style.display = 'none';
+                if (newRoundBtn) newRoundBtn.style.display = 'none';
                 toggleModal("modal-final-score"); 
             } else {
-                newRoundBtn.style.display = 'inline-flex';
+                if (newRoundBtn) newRoundBtn.style.display = 'inline-flex';
             }
-            restartRoundBtn.style.display = 'none';
-            endMatchBtn.style.display = 'none';
+            if (restartRoundBtn) restartRoundBtn.style.display = 'none';
+            if (endMatchBtn) endMatchBtn.style.display = 'none';
         }
         
         switchView("game"); 
@@ -807,27 +812,25 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- [9] ربط الأحداث (Event Listeners) ---
     function initEventListeners() { 
-           startGameBtn.addEventListener("click", startNewMatch); 
-           resumeGameBtn.addEventListener("click", resumeGame); 
-           // [تم الحذف] themeToggleHome
-           soundsToggleHome.addEventListener("click", toggleSounds); 
-           instructionsBtnHome.addEventListener("click", () => { initAudio(); if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
-           // [تم الحذف] themeToggleGame
+           if (startGameBtn) startGameBtn.addEventListener("click", startNewMatch); 
+           if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); 
+           if (soundsToggleHome) soundsToggleHome.addEventListener("click", toggleSounds); 
+           if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
            
-           instructionsBtnGame.addEventListener("click", () => { if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
-           newRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.click(); initNewRound(false); }); 
-           restartRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
-           endMatchBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
-           answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
-           answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
+           if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
+           if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.click(); initNewRound(false); }); 
+           if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
+           if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
+           if (answerCorrectBtn) answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
+           if (answerWrongBtn) answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
            
-           newMatchBtn.addEventListener("click", endMatchAndStartNew); 
+           if (newMatchBtn) newMatchBtn.addEventListener("click", endMatchAndStartNew); 
            
            if (backToHomeBtn) {
                 backToHomeBtn.addEventListener("click", backToHomeWithSave);
            }
            
-           confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (state.settings.sounds) sounds.click(); initNewRound(true); }); 
+           if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (state.settings.sounds) sounds.click(); initNewRound(true); }); 
            modalCloseBtns.forEach(btn => { btn.addEventListener("click", (e) => { const modalId = e.currentTarget.dataset.modal; if (modalId) { toggleModal(null); if (state.settings.sounds) sounds.click(); } }); }); 
            $$(".modal-overlay").forEach(modal => { modal.addEventListener("click", (e) => { if (e.target === modal) { if (modal.id !== 'modal-answer') { toggleModal(null); if (state.settings.sounds) sounds.click(); } } }); });
            
@@ -843,15 +846,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- [10] بدء تشغيل اللعبة ---
     function initializeGame() { 
         if (loadStateFromLocalStorage()) { 
-            resumeGameBtn.style.display = "inline-flex"; 
-            playerNameXInput.value = state.settings.playerNames.X; 
-            playerNameOInput.value = state.settings.playerNames.O; 
+            if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex"; 
+            if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X; 
+            if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O; 
             
-            timerSelectHome.value = state.settings.secs; 
-            roundsSelectHome.value = state.match.totalRounds || 3;
+            if (timerSelectHome) timerSelectHome.value = state.settings.secs; 
+            if (roundsSelectHome) roundsSelectHome.value = state.match.totalRounds || 3;
             
-            document.getElementById('mode-team-home').classList.toggle('active', state.settings.playMode === 'team');
-            document.getElementById('mode-individual-home').classList.toggle('active', state.settings.playMode === 'individual');
+            if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
+            if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
 
             updatePlayerInputLabels(state.settings.playMode);
             
@@ -860,12 +863,11 @@ document.addEventListener("DOMContentLoaded", () => {
             renderChipsCategories(); 
             
         } else {
-            document.getElementById('mode-team-home').classList.add('active'); 
+            if (modeBtnTeamHome) modeBtnTeamHome.classList.add('active'); 
             updatePlayerInputLabels(DEFAULT_STATE.settings.playMode);
             renderChipsCategories(); 
         }
         
-        // [تم الحذف] applyTheme()
         updateSoundToggles(); 
         updatePlayerTags(); 
         initEventListeners();
