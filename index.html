@@ -34,74 +34,114 @@
                     <div class="settings-box-header">
                         <h3>الإعدادات</h3>
                     </div>
+                    <!-- [تعديل هيكلي] إضافة حاوية grid لتنظيم المحتوى -->
                     <div class="settings-box-content">
                         
-                        <!-- [نقل] قسم اللاعبين -->
-                        <div id="mode-selector-wrapper">
-                            <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team">فريق</button>
-                            <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual">فردي</button>
-                        </div>
-                        
-                        <div class="team-name-group">
-                            <div class="form-group">
-                                <label for="player-name-x">اسم فريق X</label>
-                                <input type="text" id="player-name-x" class="form-input" placeholder="اسم فريق X">
-                            </div>
-                            <div class="form-group team-members-group" style="display: flex;">
-                               <label>أعضاء الفريق X</label>
-                               <div class="chip-input-control">
-                                    <div id="chip-container-x-home" class="chip-input-container home-chip-container">
-                                        <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter أو +">
+                        <!-- [جديد] حاوية الصف العلوي (لاعبين + الوضع) -->
+                        <div class="settings-grid settings-grid-top">
+                            
+                            <!-- العمود 1: لاعب X -->
+                            <div class="settings-column player-column-x">
+                                <div class="team-name-group">
+                                    <div class="form-group">
+                                        <!-- [مطابقة للصورة] تغيير النص -->
+                                        <label for="player-name-x">Player X</label> 
+                                        <input type="text" id="player-name-x" class="form-input" placeholder="اسم فريق X">
                                     </div>
-                                    <button type="button" class="btn-add-chip" id="add-chip-x-home">+</button>
-                               </div>
-                            </div>
-                        </div>
-                        
-                        <div class="team-name-group">
-                            <div class="form-group">
-                                <label for="player-name-o">اسم فريق O</label>
-                                <input type="text" id="player-name-o" class="form-input" placeholder="اسم فريق O">
-                            </div>
-                            <div class="form-group team-members-group" style="display: flex;">
-                               <label>أعضاء الفريق O</label>
-                               <div class="chip-input-control">
-                                    <div id="chip-container-o-home" class="chip-input-container home-chip-container">
-                                        <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                    <div class="form-group team-members-group" style="display: flex;">
+                                       <label>أعضاء الفريق X</label>
+                                       <div class="chip-input-control">
+                                            <div id="chip-container-x-home" class="chip-input-container home-chip-container">
+                                                <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                            </div>
+                                            <button type="button" class="btn-add-chip" id="add-chip-x-home">+</button>
+                                       </div>
                                     </div>
-                                    <button type="button" class="btn-add-chip" id="add-chip-o-home">+</button>
-                               </div>
+                                </div>
                             </div>
-                        </div>
+                            
+                            <!-- العمود 2: الوضع -->
+                            <div class="settings-column mode-column">
+                                <!-- [مطابقة للصورة] إضافة label -->
+                                <label class="form-group-label">الوضع</label> 
+                                <div id="mode-selector-wrapper">
+                                    <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team">فريق</button>
+                                    <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual">فردي</button>
+                                </div>
+                                <!-- [ملاحظة] الأزرار الإضافية في الصورة ("تحميل", "الذكي") غير موجودة في الكود الأصلي، سنتجاهلها الآن -->
+                            </div>
 
-                        <!-- [نقل] قسم إعدادات اللعبة -->
-                        <div class="form-group">
-                            <label for="settings-timer-home">مدة المؤقت (ثوانٍ)</label>
-                            <select id="settings-timer-home" class="form-select">
-                                <option value="5">5</option>
-                                <option value="7">7</option>
-                                <option value="10" selected>10</option>
-                                <option value="15">15</option>
-                                <option value="20">20</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="settings-rounds-home">عدد الجولات (Best-of)</label>
-                            <select id="settings-rounds-home" class="form-select">
-                                <option value="1">1 (جولة واحدة)</option>
-                                <option value="3" selected>3 (الأفضل من 3)</option>
-                                <option value="5">5 (الأفضل من 5)</option>
-                                <option value="7">7 (الأفضل من 7)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>الأصوات</label>
-                            <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
-                        </div>
+                            <!-- العمود 3: لاعب O -->
+                            <div class="settings-column player-column-o">
+                                <div class="team-name-group">
+                                    <div class="form-group">
+                                        <!-- [مطابقة للصورة] تغيير النص -->
+                                        <label for="player-name-o">Player O</label> 
+                                        <input type="text" id="player-name-o" class="form-input" placeholder="اسم فريق O">
+                                    </div>
+                                    <div class="form-group team-members-group" style="display: flex;">
+                                       <label>أعضاء الفريق O</label>
+                                       <div class="chip-input-control">
+                                            <div id="chip-container-o-home" class="chip-input-container home-chip-container">
+                                                <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                            </div>
+                                            <button type="button" class="btn-add-chip" id="add-chip-o-home">+</button>
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- نهاية .settings-grid-top -->
+
+                        <!-- [جديد] حاوية الصف السفلي (إعدادات) -->
+                        <div class="settings-grid settings-grid-bottom">
+
+                            <!-- العمود 1: إعدادات 1 -->
+                            <div class="settings-column settings-column-1">
+                                <div class="form-group">
+                                    <label for="settings-timer-home">مدة المؤقت (ثوانٍ)</label>
+                                    <select id="settings-timer-home" class="form-select">
+                                        <option value="5">5</option>
+                                        <option value="7">7</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settings-rounds-home">عدد الجولات (Best-of)</label>
+                                    <select id="settings-rounds-home" class="form-select">
+                                        <option value="1">1 (جولة واحدة)</option>
+                                        <option value="3" selected>3 (الأفضل من 3)</option>
+                                        <option value="5">5 (الأفضل من 5)</option>
+                                        <option value="7">7 (الأفضل من 7)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- العمود 2: إعدادات 2 (فارغ مؤقتاً) -->
+                            <div class="settings-column settings-column-2">
+                                <!-- سنقوم لاحقاً بنقل الفئات الإضافية هنا إذا أردنا -->
+                                 <div class="form-group" style="visibility: hidden;">
+                                    <label>إعداد إضافي</label>
+                                    <input type="text" placeholder="مؤقت">
+                                </div>
+                                <div class="form-group" style="visibility: hidden;">
+                                    <label>إعداد إضافي 2</label>
+                                    <input type="text" placeholder="مؤقت">
+                                </div>
+                            </div>
+
+                            <!-- العمود 3: إعدادات 3 (الأصوات) -->
+                            <div class="settings-column settings-column-3">
+                                <div class="form-group">
+                                    <label>الأصوات</label>
+                                    <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
+                                </div>
+                                <!-- [ملاحظة] المفتاح الثاني في الصورة ("النقلة") غير موجود حالياً -->
+                            </div>
+                        </div> <!-- نهاية .settings-grid-bottom -->
                         
-                        <!-- [حذف] تم حذف صندوق الفئات الإضافية -->
-                        
-                        <!-- [نقل] أزرار التحكم السفلية -->
+                        <!-- أزرار التحكم السفلية -->
                         <div class="btn-group-bottom">
                             <button id="start-game-btn" class="btn btn-primary">ابدأ اللعب</button>
                             <button id="resume-game-btn" class="btn" style="display: none;">استئناف اللعبة</button>
@@ -169,3 +209,4 @@
 
 </body>
 </html>
+
