@@ -43,7 +43,8 @@
 
     /* تطبيق الخطوط */
     --main-font: "Press Start 2P", 'PixelAE', sans-serif; /* الخط الرئيسي (للاتينية أولاً) */
-    --arabic-pixel-font: 'PixelAE', sans-serif;          /* الخط الأساسي للعربية */
+    /* [تعديل] إضافة "Press Start 2P" كخط احتياطي بكسلي */
+    --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif; /* الخط الأساسي للعربية */
 }
 
 /* --- Global Reset & Box Sizing: إعدادات البكسل --- */
@@ -69,12 +70,5 @@ html, body {
     overflow-x: hidden;
 }
 
-/* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
-body {
-    /* [تعديل]: استخدام الصورة pixel_background.png التي رفعتها */
-    background-image: url('../assets/pixel_background.png'); 
-    background-size: cover;          /* لضمان تغطية الشاشة بالكامل دون تكرار الصورة */
-    background-position: center center; /* لتركيز الصورة في المنتصف */
-    background-repeat: no-repeat;    /* لمنع تكرار الصورة */
-    background-attachment: fixed;    /* لتثبيت الخلفية عند التمرير */
-}
+/* --- [حذف] الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
+/* [حذف] تم إزالة القاعدة التي تستدعي 'pixel_background.png' لأنها ملف محلي */
