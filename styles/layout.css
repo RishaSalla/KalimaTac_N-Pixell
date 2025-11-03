@@ -31,7 +31,7 @@
     justify-content: center;
     z-index: 20; 
     padding-top: 15px; /* مسافة بسيطة من أعلى المتصفح */
-    background-color: var(--background-color); 
+    background-color: transparent; /* FIX: لجعل الخلفية شفافة تماماً */
 }
 
 .screen {
