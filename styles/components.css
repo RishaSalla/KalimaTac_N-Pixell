@@ -155,7 +155,8 @@ input[type="text"]::placeholder {
     flex-wrap: wrap;
     gap: 5px;
     background-color: var(--text-color);
-    padding: 5px;
+    /* [FIX] يجب أن يكون الـ padding الداخلي أقل لترك مساحة كافية للـ chip-input */
+    padding: 5px; 
     /* *FIX*: إزالة min-height وترك height لضمان الالتزام بارتفاع الـ 50px */
     height: 100%; 
     width: 100%;
@@ -189,7 +190,7 @@ input[type="text"]::placeholder {
     border-top: 2px solid var(--border-color-light);
     border-left: 2px solid var(--border-color-light);
     border-bottom: 2px solid var(--border-color-dark);
-    border-right: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-light);
     padding: 5px 10px;
     font-size: 0.9rem;
     display: inline-flex;
