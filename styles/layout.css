@@ -10,28 +10,18 @@
 }
 
 .content-wrapper {
-    /* [FIX/NEW]: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
     max-width: 1200px; 
     margin: 0 auto;
-    
-    /* *FIX*: سحب كل محتوى الصفحة للأعلى ليلتصق اللوجو بأعلى المتصفح */
-    margin-top: -100px; 
-    
+    /* [تعديل] إزالة الهامش السلبي، التدفق الآن طبيعي */
+    margin-top: 0; 
     position: relative; 
     padding-top: 0; 
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
     width: 100%; 
 }
 
-/* [FIX]: حذف حاوية الشعار الثابتة (لأنها حذفت من HTML) */
-#absolute-header-container {
-    display: none !important; 
-}
+/* [محذوف] تم حذف #absolute-header-container لأنه لم يعد موجوداً */
 
 .screen {
-    /* *FIX*: العودة إلى التموضع النسبي (Relative) للتدفق العادي */
     position: relative; 
     top: 0; 
     left: 0;
@@ -56,20 +46,26 @@
     to { opacity: 1; }
 }
 
-/* القواعد الخاصة لإظهار الشاشة النشطة */
-#app-container[data-view="home"] #screen-home { display: flex; } /* [تعديل] تغيير من grid إلى flex */
+/* [تعديل] شاشة البداية أصبحت flex (عمودي) */
+#app-container[data-view="home"] #screen-home { display: flex; }
 #app-container[data-view="game"] #screen-game { display: flex; }
 
 /* --- [2] هيكل شاشة البداية (Screen Home Layout) --- */
 
 #screen-home {
-    /* [حذف] تم حذف كل خصائص الـ grid القديمة */
     gap: 20px;
-        
-    /* *FIX*: تعويض الهامش السلبي للحاوية الأم (لبدء الصناديق بعد اللوجو) */
-    padding-top: 150px; 
+    /* [تعديل] تغييرها إلى flex عمودي */
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    
+    /* [تعديل] إعطاء مساحة علوية للوجو */
+    padding-top: 20px; 
     margin-top: 0; 
 }
+
+/* [محذوف] تم حذف قواعد الـ Grid القديمة لشاشة البداية */
+
 
 /* --- [3] تنسيق الصناديق (Box Styles & Grid Areas) --- */
 
@@ -78,15 +74,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0 0 0;
+    /* [تعديل] زيادة الهامش السفلي للوجو */
     margin-bottom: 20px;
     border-bottom: none;
     text-align: center;
-    
-    /* *FIX*: العودة للتموضع النسبي (اللوجو الآن جزء من التدفق العادي) */
     position: relative; 
     top: 0; 
     z-index: 10; 
+    /* [تعديل] إزالة الحشو العلوي الزائد */
+    padding: 0;
 }
 
 .game-logo {
@@ -94,30 +90,26 @@
     margin-bottom: 10px;
 }
 
-/* [تعديل اللوجو]: اللوجو الكبير في شاشة البداية فقط */
 .game-logo.large {
-    width: 300px; /* الحجم الاحترافي المطلوب */
+    width: 300px;
     height: auto;
     display: block;
 }
 
-/* [تعديل اللوجو]: اللوجو الصغير في شاشة اللعب فقط */
 .game-logo.small {
-    width: 64px; /* الحجم الصغير المطلوب */
+    width: 64px;
     height: 64px;
     margin-bottom: 0;
     display: none; 
 }
 
-/* [NEW/FIX]: قواعد إظهار/إخفاء اللوجو حسب الشاشة */
+/* قواعد إظهار/إخفاء اللوجو (لم تتغير) */
 #screen-home .game-logo.large { display: block; }
 #screen-home .game-logo.small { display: none; }
+#screen-game .game-logo.large { display: none !important; }
+#screen-game .game-logo.small { display: block !important; }
 
-#screen-game .game-logo.large { display: none !important; } /* إخفاء اللوجو الكبير في شاشة اللعب */
-#screen-game .game-logo.small { display: block !important; } /* إظهار اللوجو الصغير في شاشة اللعب */
 
-
-/* ... (باقي تنسيقات الصناديق الداخلية لم تتغير) ... */
 .settings-box {
     background-color: #00000020; 
     width: 100%;
@@ -141,53 +133,35 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    /* [حذف] تم حذف gap: 20px لينظمها الـ grid */
+    gap: 20px;
 }
 
-/* [جديد] تنسيق الـ grid الداخلي للإعدادات */
+/* [جديد] تنسيق الشبكة الداخلية للصناديق */
 .settings-grid {
     display: grid;
+    /* الافتراضي: عمود واحد للموبايل */
+    grid-template-columns: 1fr;
     gap: 20px;
+}
+
+/* [جديد] تطبيق 3 أعمدة للشاشات الأكبر (مثل 900px) */
+@media (min-width: 900px) {
+    .settings-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px; /* تباعد أكبر على الشاشات الكبيرة */
+    }
+}
+
+/* [محذوف] تم حذف كل قواعد grid-area القديمة */
+
+.btn-group-bottom { 
+    /* [تعديل] إزالة grid-area */
+    margin-top: 10px; 
+    display: flex;
+    gap: 10px;
+    justify-content: center;
     width: 100%;
 }
-
-.settings-grid-top {
-    /* الوضع الافتراضي (موبايل): عمود واحد */
-    grid-template-columns: 1fr;
-}
-
-.settings-grid-bottom {
-    /* الوضع الافتراضي (موبايل): عمود واحد */
-    grid-template-columns: 1fr;
-    margin-top: 20px; /* فاصل بين الصف العلوي والسفلي */
-}
-
-/* [جديد] تنسيق الأ label الخاص بـ "الوضع" */
-.form-group-label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--text-color);
-    text-shadow: 1px 1px #00000080;
-    text-align: right; 
-    margin-bottom: 5px; 
-    display: block;
-}
-
-/* [جديد] تنسيق عمود "الوضع" ليطابق الصورة */
-.settings-column.mode-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.settings-column.mode-column #mode-selector-wrapper {
-    display: flex;
-    flex-direction: column; /* لجعل الأزرار مكدسة عمودياً */
-    gap: 10px;
-}
-
-
-/* [حذف] تم حذف مناطق الـ Grid القديمة */
-/* .player-box, .game-settings-box, .category-settings-box, .btn-group-bottom */
 
 
 /* --- [4] هيكل شاشة اللعب (Screen Game Layout) --- */
@@ -195,9 +169,9 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* *FIX*: يجب أن تبدأ بعد اللوجو الكبير في التدفق */
     margin-top: 0; 
-    padding-top: 150px; 
+    /* [تعديل] إعطاء مساحة علوية طبيعية */
+    padding-top: 20px; 
 }
 
 #game-header {
@@ -231,22 +205,30 @@
     flex-wrap: wrap;
 }
 
-/* ... (باقي الكود لم يتغير) ... */
 #game-controls-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    flex-grow: 1;
     width: 100%;
+}
+#game-controls {
+    justify-content: center;
 }
 
 #player-turn-bar {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 10px;
+    gap: 15px;
     width: 100%;
-    max-width: 900px;
+    max-width: 700px;
+    align-items: center;
+}
+#timer-display {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -255,7 +237,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    /* *FIX*: زيادة الفواصل لحل مشكلة تداخل الحروف */
+    /* [تعديل] زيادة الفواصل لحل مشكلة تداخل الحروف */
     gap: 15px; 
     width: 100%;
     max-width: 450px;
@@ -264,7 +246,6 @@
     position: relative;
     overflow: hidden;
     
-    /* خلفية أغمق للوحة + حدود غائرة */
     background-color: #1a142c; 
     border-top: var(--border-width) solid var(--border-color-dark);
     border-left: var(--border-width) solid var(--border-color-dark);
@@ -273,7 +254,7 @@
 }
 
 .board-cell {
-    /* *FIX*: زيادة الحشو الداخلي لمنع تداخل الحروف مع حدود الخلية */
+    /* [تعديل] زيادة الحشو الداخلي لمنع تداخل الحروف مع حدود الخلية */
     padding: 10px; 
     width: 100%;
     height: 100%;
@@ -291,22 +272,8 @@
     overflow: hidden;
 }
 
-/* ... (باقي الكود لم يتغير) ... */
+
 /* --- [6] تعديلات الاستجابة (Responsive) للهيكل --- */
-
-/* [جديد] تطبيق الـ grid الخاص بالديسكتوب */
-@media (min-width: 900px) { /* استخدام 900px كنقطة كسر */
-    .settings-grid-top {
-         /* 3 أعمدة: Player (1fr) | Mode (0.5fr) | Player (1fr) */
-        grid-template-columns: 1fr 0.5fr 1fr;
-    }
-    .settings-grid-bottom {
-         /* 3 أعمدة متساوية للإعدادات */
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-
 @media (max-width: 768px) {
     #app-container {
         padding: 0.5rem;
@@ -318,8 +285,7 @@
         padding: 10px;
     }
 
-    /* [حذف] تم حذف هيكل الـ grid القديم لشاشة البداية */
-    /* #screen-home { ... } */
+    /* [محذوف] تم حذف قواعد الاستجابة القديمة لـ #screen-home */
 
     #game-header {
         flex-direction: column;
@@ -348,7 +314,9 @@
         width: 100%;
         max-width: none;
         height: auto;
-        gap: 3px;
+        /* [تعديل] فواصل أصغر للموبايل */
+        gap: 5px; 
         border-width: 3px;
     }
 }
+
