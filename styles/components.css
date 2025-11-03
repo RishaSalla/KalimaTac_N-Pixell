@@ -472,7 +472,7 @@ input[type="text"]::placeholder {
 
 .modal-content {
     background-color: var(--background-color);
-    /* [تعديل]: زيادة الحشو الداخلي لتقليل تداخل النص مع الحدود */
+    /* [FIX/NEW]: زيادة الحشو الداخلي لتقليل تداخل النص */
     padding: 40px 50px; /* زيادة الحشو لـ 40px من أعلى/أسفل و 50px من الجوانب */
     text-align: center;
     position: relative;
