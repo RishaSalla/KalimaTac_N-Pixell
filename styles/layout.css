@@ -10,40 +10,32 @@
 }
 
 .content-wrapper {
-    /* أساسي لحل مشكلة التداخل مع position: absolute */
-    position: relative; 
-    /* *FIX/NEW*: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
+    /* [FIX/NEW]: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
     max-width: 1200px; 
     margin: 0 auto;
-    /* *FIX*: زيادة الحشو العلوي لترك مساحة كافية للشعار الكبير */
-    padding-top: 150px; 
+    
+    /* *FIX*: سحب كل محتوى الصفحة للأعلى ليلتصق اللوجو بأعلى المتصفح */
+    margin-top: -100px; 
+    
+    position: relative; 
+    padding-top: 0; 
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
+    width: 100%; 
 }
 
-/* *FIX/NEW*: حاوية الشعار الثابتة (لتثبيت اللوجو في أعلى الشاشة) */
+/* [FIX]: حذف حاوية الشعار الثابتة (لأنها حذفت من HTML) */
 #absolute-header-container {
-    /* *FIX*: التثبيت في أعلى النافذة ليكون مرئياً دائماً */
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    z-index: 20; 
-    padding-top: 15px;
-    /* *FIX*: إزالة الخلفية هنا ليكون اللوجو شفافاً تماماً */
-    background-color: transparent; 
+    display: none !important; 
 }
 
 .screen {
-    /* [الإصلاح النهائي]: وضع مطلق لمنع الشاشات من دفع بعضها البعض وحل مشكلة التداخل */
-    position: absolute; 
-    /* يجب أن تبدأ هذه الشاشات من أعلى .content-wrapper (top: 0) */
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%); 
+    /* *FIX*: العودة إلى التموضع النسبي (Relative) للتدفق العادي */
+    position: relative; 
+    top: 0; 
+    left: 0;
+    transform: none; 
     
     display: none; 
     width: 100%;
@@ -80,8 +72,8 @@
         "cats"      
         "controls";
         
-    /* *FIX*: إضافة حشو علوي لتبدأ محتويات الشاشة (الصناديق) بعد مساحة اللوجو المطلق */
-    padding-top: 100px; 
+    /* *FIX*: تعويض الهامش السلبي للحاوية الأم (لبدء الصناديق بعد اللوجو) */
+    padding-top: 150px; 
     margin-top: 0; 
 }
 
@@ -111,9 +103,9 @@
     border-bottom: none;
     text-align: center;
     
-    /* *FIX*: جعل الشعار مطلق الموقع وملتصقاً بالأعلى */
-    position: absolute; 
-    top: -150px; /* القيمة المعكوسة لـ padding-top في .content-wrapper لرفعه للأعلى */
+    /* *FIX*: العودة للتموضع النسبي (اللوجو الآن جزء من التدفق العادي) */
+    position: relative; 
+    top: 0; 
     z-index: 10; 
 }
 
@@ -194,9 +186,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* *FIX*: إزالة margin-top الزائد */
+    /* *FIX*: يجب أن تبدأ بعد اللوجو الكبير في التدفق */
     margin-top: 0; 
-    /* *FIX/NEW*: دفع شاشة اللعب لأسفل اللوجو الثابت */
     padding-top: 150px; 
 }
 
