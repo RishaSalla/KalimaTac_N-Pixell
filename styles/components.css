@@ -95,15 +95,25 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 
 /* --- [3] حقول الإدخال والشرائح (Chips) --- */
 
+.form-group {
+    /* *NEW*: إضافة تباعد سفلي موحد للمجموعات */
+    margin-bottom: 20px; 
+}
 .form-group label {
     font-size: 1rem;
     font-weight: bold;
     color: var(--text-color);
     text-shadow: 1px 1px #00000080;
     text-align: right; 
+    /* *NEW*: إضافة تباعد سفلي صغير ليفصل عن حقل الإدخال */
+    margin-bottom: 5px; 
+    display: block;
 }
 
 input[type="text"], select {
+    /* *FIX*: تعيين ارتفاع ثابت لتوحيد المظهر مع حقل الشريحة */
+    height: 50px; 
+    
     background-color: var(--text-color); 
     /* [إصلاح]: ضمان وضوح لون النص المدخل (أسود) */
     color: var(--border-color);
@@ -131,6 +141,8 @@ input[type="text"]::placeholder {
     border: none !important; 
     padding: 0 !important;
     background: transparent !important;
+    /* *FIX*: تعيين ارتفاع ثابت لتوحيد المظهر */
+    height: 50px; 
     
     border-top: none;
     border-left: none;
@@ -144,8 +156,8 @@ input[type="text"]::placeholder {
     gap: 5px;
     background-color: var(--text-color);
     padding: 5px;
-    min-height: 50px;
-    height: 50px; 
+    /* *FIX*: إزالة min-height وترك height لضمان الالتزام بارتفاع الـ 50px */
+    height: 100%; 
     width: 100%;
     align-items: center;
     flex-grow: 1;
@@ -211,7 +223,8 @@ input[type="text"]::placeholder {
     flex-shrink: 0;
     font-size: 1.5rem;
     line-height: 1;
-    height: 50px; 
+    /* *FIX*: ضمان الالتزام بارتفاع الـ 50px */
+    height: 100%; 
     align-self: stretch; 
 }
 
@@ -545,6 +558,7 @@ input[type="text"]::placeholder {
 }
 #answer-timer-bar-wrapper { 
     width: 100%;
+    /* *FIX*: تعيين ارتفاع ثابت لشريط المؤقت */
     height: 20px;
     margin-bottom: 25px; 
     position: relative;
