@@ -15,14 +15,14 @@
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    /* *NEW*: إضافة حشو علوي لرفع اللوجو والمحتوى عن أعلى الشاشة */
-    padding: 50px 0 0 0; 
+    /* *FIX*: زيادة الحشو العلوي لترك مساحة للشعار الكبير الذي سيكون مطلق الموقع */
+    padding: 100px 0 0 0; /* رفع القيمة لـ 100px لترك مساحة كافية للشعار */
 }
 
 .screen {
     /* [الإصلاح النهائي]: وضع مطلق لمنع الشاشات من دفع بعضها البعض وحل مشكلة التداخل */
     position: absolute; 
-    /* يتم تعديل الـ top في الشاشات الفردية لضمان بدء المحتوى بعد اللوجو */
+    /* *FIX*: تعيين الـ top لـ 0، وسيعتمد موقعه على padding-top لـ .content-wrapper */
     top: 0;
     left: 50%;
     transform: translateX(-50%); 
@@ -62,7 +62,7 @@
         "cats"      
         "controls";
         
-    /* *NEW/MODIFIED*: إزالة margin-top 200px والاعتماد على اللوجو لدفعه. */
+    /* *FIX*: إزالة margin-top تمامًا والاعتماد على padding-top في .content-wrapper */
     margin-top: 0; 
 }
 
@@ -92,8 +92,9 @@
     border-bottom: none;
     text-align: center;
     
-    /* [إصلاح]: تثبيت الموقع ورفع الترتيب فوق البوكسات */
-    position: relative; 
+    /* *FIX*: تثبيت الموقع ليلتصق الشعار بأعلى الحاوية */
+    position: absolute; 
+    top: -100px; /* القيمة المعكوسة لـ padding-top: 100px في .content-wrapper */
     z-index: 10; 
 }
 
@@ -104,17 +105,17 @@
 
 /* [تعديل اللوجو]: اللوجو الكبير في شاشة البداية فقط */
 .game-logo.large {
-    width: 300px; /* الحجم الاحترافي المطلوب */
+    width: 300px; 
     height: auto;
     display: block;
 }
 
 /* [تعديل اللوجو]: اللوجو الصغير في شاشة اللعب فقط */
 .game-logo.small {
-    width: 64px; /* الحجم الصغير المطلوب */
+    width: 64px; 
     height: 64px;
     margin-bottom: 0;
-    display: none; /* إخفاؤه مبدئياً للتحكم به في شاشة اللعب */
+    display: none; 
 }
 
 /* [NEW]: قواعد إظهار/إخفاء اللوجو حسب الشاشة */
@@ -174,8 +175,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* [إضافة]: لضمان أن شاشة اللعب تبدأ أيضاً في نفس المكان بعد اللوجو */
-    margin-top: 50px; /* تقليل الهامش ليعتمد على اللوجو الصغير فقط */
+    /* *FIX*: إزالة margin-top والاعتماد على هيدر اللعبة لدفع المحتوى لأسفل */
+    margin-top: 0; 
 }
 
 #game-header {
@@ -188,8 +189,8 @@
     width: 100%;
     border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
-    /* [تعديل]: جعل الهيدر مطلقاً ليظهر اللوجو الكبير في الخلفية */
-    position: relative; /* يجب أن يكون نسبياً ليحتوي اللوجو الصغير */
+    
+    position: relative; 
     top: 0;
     left: 0;
     width: 100%;
