@@ -8,7 +8,7 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-con
     font-size: 1.1rem;
     padding: 10px 15px; 
     /* [FIX]: ضمان وضوح اللون (أسود) */
-    color: var(--border-color) !important; 
+    color: var(--border-color-dark) !important; /* تغيير من --border-color */
     cursor: pointer;
     transition: background-color 0.1s ease, transform 0.05s ease;
     position: relative;
@@ -47,12 +47,13 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
 /* --- [2] تخصيص الأزرار --- */
 .mode-btn {
     background-color: var(--accent-color);
-    color: var(--border-color);
+    color: var(--border-color-dark); /* تغيير من --border-color */
     flex-grow: 1;
 }
+
+/* [تعديل] تغيير اللون النشط إلى البنفسجي ليطابق التصميم */
 .mode-btn.active {
-    /* [تعديل] تغيير اللون النشط من الأحمر إلى البنفسجي ليطابق الصورة */
-    background-color: var(--player-o-color); /* تغيير من --player-x-color */
+    background-color: var(--player-o-color); /* تغيير من player-x-color */
     color: var(--text-color);
     border-top: var(--border-width) solid var(--border-color-dark);
     border-left: var(--border-width) solid var(--border-color-dark);
@@ -60,16 +61,17 @@ button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     border-right: var(--border-width) solid var(--border-color-light);
 }
 .mode-btn:hover:not(.active) {
-    background-color: var(--player-o-color);
+    background-color: var(--button-bg-hover); /* تغيير من player-o-color */
     color: var(--text-color);
 }
 .btn-danger {
     background-color: var(--player-x-color);
     color: var(--text-color);
 }
+/* [جديد] زر أصفر ليطابق "كلمتاك" و "الكل" */
 .btn-warning {
     background-color: var(--primary-color);
-    color: var(--border-color);
+    color: var(--border-color-dark); /* تغيير من --border-color */
 }
 .btn-success {
     background-color: #4CAF50;
@@ -118,7 +120,7 @@ input[type="text"], select {
     
     background-color: var(--text-color); 
     /* [إصلاح حاسم للون]: ضمان وضوح لون النص المدخل (أسود) */
-    color: var(--border-color) !important;
+    color: var(--border-color-dark) !important; /* تغيير من --border-color */
     padding: 10px;
     width: 100%;
     font-size: 1.1rem;
@@ -180,7 +182,7 @@ input[type="text"]::placeholder {
     min-width: 100px;
     font-size: 1.1rem !important;
     /* [إصلاح حاسم للون]: ضمان وضوح لون النص المدخل (أسود) */
-    color: var(--border-color) !important; 
+    color: var(--border-color-dark) !important; /* تغيير من --border-color */
     
     box-shadow: none !important; 
     border-radius: 0 !important; 
@@ -258,7 +260,7 @@ input[type="text"]::placeholder {
 .switch {
     width: 44px;
     height: 24px;
-    background: var(--border-color);
+    background: var(--border-color-dark); /* تغيير من --border-color */
     border-top: 1px solid var(--border-color-dark);
     border-left: 1px solid var(--border-color-dark);
     border-bottom: 1px solid var(--border-color-light);
@@ -289,7 +291,7 @@ input[type="text"]::placeholder {
     padding: 8px 12px;
     font-size: 0.9rem;
     font-weight: bold;
-    text-shadow: 1px 1px var(--border-color);
+    text-shadow: 1px 1px var(--border-color-dark); /* تغيير من --border-color */
     border-top: 2px solid var(--border-color-dark);
     border-left: 2px solid var(--border-color-dark);
     border-bottom: 2px solid var(--border-color-light);
@@ -301,7 +303,7 @@ input[type="text"]::placeholder {
 #round-info {
     font-size: 1rem;
     color: var(--text-color);
-    text-shadow: 1px 1px var(--border-color);
+    text-shadow: 1px 1px var(--border-color-dark); /* تغيير من --border-color */
     background-color: #00000030;
     padding: 8px 12px;
     border-top: 2px solid var(--border-color-dark);
@@ -344,7 +346,7 @@ input[type="text"]::placeholder {
 
 .player-tag .player-name-text {
     font-weight: bold;
-    text-shadow: 1px 1px var(--border-color);
+    text-shadow: 1px 1px var(--border-color-dark); /* تغيير من --border-color */
 }
 .player-tag .player-tag-details {
     font-size: 0.9rem;
@@ -358,7 +360,7 @@ input[type="text"]::placeholder {
     padding: 8px 12px;
     text-align: center;
     margin-bottom: 5px;
-    text-shadow: 1px 1px var(--border-color);
+    text-shadow: 1px 1px var(--border-color-dark); /* تغيير من --border-color */
     font-weight: bold;
     border-top: 2px solid var(--border-color-dark);
     border-left: 2px solid var(--border-color-dark);
@@ -376,7 +378,7 @@ input[type="text"]::placeholder {
 .board-cell .cell-letter {
     font-size: 2.5rem; 
     font-family: var(--main-font); 
-    text-shadow: 2px 2px var(--border-color);
+    text-shadow: 2px 2px var(--border-color-dark); /* تغيير من --border-color */
     line-height: 1.1;
 }
 
@@ -408,7 +410,7 @@ input[type="text"]::placeholder {
     background-position: center;
     background-repeat: no-repeat;
 }
-/* (المسارات صحيحة كما هي في مستودعك) */
+/* المسار يفترض أنه صحيح في مستودعك */
 .board-cell.owned.player-x {
     background-image: url('../assets/player-x.png'); 
 }
@@ -427,7 +429,7 @@ input[type="text"]::placeholder {
     z-index: 10;
     transform-origin: 0% 50%;
     box-shadow: 0 0 10px var(--text-color);
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-color-dark); /* تغيير من --border-color */
 }
 
 #game-controls {
@@ -494,7 +496,7 @@ input[type="text"]::placeholder {
     font-size: 2rem;
     color: var(--primary-color);
     margin-bottom: 20px;
-    text-shadow: 2px 2px var(--border-color);
+    text-shadow: 2px 2px var(--border-color-dark); /* تغيير من --border-color */
 }
 
 .modal-content p {
@@ -539,7 +541,7 @@ input[type="text"]::placeholder {
 #answer-letter {
     font-size: 5rem; 
     color: var(--primary-color);
-    text-shadow: 3px 3px var(--border-color);
+    text-shadow: 3px 3px var(--border-color-dark); /* تغيير من --border-color */
     font-family: var(--arabic-pixel-font); 
     font-weight: normal; 
     line-height: 1;
@@ -625,7 +627,7 @@ input[type="text"]::placeholder {
     color: var(--primary-color);
     text-align: center;
     margin-top: 5px;
-    text-shadow: 2px 2px var(--border-color);
+    text-shadow: 2px 2px var(--border-color-dark); /* تغيير من --border-color */
     font-family: var(--arabic-pixel-font);
     padding: 10px;
     background-color: #00000030;
@@ -674,4 +676,3 @@ input[type="text"]::placeholder {
     #answer-category { font-size: 1.5rem; }
     #answer-buttons .btn { font-size: 1.1rem; padding: 10px;}
 }
-
