@@ -11,7 +11,7 @@
 
 .content-wrapper {
     position: relative; 
-    /* *FIX/NEW*: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
+    /* *FIX*: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
     max-width: 1200px; 
     margin: 0 auto;
     /* *FIX*: إزالة الحشو العلوي من هنا والاعتماد على اللوجو المطلق */
@@ -22,22 +22,24 @@
     width: 100%; /* يجب أن يأخذ العرض الكامل */
 }
 
-/* *NEW*: حاوية الشعار المطلق (لتثبيت اللوجو في أعلى الشاشة) */
+/* *FIX/NEW*: حاوية الشعار المطلق (لتثبيت اللوجو في أعلى الشاشة) */
 #absolute-header-container {
-    position: absolute;
+    /* *FIX*: التثبيت في أعلى النافذة ليكون مرئياً دائماً */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
     z-index: 20; /* لضمان ظهوره فوق كل شيء */
-    /* *NEW/FIX*: إضافة حشو علوي لرفع اللوجو عن حافة المتصفح */
     padding-top: 15px;
+    /* *NEW*: إضافة خلفية لمنع ظهور المحتوى خلفه عند التمرير */
+    background-color: var(--background-color); 
 }
 
 .screen {
     /* [الإصلاح النهائي]: جعل الشاشات تبدأ تحت اللوجو المطلق */
-    position: relative; /* يجب أن يكون نسبياً ليحتوي اللوجو الصغير في هيدر شاشة اللعب */
+    position: relative; 
     top: 0;
     left: 0;
     
@@ -76,7 +78,7 @@
         "cats"      
         "controls";
         
-    /* *FIX/NEW*: إضافة حشو علوي لتبدأ محتويات الصناديق بعد مساحة اللوجو المطلق */
+    /* *FIX*: إضافة حشو علوي لتبدأ محتويات الصناديق بعد مساحة اللوجو المطلق */
     padding-top: 150px; /* مسافة كافية لتبدأ البوكسات تحت اللوجو الكبير */
     margin-top: 0; 
 }
@@ -99,7 +101,7 @@
 
 /* [FIX]: تنسيق الشعار المطلق (في حاوية #absolute-header-container) */
 .screen-header {
-    width: 300px; /* يجب أن يأخذ عرض اللوجو فقط */
+    width: 300px; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -107,7 +109,7 @@
     margin: 0;
     border: none;
     background: transparent;
-    position: relative; /* يجب أن يكون نسبياً داخل حاويته المطلقة */
+    position: relative; 
 }
 
 .game-logo {
@@ -134,8 +136,8 @@
 #screen-home .game-logo.large { display: block; }
 #screen-home .game-logo.small { display: none; }
 
-#screen-game .game-logo.large { display: none !important; } /* إخفاء اللوجو الكبير تماماً في شاشة اللعب */
-#screen-game .game-logo.small { display: block !important; } /* إظهار اللوجو الصغير في شاشة اللعب */
+#screen-game .game-logo.large { display: none !important; } 
+#screen-game .game-logo.small { display: block !important; } 
 
 /* ... (باقي تنسيقات الصناديق الداخلية لم تتغير) ... */
 .settings-box {
@@ -186,6 +188,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
+    /* *FIX/NEW*: إضافة حشو علوي لتبدأ محتويات الصناديق بعد مساحة اللوجو المطلق */
+    padding-top: 150px; 
     margin-top: 0; 
 }
 
