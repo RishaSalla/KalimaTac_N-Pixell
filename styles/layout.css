@@ -57,38 +57,18 @@
 }
 
 /* القواعد الخاصة لإظهار الشاشة النشطة */
-#app-container[data-view="home"] #screen-home { display: grid; }
+#app-container[data-view="home"] #screen-home { display: flex; } /* [تعديل] تغيير من grid إلى flex */
 #app-container[data-view="game"] #screen-game { display: flex; }
 
 /* --- [2] هيكل شاشة البداية (Screen Home Layout) --- */
 
 #screen-home {
+    /* [حذف] تم حذف كل خصائص الـ grid القديمة */
     gap: 20px;
-    display: grid; 
-    grid-template-columns: 1fr; 
-    grid-template-areas:
-        "player"    
-        "settings"  
-        "cats"      
-        "controls";
         
     /* *FIX*: تعويض الهامش السلبي للحاوية الأم (لبدء الصناديق بعد اللوجو) */
     padding-top: 150px; 
     margin-top: 0; 
-}
-
-/* للشاشات الأكبر من 800px */
-@media (min-width: 800px) {
-    #screen-home {
-        align-items: stretch;
-        
-        grid-template-columns: 1fr 1fr; 
-        grid-template-areas:
-            "player settings"  
-            "cats cats"        
-            "controls controls";
-        gap: 20px;
-    }
 }
 
 /* --- [3] تنسيق الصناديق (Box Styles & Grid Areas) --- */
@@ -161,24 +141,53 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    /* [حذف] تم حذف gap: 20px لينظمها الـ grid */
 }
 
-/* تحديد مناطق الـ Grid الجديدة */
-.player-box { 
-    grid-area: player; 
+/* [جديد] تنسيق الـ grid الداخلي للإعدادات */
+.settings-grid {
+    display: grid;
+    gap: 20px;
+    width: 100%;
 }
-.game-settings-box { 
-    grid-area: settings; 
+
+.settings-grid-top {
+    /* الوضع الافتراضي (موبايل): عمود واحد */
+    grid-template-columns: 1fr;
 }
-.category-settings-box { 
-    grid-area: cats; 
-    margin-top: 10px; 
+
+.settings-grid-bottom {
+    /* الوضع الافتراضي (موبايل): عمود واحد */
+    grid-template-columns: 1fr;
+    margin-top: 20px; /* فاصل بين الصف العلوي والسفلي */
 }
-.btn-group-bottom { 
-    grid-area: controls; 
-    margin-top: 10px; 
+
+/* [جديد] تنسيق الأ label الخاص بـ "الوضع" */
+.form-group-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-shadow: 1px 1px #00000080;
+    text-align: right; 
+    margin-bottom: 5px; 
+    display: block;
 }
+
+/* [جديد] تنسيق عمود "الوضع" ليطابق الصورة */
+.settings-column.mode-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-column.mode-column #mode-selector-wrapper {
+    display: flex;
+    flex-direction: column; /* لجعل الأزرار مكدسة عمودياً */
+    gap: 10px;
+}
+
+
+/* [حذف] تم حذف مناطق الـ Grid القديمة */
+/* .player-box, .game-settings-box, .category-settings-box, .btn-group-bottom */
 
 
 /* --- [4] هيكل شاشة اللعب (Screen Game Layout) --- */
@@ -223,6 +232,23 @@
 }
 
 /* ... (باقي الكود لم يتغير) ... */
+#game-controls-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+#player-turn-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+}
+
 
 /* --- [5] هيكل لوحة اللعب (Game Board) --- */
 #game-board {
@@ -267,6 +293,20 @@
 
 /* ... (باقي الكود لم يتغير) ... */
 /* --- [6] تعديلات الاستجابة (Responsive) للهيكل --- */
+
+/* [جديد] تطبيق الـ grid الخاص بالديسكتوب */
+@media (min-width: 900px) { /* استخدام 900px كنقطة كسر */
+    .settings-grid-top {
+         /* 3 أعمدة: Player (1fr) | Mode (0.5fr) | Player (1fr) */
+        grid-template-columns: 1fr 0.5fr 1fr;
+    }
+    .settings-grid-bottom {
+         /* 3 أعمدة متساوية للإعدادات */
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+
 @media (max-width: 768px) {
     #app-container {
         padding: 0.5rem;
@@ -278,15 +318,8 @@
         padding: 10px;
     }
 
-    /* تعديل الهيكل الأفقي للشاشات الصغيرة */
-    #screen-home {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "player"
-            "settings"
-            "cats"
-            "controls";
-    }
+    /* [حذف] تم حذف هيكل الـ grid القديم لشاشة البداية */
+    /* #screen-home { ... } */
 
     #game-header {
         flex-direction: column;
