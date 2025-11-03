@@ -33,8 +33,8 @@
     justify-content: center;
     z-index: 20; /* لضمان ظهوره فوق كل شيء */
     padding-top: 15px;
-    /* *NEW*: إضافة خلفية لمنع ظهور المحتوى خلفه عند التمرير */
-    background-color: var(--background-color); 
+    /* *FIX*: إزالة الخلفية هنا ليكون اللوجو شفافاً */
+    background-color: transparent; 
 }
 
 .screen {
