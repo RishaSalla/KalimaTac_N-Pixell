@@ -17,7 +17,7 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-con
     text-align: center;
     line-height: 1.2;
 
-    /* [تعديل]: التأكيد على حواف حادة (صفر) لتطابق التصميم البكسلي */
+    /* التأكيد على حواف حادة (صفر) لتطابق التصميم البكسلي */
     border-radius: 0 !important;
     
     /* حدود ثلاثية الأبعاد بارزة (Bevel Out) */
@@ -144,11 +144,11 @@ input[type="text"]::placeholder {
     background-color: var(--text-color);
     padding: 5px;
     min-height: 50px;
-    height: 50px; /* [تعديل]: تحديد الارتفاع لتناسق Flexbox */
+    height: 50px; 
     width: 100%;
     align-items: center;
     flex-grow: 1;
-    align-self: stretch; /* [تعديل]: للتأكد من امتداد الارتفاع */
+    align-self: stretch; 
     
     /* حدود غائرة (Inset) */
     border-top: var(--border-width) solid var(--border-color-dark);
@@ -209,8 +209,8 @@ input[type="text"]::placeholder {
     flex-shrink: 0;
     font-size: 1.5rem;
     line-height: 1;
-    height: 50px; /* [تعديل]: تحديد الارتفاع لتناسق Flexbox */
-    align-self: stretch; /* [تعديل]: امتداد الزر ليطابق الحاوية */
+    height: 50px; 
+    align-self: stretch; 
 }
 
 /* --- [4] مفاتيح التبديل (Switches) --- */
@@ -285,369 +285,279 @@ input[type="text"]::placeholder {
     color: var(--text-color);
     text-shadow: 1px 1px var(--border-color);
     background-color: #00000030;
-    padding: 8px 12px;
-    border-top: 2px solid var(--border-color-dark);
-    border-left: 2px solid var(--border-color-dark);
-    border-bottom: 2px solid var(--border-color-light);
-    border-right: 2px solid var(--border-color-light);
-}
-
-.player-tag {
-    background-color: var(--background-color);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-color);
-    font-size: 1.1rem;
-    text-align: center;
-    position: relative;
-    transition: all 0.2s ease;
-    opacity: 0.6;
-    border-top: var(--border-width) solid var(--border-color-light);
-    border-left: var(--border-width) solid var(--border-color-light);
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    border-right: var(--border-width) solid var(--border-color-dark);
-}
-
-.player-tag.active {
-    opacity: 1;
-    transform: scale(1.05);
-}
-#player-tag-x.active { 
-    border-color: var(--player-x-color); 
-    box-shadow: 0 0 15px var(--player-x-color) !important;
-}
-#player-tag-o.active { 
-    border-color: var(--player-o-color); 
-    box-shadow: 0 0 15px var(--player-o-color) !important;
-}
-
-.player-tag .player-name-text {
-    font-weight: bold;
-    text-shadow: 1px 1px var(--border-color);
-}
-.player-tag .player-tag-details {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-#timer-text {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    background-color: #00000030;
-    padding: 8px 12px;
-    text-align: center;
-    margin-bottom: 5px;
-    text-shadow: 1px 1px var(--border-color);
-    font-weight: bold;
-    border-top: 2px solid var(--border-color-dark);
-    border-left: 2px solid var(--border-color-dark);
-    border-bottom: 2px solid var(--border-color-light);
-    border-right: 2px solid var(--border-color-light);
-}
-
-#timer-hint {
-    font-size: 0.9rem;
-    color: var(--accent-color);
-    text-align: center;
-}
-
-/* --- [6] مكونات لوحة اللعب (Game Board Components) --- */
-.board-cell .cell-letter {
-    font-size: 2.5rem; 
-    font-family: var(--main-font); 
-    text-shadow: 2px 2px var(--border-color);
-    line-height: 1.1;
-}
-
-.board-cell .cell-category {
-    display: none; 
-}
-
-.board-cell.revealed .cell-category {
-    display: block; 
-    font-size: 0.9rem; 
-    opacity: 0.9;
-    margin-top: 0px; 
-    line-height: 1;
-    color: var(--primary-color);
-}
-
-.board-cell.unavailable {
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.board-cell.revealed {
-    background-color: var(--accent-color); 
-}
-
-.board-cell.owned {
-    cursor: default;
-    background-size: 80%; 
-    background-position: center;
-    background-repeat: no-repeat;
-}
-.board-cell.owned.player-x {
-    background-image: url('../assets/player-x.png'); 
-}
-.board-cell.owned.player-o {
-    background-image: url('../assets/player-o.png'); 
-}
-.board-cell.owned .cell-letter,
-.board-cell.owned .cell-category {
-    display: none;
-}
-
-.win-line {
-    position: absolute;
-    background-color: var(--primary-color); 
-    height: 8px; 
-    z-index: 10;
-    transform-origin: 0% 50%;
-    box-shadow: 0 0 10px var(--text-color);
-    border: 2px solid var(--border-color);
-}
-
-#game-controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-#game-controls .btn, #game-controls .switch-toggle {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    flex-grow: 1;
-    min-width: 120px;
-}
-#game-controls .switch-toggle {
-    flex-grow: 0;
-    min-width: 150px;
-}
-
-/* --- [7] مكونات النوافذ المنبثقة (Modals) --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    backdrop-filter: blur(2px);
-}
-
-.modal-overlay.visible {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.modal-content {
-    background-color: var(--background-color);
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    max-width: 500px;
-    width: 90%;
-    animation: modalPopIn 0.2s forwards;
-    border-radius: 0 !important; /* التأكيد على حواف حادة */
-}
-
-@keyframes modalPopIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.modal-content h2 {
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    text-shadow: 2px 2px var(--border-color);
-}
-
-.modal-content p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    color: var(--text-color);
-}
-.modal-content ul {
-    text-align: right;
-    list-style-position: inside;
-    padding-right: 10px;
-}
-.modal-content li {
-    margin-bottom: 10px;
-    font-size: 1rem;
-}
-
-.modal-close-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: var(--player-x-color);
-    color: var(--text-color);
-    padding: 5px 10px;
-    font-size: 1.2rem;
-    line-height: 1;
-    min-width: unset; 
-}
-
-/* نافذة الإجابة */
-#modal-answer .modal-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
-    padding-bottom: 18px; /* [تعديل]: زيادة التباعد */
-    border-bottom: 3px solid var(--border-color-dark);
-}
-#answer-letter {
-    font-size: 5rem; /* [تعديل]: تكبير الحرف */
-    color: var(--primary-color);
-    text-shadow: 3px 3px var(--border-color);
-    font-family: var(--arabic-pixel-font); 
-    font-weight: normal; 
-    line-height: 1;
-}
-.header-separator {
-    width: 3px;
-    height: 3rem;
-    background-color: var(--border-color-dark);
-}
-#answer-category {
-    font-size: 3rem; /* [تعديل]: تكبير الفئة */
-    color: var(--text-color);
-    font-family: var(--arabic-pixel-font); 
-    font-weight: normal; 
-    line-height: 1.1;
-}
-#answer-turn-hint {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    font-weight: bold;
-    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
-}
-#answer-timer-bar-wrapper { 
-    width: 100%;
-    height: 20px;
-    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */
-    position: relative;
-    overflow: hidden;
-}
-#answer-timer-bar {
-    height: 100%;
-    width: 100%; 
-    background: transparent; 
-    border: none; 
-    padding: 0;
-}
-#answer-timer-bar.animating::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: var(--primary-color);
-    transform-origin: left center;
-    animation: timerCountdown var(--timer-duration, 10s) linear forwards;
-}
-
-@keyframes timerCountdown {
-    from { transform: scaleX(1); background-color: #4CAF50; }
-    50% { background-color: var(--primary-color); }
-    to { transform: scaleX(0); background-color: var(--player-x-color); }
-}
-
-#answer-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: center;
-    gap: 15px;
-}
-#answer-buttons .btn {
-    font-size: 1.3rem;
-    padding: 15px;
-}
-
-/* نافذة النتيجة النهائية */
-#final-scores-display {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 20px 0;
-}
-#final-scores-display .score-tag {
-    font-size: 1.1rem;
-    padding: 10px 15px;
-}
-
-/* رسالة الفائز بالجولة */
-#round-winner-message {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    text-align: center;
-    margin-top: 5px;
-    text-shadow: 2px 2px var(--border-color);
-    font-family: var(--arabic-pixel-font);
-    padding: 10px;
-    background-color: #00000030;
-    display: none; 
-}
-#round-winner-message[style*="var(--player-x-color)"] {
-    border-color: var(--player-x-color);
-}
-#round-winner-message[style*="var(--player-o-color)"] {
-    border-color: var(--player-o-color);
-}
-
-/* --- [8] الاستجابة (Responsive) للمكونات --- */
-@media (max-width: 768px) {
-    #game-title-info {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    #player-turn-bar {
-        grid-template-columns: 1fr;
-        gap: 5px;
-    }
-    .player-tag {
-        width: 100%;
-        order: 2;
-    }
-    #timer-display {
-        order: 1;
-        width: 100%;
-    }
-
-    .board-cell .cell-letter {
-        font-size: 2rem;
-    }
-    .board-cell .cell-category {
-        font-size: 0.8rem;
-    }
-    .modal-content h2 {
-        font-size: 1.5rem;
-    }
-    #round-winner-message {
-        font-size: 1.1rem;
-    }
-    #answer-letter { font-size: 3rem; }
-    #answer-category { font-size: 1.5rem; }
-    #answer-buttons .btn { font-size: 1.1rem; padding: 10px;}
-}
+    padding: 8px 12px;<br>
+    border-top: 2px solid var(--border-color-dark);<br>
+    border-left: 2px solid var(--border-color-dark);<br>
+    border-bottom: 2px solid var(--border-color-light);<br>
+    border-right: 2px solid var(--border-color-light);<br>
+}<br><br>.player-tag {<br>
+    background-color: var(--background-color);<br>
+    padding: 10px;<br>
+    display: flex;<br>
+    flex-direction: column;<br>
+    align-items: center;<br>
+    gap: 5px;<br>
+    color: var(--text-color);<br>
+    font-size: 1.1rem;<br>
+    text-align: center;<br>
+    position: relative;<br>
+    transition: all 0.2s ease;<br>
+    opacity: 0.6;<br>
+    border-top: var(--border-width) solid var(--border-color-light);<br>
+    border-left: var(--border-width) solid var(--border-color-light);<br>
+    border-bottom: var(--border-width) solid var(--border-color-dark);<br>
+    border-right: var(--border-width) solid var(--border-color-dark);<br>
+}<br><br>.player-tag.active {<br>
+    opacity: 1;<br>
+    transform: scale(1.05);<br>
+}<br>#player-tag-x.active { <br>
+    border-color: var(--player-x-color); <br>
+    box-shadow: 0 0 15px var(--player-x-color) !important;<br>
+}<br>#player-tag-o.active { <br>
+    border-color: var(--player-o-color); <br>
+    box-shadow: 0 0 15px var(--player-o-color) !important;<br>
+}<br><br>.player-tag .player-name-text {<br>
+    font-weight: bold;<br>
+    text-shadow: 1px 1px var(--border-color);<br>
+}<br>.player-tag .player-tag-details {<br>
+    font-size: 0.9rem;<br>
+    opacity: 0.8;<br>
+}<br><br>#timer-text {<br>
+    font-size: 1.2rem;<br>
+    color: var(--text-color);<br>
+    background-color: #00000030;<br>
+    padding: 8px 12px;<br>
+    text-align: center;<br>
+    margin-bottom: 5px;<br>
+    text-shadow: 1px 1px var(--border-color);<br>
+    font-weight: bold;<br>
+    border-top: 2px solid var(--border-color-dark);<br>
+    border-left: 2px solid var(--border-color-dark);<br>
+    border-bottom: 2px solid var(--border-color-light);<br>
+    border-right: 2px solid var(--border-color-light);<br>
+}<br><br>#timer-hint {<br>
+    font-size: 0.9rem;<br>
+    color: var(--accent-color);<br>
+    text-align: center;<br>
+}<br><br>/* --- [6] مكونات لوحة اللعب (Game Board Components) --- */<br>.board-cell .cell-letter {<br>
+    font-size: 2.5rem; <br>
+    font-family: var(--main-font); <br>
+    text-shadow: 2px 2px var(--border-color);<br>
+    line-height: 1.1;<br>
+}<br><br>.board-cell .cell-category {<br>
+    display: none; <br>
+}<br><br>.board-cell.revealed .cell-category {<br>
+    display: block; <br>
+    font-size: 0.9rem; <br>
+    opacity: 0.9;<br>
+    margin-top: 0px; <br>
+    line-height: 1;<br>
+    color: var(--primary-color);<br>
+}<br><br>.board-cell.unavailable {<br>
+    cursor: not-allowed;<br>
+    opacity: 0.7;<br>
+}<br><br>.board-cell.revealed {<br>
+    background-color: var(--accent-color); <br>
+}<br><br>.board-cell.owned {<br>
+    cursor: default;<br>
+    background-size: 80%; <br>
+    background-position: center;<br>
+    background-repeat: no-repeat;<br>
+}<br>.board-cell.owned.player-x {<br>
+    background-image: url('../assets/player-x.png'); <br>
+}<br>.board-cell.owned.player-o {<br>
+    background-image: url('../assets/player-o.png'); <br>
+}<br>.board-cell.owned .cell-letter,<br>.board-cell.owned .cell-category {<br>
+    display: none;<br>
+}<br><br>.win-line {<br>
+    position: absolute;<br>
+    background-color: var(--primary-color); <br>
+    height: 8px; <br>
+    z-index: 10;<br>
+    transform-origin: 0% 50%;<br>
+    box-shadow: 0 0 10px var(--text-color);<br>
+    border: 2px solid var(--border-color);<br>
+}<br><br>#game-controls {<br>
+    display: flex;<br>
+    justify-content: center;<br>
+    gap: 10px;<br>
+    margin-top: 10px;<br>
+    flex-wrap: wrap;<br>
+    width: 100%;<br>
+}<br>#game-controls .btn, #game-controls .switch-toggle {<br>
+    font-size: 0.9rem;<br>
+    padding: 8px 12px;<br>
+    flex-grow: 1;<br>
+    min-width: 120px;<br>
+}<br>#game-controls .switch-toggle {<br>
+    flex-grow: 0;<br>
+    min-width: 150px;<br>
+}<br><br>/* --- [7] مكونات النوافذ المنبثقة (Modals) --- */<br>.modal-overlay {<br>
+    position: fixed;<br>
+    top: 0;<br>
+    left: 0;<br>
+    width: 100%;<br>
+    height: 100%;<br>
+    background-color: rgba(0, 0, 0, 0.8);<br>
+    display: flex;<br>
+    justify-content: center;<br>
+    align-items: center;<br>
+    z-index: 1000;<br>
+    opacity: 0;<br>
+    pointer-events: none;<br>
+    transition: opacity 0.2s ease;<br>
+    backdrop-filter: blur(2px);<br>
+}<br><br>.modal-overlay.visible {<br>
+    opacity: 1;<br>
+    pointer-events: all;<br>
+}<br><br>.modal-content {<br>
+    background-color: var(--background-color);<br>
+    padding: 20px;<br>
+    text-align: center;<br>
+    position: relative;<br>
+    max-width: 500px;<br>
+    width: 90%;<br>
+    animation: modalPopIn 0.2s forwards;<br>
+    border-radius: 0 !important; /* التأكيد على حواف حادة */<br>
+}<br><br>@keyframes modalPopIn {<br>
+    from { transform: scale(0.9); opacity: 0; }<br>
+    to { transform: scale(1); opacity: 1; }<br>
+}<br><br>.modal-content h2 {<br>
+    font-size: 2rem;<br>
+    color: var(--primary-color);<br>
+    margin-bottom: 20px;<br>
+    text-shadow: 2px 2px var(--border-color);<br>
+}<br><br>.modal-content p {<br>
+    margin-bottom: 20px;<br>
+    font-size: 1.1rem;<br>
+    color: var(--text-color);<br>
+}<br>.modal-content ul {<br>
+    text-align: right;<br>
+    list-style-position: inside;<br>
+    padding-right: 10px;<br>
+}<br>.modal-content li {<br>
+    margin-bottom: 10px;<br>
+    font-size: 1rem;<br>
+}<br><br>.modal-close-btn {<br>
+    position: absolute;<br>
+    top: 5px;<br>
+    right: 5px;<br>
+    background-color: var(--player-x-color);<br>
+    color: var(--text-color);<br>
+    padding: 5px 10px;<br>
+    font-size: 1.2rem;<br>
+    line-height: 1;<br>
+    min-width: unset; <br>
+}<br><br>/* نافذة الإجابة */<br>#modal-answer .modal-header {<br>
+    display: flex;<br>
+    flex-direction: row;<br>
+    justify-content: center;<br>
+    align-items: center;<br>
+    gap: 15px;<br>
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */<br>
+    padding-bottom: 18px; /* [تعديل]: زيادة التباعد */<br>
+    border-bottom: 3px solid var(--border-color-dark);<br>
+}<br>#answer-letter {<br>
+    font-size: 5rem; /* [تعديل]: تكبير الحرف */<br>
+    color: var(--primary-color);<br>
+    text-shadow: 3px 3px var(--border-color);<br>
+    font-family: var(--arabic-pixel-font); <br>
+    font-weight: normal; <br>
+    line-height: 1;<br>
+}<br>.header-separator {<br>
+    width: 3px;<br>
+    height: 3rem;<br>
+    background-color: var(--border-color-dark);<br>
+}<br>#answer-category {<br>
+    font-size: 3rem; /* [تعديل]: تكبير الفئة */<br>
+    color: var(--text-color);<br>
+    font-family: var(--arabic-pixel-font); <br>
+    font-weight: normal; <br>
+    line-height: 1.1;<br>
+}<br>#answer-turn-hint {<br>
+    font-size: 1.2rem;<br>
+    color: var(--text-color);<br>
+    font-weight: bold;<br>
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */<br>
+}<br>#answer-timer-bar-wrapper { <br>
+    width: 100%;<br>
+    height: 20px;<br>
+    margin-bottom: 25px; /* [تعديل]: زيادة التباعد */<br>
+    position: relative;<br>
+    overflow: hidden;<br>
+}<br>#answer-timer-bar {<br>
+    height: 100%;<br>
+    width: 100%; <br>
+    background: transparent; <br>
+    border: none; <br>
+    padding: 0;<br>
+}<br>#answer-timer-bar.animating::before {<br>
+    content: '';<br>
+    position: absolute;<br>
+    top: 0;<br>
+    left: 0;<br>
+    height: 100%;<br>
+    width: 100%;<br>
+    background-color: var(--primary-color);<br>
+    transform-origin: left center;<br>
+    animation: timerCountdown var(--timer-duration, 10s) linear forwards;<br>
+}<br><br>@keyframes timerCountdown {<br>
+    from { transform: scaleX(1); background-color: #4CAF50; }<br>
+    50% { background-color: var(--primary-color); }<br>
+    to { transform: scaleX(0); background-color: var(--player-x-color); }<br>
+}<br><br>#answer-buttons {<br>
+    display: grid;<br>
+    grid-template-columns: 1fr 1fr;<br>
+    justify-content: center;<br>
+    gap: 15px;<br>
+}<br>#answer-buttons .btn {<br>
+    font-size: 1.3rem;<br>
+    padding: 15px;<br>
+}<br><br>/* نافذة النتيجة النهائية */<br>#final-scores-display {<br>
+    display: flex;<br>
+    justify-content: center;<br>
+    gap: 1rem;<br>
+    margin: 20px 0;<br>
+}<br>#final-scores-display .score-tag {<br>
+    font-size: 1.1rem;<br>
+    padding: 10px 15px;<br>
+}<br><br>/* رسالة الفائز بالجولة */<br>#round-winner-message {<br>
+    font-size: 1.3rem;<br>
+    font-weight: bold;<br>
+    color: var(--primary-color);<br>
+    text-align: center;<br>
+    margin-top: 5px;<br>
+    text-shadow: 2px 2px var(--border-color);<br>
+    font-family: var(--arabic-pixel-font);<br>
+    padding: 10px;<br>
+    background-color: #00000030;<br>
+    display: none; <br>
+}<br>#round-winner-message[style*="var(--player-x-color)"] {<br>
+    border-color: var(--player-x-color);<br>
+}<br>#round-winner-message[style*="var(--player-o-color)"] {<br>
+    border-color: var(--player-o-color);<br>
+}<br><br>/* --- [8] الاستجابة (Responsive) للمكونات --- */<br>@media (max-width: 768px) {<br>
+    #game-title-info {<br>
+        flex-direction: column;<br>
+        gap: 10px;<br>
+    }<br><br>    #player-turn-bar {<br>
+        grid-template-columns: 1fr;<br>
+        gap: 5px;<br>
+    }<br>    .player-tag {<br>
+        width: 100%;<br>
+        order: 2;<br>
+    }<br>    #timer-display {<br>
+        order: 1;<br>
+        width: 100%;<br>
+    }<br><br>    .board-cell .cell-letter {<br>
+        font-size: 2rem;<br>
+    }<br>    .board-cell .cell-category {<br>
+        font-size: 0.8rem;<br>
+    }<br>    .modal-content h2 {<br>
+        font-size: 1.5rem;<br>
+    }<br>    #round-winner-message {<br>
+        font-size: 1.1rem;<br>
+    }<br>    #answer-letter { font-size: 3rem; }<br>
+    #answer-category { font-size: 1.5rem; }<br>
+    #answer-buttons .btn { font-size: 1.1rem; padding: 10px;}<br>
+}</div>
