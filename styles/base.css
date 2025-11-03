@@ -60,12 +60,13 @@
 }
 
 html, body {
-    font-family: var(--arabic-pixel-font);
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--background-color);
-    overflow-y: auto; 
-    overflow-x: hidden;
+    font-family: var(--arabic-pixel-font);
+    line-height: 1.6;
+    /* [FIX]: تغيير اللون الافتراضي للعناصر التي تستخدم --text-color */
+    color: var(--border-color-dark); /* يجب أن نغيره إلى لون داكن (أسود) */
+    background-color: var(--background-color);
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 /* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
