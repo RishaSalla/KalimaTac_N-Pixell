@@ -472,11 +472,12 @@ input[type="text"]::placeholder {
 
 .modal-content {
     background-color: var(--background-color);
-    /* [تعديل]: زيادة الحشو الداخلي لتقليل تداخل النص مع الحدود */
-    padding: 30px; 
+    /* [FIX/NEW]: زيادة الحشو الداخلي لتقليل تداخل النص */
+    padding: 40px 50px; /* زيادة الحشو لـ 40px من أعلى/أسفل و 50px من الجوانب */
     text-align: center;
     position: relative;
-    max-width: 500px;
+    /* *FIX*: زيادة العرض الأقصى لاستيعاب النصوص الكبيرة */
+    max-width: 600px; 
     width: 90%;
     animation: modalPopIn 0.2s forwards;
     border-radius: 0 !important; 
@@ -526,10 +527,11 @@ input[type="text"]::placeholder {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    /* *FIX*: زيادة التباعد بين الحرف والفئة */
+    gap: 30px; 
     align-items: center;
-    gap: 15px;
-    margin-bottom: 25px; 
-    padding-bottom: 18px; 
+    margin-bottom: 30px; /* زيادة التباعد السفلي */
+    padding-bottom: 20px; 
     border-bottom: 3px solid var(--border-color-dark);
 }
 #answer-letter {
