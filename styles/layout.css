@@ -10,25 +10,36 @@
 }
 
 .content-wrapper {
-    /* أساسي لحل مشكلة التداخل مع position: absolute */
     position: relative; 
-    /* *FIX*: زيادة العرض الأقصى لـ 1200px ليتناسب مع التصميم العريض */
+    /* *FIX/NEW*: زيادة العرض الأقصى ليتناسب مع التصميم العريض */
     max-width: 1200px; 
     margin: 0 auto;
-    /* *FIX*: زيادة الحشو العلوي لترك مساحة كافية للشعار الكبير */
-    padding-top: 150px; 
+    /* *FIX*: إزالة الحشو العلوي من هنا والاعتماد على اللوجو المطلق */
+    padding-top: 0; 
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
+    width: 100%; /* يجب أن يأخذ العرض الكامل */
+}
+
+/* *NEW*: حاوية الشعار المطلق (لتثبيت اللوجو في أعلى الشاشة) */
+#absolute-header-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 20; /* لضمان ظهوره فوق كل شيء */
+    /* *NEW/FIX*: إضافة حشو علوي لرفع اللوجو عن حافة المتصفح */
+    padding-top: 15px;
 }
 
 .screen {
-    /* [الإصلاح النهائي]: وضع مطلق لمنع الشاشات من دفع بعضها البعض وحل مشكلة التداخل */
-    position: absolute; 
-    /* يجب أن تبدأ هذه الشاشات من أعلى .content-wrapper (top: 0) */
+    /* [الإصلاح النهائي]: جعل الشاشات تبدأ تحت اللوجو المطلق */
+    position: relative; /* يجب أن يكون نسبياً ليحتوي اللوجو الصغير في هيدر شاشة اللعب */
     top: 0;
-    left: 50%;
-    transform: translateX(-50%); 
+    left: 0;
     
     display: none; 
     width: 100%;
@@ -65,8 +76,8 @@
         "cats"      
         "controls";
         
-    /* *FIX*: إضافة حشو علوي لتبدأ محتويات الشاشة (الصناديق) بعد مساحة اللوجو المطلق */
-    padding-top: 100px; 
+    /* *FIX/NEW*: إضافة حشو علوي لتبدأ محتويات الصناديق بعد مساحة اللوجو المطلق */
+    padding-top: 150px; /* مسافة كافية لتبدأ البوكسات تحت اللوجو الكبير */
     margin-top: 0; 
 }
 
@@ -86,20 +97,17 @@
 
 /* --- [3] تنسيق الصناديق (Box Styles & Grid Areas) --- */
 
+/* [FIX]: تنسيق الشعار المطلق (في حاوية #absolute-header-container) */
 .screen-header {
-    width: 100%;
+    width: 300px; /* يجب أن يأخذ عرض اللوجو فقط */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0 0 0;
-    margin-bottom: 20px;
-    border-bottom: none;
-    text-align: center;
-    
-    /* *FIX*: جعل الشعار مطلق الموقع وملتصقاً بالأعلى */
-    position: absolute; 
-    top: -150px; /* القيمة المعكوسة لـ padding-top في .content-wrapper لرفعه للأعلى */
-    z-index: 10; 
+    padding: 0; 
+    margin: 0;
+    border: none;
+    background: transparent;
+    position: relative; /* يجب أن يكون نسبياً داخل حاويته المطلقة */
 }
 
 .game-logo {
@@ -109,14 +117,14 @@
 
 /* [تعديل اللوجو]: اللوجو الكبير في شاشة البداية فقط */
 .game-logo.large {
-    width: 300px; /* الحجم الاحترافي المطلوب */
+    width: 300px; 
     height: auto;
     display: block;
 }
 
 /* [تعديل اللوجو]: اللوجو الصغير في شاشة اللعب فقط */
 .game-logo.small {
-    width: 64px; /* الحجم الصغير المطلوب */
+    width: 64px; 
     height: 64px;
     margin-bottom: 0;
     display: none; 
@@ -126,9 +134,8 @@
 #screen-home .game-logo.large { display: block; }
 #screen-home .game-logo.small { display: none; }
 
-#screen-game .game-logo.large { display: none; } /* إخفاء اللوجو الكبير في شاشة اللعب */
-#screen-game .game-logo.small { display: block; } /* إظهار اللوجو الصغير في شاشة اللعب */
-
+#screen-game .game-logo.large { display: none !important; } /* إخفاء اللوجو الكبير تماماً في شاشة اللعب */
+#screen-game .game-logo.small { display: block !important; } /* إظهار اللوجو الصغير في شاشة اللعب */
 
 /* ... (باقي تنسيقات الصناديق الداخلية لم تتغير) ... */
 .settings-box {
@@ -179,7 +186,6 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* *FIX*: إزالة margin-top الزائد */
     margin-top: 0; 
 }
 
@@ -194,7 +200,6 @@
     border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
     
-    /* *FIX*: يجب أن يكون نسبياً ليدفع محتوى اللوحة لأسفل */
     position: relative; 
     top: 0;
     left: 0;
