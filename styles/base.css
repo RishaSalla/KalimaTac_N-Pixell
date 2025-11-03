@@ -1,6 +1,6 @@
 /* --- [0] الأساسيات: الخطوط، الألوان، الخلفية (Base: Fonts, Colors, Background) --- */
 
-/* ربط خط البكسل المحلي للعربية */
+/* ربط خط البكسل المحلي للعربية (المسار يفترض أنه صحيح في مستودعك) */
 @font-face {
     font-family: 'PixelAE';
     src: url('../assets/PixelAE-Bold.ttf') format('truetype');
@@ -41,10 +41,9 @@
     --button-bg-hover: var(--color-logo-red);        /* خلفية الأزرار عند التحويم */
     --button-bg-active: var(--color-xo-pink);        /* خلفية الأزرار عند الضغط */
 
-    /* تطبيق الخطوط */
+    /* [تعديل] دمج الخطوط لضمان مظهر بكسلي كامل */
     --main-font: "Press Start 2P", 'PixelAE', sans-serif; /* الخط الرئيسي (للاتينية أولاً) */
-    /* [تعديل] إضافة "Press Start 2P" كخط احتياطي بكسلي */
-    --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif; /* الخط الأساسي للعربية */
+    --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif; /* الخط الأساسي للعربية (مع fallback) */
 }
 
 /* --- Global Reset & Box Sizing: إعدادات البكسل --- */
@@ -70,5 +69,12 @@ html, body {
     overflow-x: hidden;
 }
 
-/* --- [حذف] الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
-/* [حذف] تم إزالة القاعدة التي تستدعي 'pixel_background.png' لأنها ملف محلي */
+/* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
+body {
+    /* [تعديل] استخدام تكرار الخلفية بدلاً من تغطية الشاشة */
+    /* المسار يفترض أنه صحيح في مستودعك */
+    background-image: url('../assets/pixel_background.png'); 
+    background-repeat: repeat;       /* تغيير من no-repeat */
+    background-attachment: fixed;    /* لتثبيت الخلفية عند التمرير */
+    /* (تم حذف background-size: cover و background-position) */
+}
