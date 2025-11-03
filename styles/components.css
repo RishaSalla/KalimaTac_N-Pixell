@@ -162,7 +162,7 @@ input[type="text"]::placeholder {
     background: transparent !important; 
     padding: 5px !important;
     min-width: 100px;
-    font-size: 1.1rem !important;
+    /* [إصلاح]: التأكد من لون النص الداكن */
     color: var(--border-color); 
     
     box-shadow: none !important; 
