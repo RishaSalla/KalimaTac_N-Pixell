@@ -30,7 +30,7 @@
     display: flex;
     justify-content: center;
     z-index: 20; 
-    padding-top: 15px; /* مسافة بسيطة من أعلى المتصفح */
+    padding-top: 5px; /* مسافة بسيطة من أعلى المتصفح */
     background-color: transparent; /* FIX: لجعل الخلفية شفافة تماماً */
 }
 
@@ -77,8 +77,8 @@
         "controls";
         
     /* *FIX/NEW*: دفع محتوى الشاشة لأسفل اللوجو الثابت */
-    margin-top: 150px; 
-    padding-top: 0; /* إزالة الحشو الزائد */
+    margin-top: 0; 
+    padding-top: 120px; /* إزالة الحشو الزائد */
 }
 
 /* للشاشات الأكبر من 800px */
