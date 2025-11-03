@@ -12,8 +12,8 @@
 .content-wrapper {
     /* أساسي لحل مشكلة التداخل مع position: absolute */
     position: relative; 
-    width: 100%;
-    max-width: 900px;
+    /* *FIX*: زيادة العرض الأقصى لـ 1200px ليتناسب مع التصميم العريض */
+    max-width: 1200px; 
     margin: 0 auto;
     /* *FIX*: زيادة الحشو العلوي لترك مساحة كافية للشعار الكبير */
     padding-top: 150px; 
