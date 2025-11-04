@@ -103,15 +103,17 @@
 
 
 .settings-box {
-    background-color: #00000020; 
+    /* [تصحيح] جعل الخلفية أغمق (كانت 20) */
+    background-color: #00000060; 
     width: 100%;
-    border-top: var(--border-width) solid var(--border-color-light);
-    border-left: var(--border-width) solid var(--border-color-light);
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    border-right: var(--border-width) solid var(--border-color-dark);
+    
+    /* [تصحيح] تطبيق "الدبل خط" (بنفسجي فاتح وأسود) */
+    border: var(--border-width) solid var(--border-color-light); /* الخط الخارجي البنفسجي */
+    box-shadow: inset 0 0 0 var(--border-width) var(--border-color-dark); /* الخط الداخلي الأسود */
 }
 .settings-box-header {
     padding: 10px;
+    /* [تصحيح] استخدام حد سفلي أسود ليتناسب مع التصميم */
     border-bottom: var(--border-width) solid var(--border-color-dark);
     background-color: var(--color-logo-purple); 
 }
