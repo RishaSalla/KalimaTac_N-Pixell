@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerOMemberDisplay = $("#player-o-member");
 
     // --- [2] نظام الصوت (Audio Engine) ---
+    // ... (لا تغيير هنا)
     let audioCtx;
     const sounds = { 
         click: () => {}, success: () => {}, fail: () => {}, 
@@ -126,9 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
         oscillator.start(audioCtx.currentTime + delay); 
         oscillator.stop(audioCtx.currentTime + delay + duration);
     }
-
     // --- [3] إدارة شرائح الإدخال (Chips Management) ---
-    
+    // ... (لا تغيير هنا)
     function createChip(name, team) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -209,6 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- [4] إدارة شرائح الفئات (Category Chips) ---
+    // ... (لا تغيير هنا)
     function createChipCategory(name) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -300,14 +301,16 @@ document.addEventListener("DOMContentLoaded", () => {
         
         $$('.team-members-group').forEach(group => group.style.display = isTeam ? 'flex' : 'none');
         
+        // [تصحيح] تعديل هذا الجزء ليعمل مع الهيكل الجديد
+        // ليس لدينا <label> رئيسي، بل نستخدم <input placeholder>
         $$('.team-name-group').forEach(group => {
             const isX = group.querySelector('#player-name-x');
             const nameInput = isX ? playerNameXInput : playerNameOInput;
-            const labelText = isX ? `اسم ${isTeam ? 'فريق' : 'فرد'} X` : `اسم ${isTeam ? 'فريق' : 'فرد'} O`;
-            const placeholderText = isX ? `اسم فريق X` : `اسم فريق O`;
+            const placeholderText = isX 
+                ? (isTeam ? 'اسم فريق X' : 'اسم لاعب X') 
+                : (isTeam ? 'اسم فريق O' : 'اسم لاعب O');
             
-            if (group.querySelector('label')) group.querySelector('label').textContent = labelText;
-            if (nameInput) nameInput.placeholder = isTeam ? placeholderText : 'اسم اللاعب';
+            if (nameInput) nameInput.placeholder = placeholderText;
         });
         
         renderChips('X'); 
@@ -341,14 +344,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
     function updateSoundToggles() { 
         const active = getState().settings.sounds; 
-        const text = active ? "مفعلة" : "معطلة"; 
         if (soundsToggleHome) {
             soundsToggleHome.setAttribute("data-active", active); 
-            if (soundsToggleHome.querySelector(".switch-text")) {
-                soundsToggleHome.querySelector(".switch-text").textContent = text; 
-            }
+            
+            // [ --- [!!] تم حذف هذا السطر [!!] --- ]
+            // لم يعد لدينا .switch-text داخل المبدل، بل label خارجه
+            // if (soundsToggleHome.querySelector(".switch-text")) { ... }
         }
     }
+
     function toggleSounds() { 
         const state = getState(); 
         initAudio(); 
@@ -357,6 +361,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.settings.sounds) { initAudio(); sounds.success(); } 
         saveStateToLocalStorage();
     }
+    
+    // ... (لا تغيير من هنا حتى نهاية الملف) ...
+    
     function updateScoreboard() { 
         const state = getState(); 
         const totalRounds = state.match.totalRounds || 3;
@@ -892,7 +899,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // دمج باقي الإعدادات
                 Object.assign(mergedState.settings, loadedState.settings); 
-                Object.assign(mergedState.match, loadedState.match); 
+                Object.assign(mergedState.match, loaded.match); 
                 Object.assign(mergedState.roundState, loadedState.roundState); 
                 
                 mergedState.match.usedCombinations = loadedState.match.usedCombinations || [];
