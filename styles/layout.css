@@ -56,8 +56,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
-    padding-top: 250px; 
+    /* [FIX 3] Add buffer space between logo and first box (was 250px) */
+    padding-top: 270px; 
     margin-top: 0; 
 }
 
@@ -103,15 +103,17 @@
 
 
 .settings-box {
-    background-color: #00000020; 
+    /* [FIX 1] Set the background fill color */
+    background-color: #312d3f; 
     width: 100%;
-    border-top: var(--border-width) solid var(--border-color-light);
-    border-left: var(--border-width) solid var(--border-color-light);
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    border-right: var(--border-width) solid var(--border-color-dark);
+    
+    /* [FIX 1] Apply the double "pixelated" border */
+    border: var(--border-width) solid #60347c; /* The outer purple border */
+    box-shadow: inset 0 0 0 var(--border-width) var(--border-color-dark); /* The inner black border */
 }
 .settings-box-header {
     padding: 10px;
+    /* [تصحيح] استخدام حد سفلي أسود ليتناسب مع التصميم */
     border-bottom: var(--border-width) solid var(--border-color-dark);
     background-color: var(--color-logo-purple); 
 }
