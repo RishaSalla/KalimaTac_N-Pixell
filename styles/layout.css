@@ -24,11 +24,10 @@
     align-items: center;
     padding: 15px;
     
-    background-color: var(--background-color);
-    border-top: var(--border-width) solid var(--border-color-light);
-    border-left: var(--border-width) solid var(--border-color-light);
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    border-right: var(--border-width) solid var(--border-color-dark);
+    /* [تصحيح] جعل الحاوية الرئيسية شفافة وإزالة حدودها */
+    background-color: transparent;
+    border: none;
+    
     animation: pixel-fade-in 0.3s forwards;
 }
 
@@ -160,8 +159,8 @@
     width: 100%;
     padding: 15px;
     margin-top: 0; 
-    /* [تصحيح] زيادة المسافة العلوية لصفحة اللعب */
-    padding-top: 250px; /* كانت 100px */
+    /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته لصفحة اللعب */
+    padding-top: 250px; 
 }
 
 #game-header {
@@ -283,8 +282,8 @@
         padding-top: 250px; 
     }
     #screen-game {
-        /* [تصحيح] زيادة المسافة للموبايل أيضاً */
-        padding-top: 250px; /* كانت 100px */
+        /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته لصفحة اللعب (موبايل) */
+        padding-top: 250px; 
     }
 
     .settings-grid {
