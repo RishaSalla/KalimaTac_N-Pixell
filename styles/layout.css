@@ -58,7 +58,7 @@
     width: 100%;
     padding: 15px;
     /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
-    padding-top: 250px; /* تم التعديل من 180px */
+    padding-top: 250px; 
     margin-top: 0; 
 }
 
@@ -160,7 +160,8 @@
     width: 100%;
     padding: 15px;
     margin-top: 0; 
-    padding-top: 100px; 
+    /* [تصحيح] زيادة المسافة العلوية لصفحة اللعب */
+    padding-top: 250px; /* كانت 100px */
 }
 
 #game-header {
@@ -279,11 +280,11 @@
     }
     .screen {
         padding: 10px;
-        /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
-        padding-top: 250px; /* تم التعديل من 180px */
+        padding-top: 250px; 
     }
     #screen-game {
-        padding-top: 100px; 
+        /* [تصحيح] زيادة المسافة للموبايل أيضاً */
+        padding-top: 250px; /* كانت 100px */
     }
 
     .settings-grid {
