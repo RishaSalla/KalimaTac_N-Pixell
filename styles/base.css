@@ -16,7 +16,9 @@
     /* ألوان الشعار الأساسية */
     --color-logo-yellow: #f2bc24;
     --color-logo-purple: #62347c;
-    --color-logo-red: #7b322f;
+    --color-logo-red: #7b322f; /*
+    /* [تعديل] هذا اللون هو لون الأزرار الرمادي/البنفسجي في التصميم */
+    --color-button-grey: #312d3f;
 
     /* ألوان X/O والألوان الثانوية */
     --color-xo-purple: #6733f6;
@@ -29,21 +31,27 @@
     --player-x-color: var(--color-xo-red);           /* لون اللاعب X (أحمر) */
     --player-o-color: var(--color-xo-purple);        /* لون اللاعب O (بنفسجي غامق) */
     
-    --background-color: #2b213f;                     /* خلفية التطبيق (بنفسجي غامق) */
+    /* [تعديل] هذا هو لون الخلفية الرئيسي للأرضية */
+    --background-color: #2b213f;                     
+    /* [إضافة] هذا هو لون الصناديق الداخلي */
+    --container-bg-color: #312d3f;
+
     --text-color: #ffffff;                           /* لون النص الأبيض */
     
-    /* ألوان الحدود ثلاثية الأبعاد (3D Bevel) */
+    /* [تبسيط] سنعتمد على اللون الأسود فقط للحدود */
     --border-color-dark: #000000;                    /* الظل/العمق (أسود) */
-    --border-color-light: #5a487a;                   /* الإضاءة (أفتح من الخلفية) */
+    /* [إزالة] لم نعد بحاجة لهذا للحدود المسطحة */
+    /* --border-color-light: #5a487a; */
+    
     --border-width: 3px;                             /* عرض الحدود */
 
-    --accent-color: var(--color-xo-purple-light);    /* لون التظليل/التركيز الثانوي */
+    /* [تعديل] ألوان الأزرار لتطابق التصميم */
+    --button-bg: var(--container-bg-color);          /* اللون البنفسجي/الرمادي الافتراضي */
     --button-bg-hover: var(--color-logo-red);        /* خلفية الأزرار عند التحويم */
     --button-bg-active: var(--color-xo-pink);        /* خلفية الأزرار عند الضغط */
 
     /* تطبيق الخطوط */
-    --main-font: "Press Start 2P", 'PixelAE', sans-serif; /* الخط الرئيسي (للاتينية أولاً) */
-    /* [FIX] دمج الخطوط لضمان مظهر بكسلي متسق */
+    --main-font: "Press Start 2P", 'PixelAE', sans-serif; 
     --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif;
 }
 
@@ -52,32 +60,29 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* قواعد لضمان مظهر البكسل النظيف */
-    /* [FIX] إزالة هذه القاعدة للسماح بالحدود الجديدة */
-    /* box-shadow: none !important; */
     border-radius: 0 !important;
     image-rendering: pixelated; 
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: grayscale;
+    /* [إضافة] ضمان عدم وجود حدود افتراضية */
+    border: none;
 }
 
 html, body {
-    font-family: var(--arabic-pixel-font);
-    line-height: 1.6;
-    /* [FIX]: تغيير اللون الافتراضي للعناصر التي تستخدم --text-color */
-    color: var(--border-color-dark); /* يجب أن نغيره إلى لون داكن (أسود) */
-    background-color: var(--background-color);
-    overflow-y: auto; 
-    overflow-x: hidden;
+    font-family: var(--arabic-pixel-font);
+    line-height: 1.6;
+    /* [FIX]: تغيير اللون الافتراضي إلى الأبيض */
+    color: var(--text-color); 
+    background-color: var(--background-color);
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 /* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
 body {
-    /* [تعديل]: استخدام الصورة pixel_background.png */
     background-image: url('../assets/pixel_background.png'); 
-    /* [FIX] تغيير إلى 'repeat' ليطابق نمط البكسل */
     background-size: auto;
     background-position: center center; 
-    background-repeat: repeat; /* تكرار النمط */
+    background-repeat: repeat; 
     background-attachment: fixed;    
 }
