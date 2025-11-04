@@ -1,14 +1,14 @@
-/* --- [1] الأزرار والمدخلات (الحدود المسطحة الجديدة) --- */
+/* --- [1] الأزرار والمدخلات (الحدود ثلاثية الأبعاد) --- */
 
-/* [إصلاح شامل] تطبيق الحد الأسود الموحد على جميع العناصر */
+/* دمج وتنسيق العناصر الأساسية */
 button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-control, 
 .score-tag, #timer-text, .player-tag, .modal-content, #round-winner-message,
-#answer-timer-bar-wrapper,
-.chip-container-static, /* [جديد] حاوية الشرائح الثابتة */
-.board-cell {
+#answer-timer-bar-wrapper {
     font-family: var(--arabic-pixel-font);
     font-size: 1.1rem;
     padding: 10px 15px; 
+    /* [FIX]: ضمان وضوح اللون (أسود) */
+    color: var(--border-color) !important; 
     cursor: pointer;
     transition: background-color 0.1s ease, transform 0.05s ease;
     position: relative;
@@ -17,59 +17,67 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-con
     justify-content: center;
     text-align: center;
     line-height: 1.2;
+
+    /* التأكيد على حواف حادة (صفر) لتطابق التصميم البكسلي */
     border-radius: 0 !important;
     
-    /* [الإصلاح الأهم] تطبيق الحد الأسود الموحد من التصميم */
-    border: var(--border-width) solid var(--border-color-dark);
-    
-    /* [إزالة] إزالة الحدود المشطوفة القديمة */
-    /* border-top: ... REMOVED */
-    /* border-left: ... REMOVED */
-    /* border-bottom: ... REMOVED */
-    /* border-right: ... REMOVED */
+    /* حدود ثلاثية الأبعاد بارزة (Bevel Out) */
+    background-color: var(--primary-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
-/* [إصلاح] تحديد ألوان الخلفية والنص الافتراضية */
-button, .btn, .switch-toggle {
-    background-color: var(--button-bg); /* بنفسجي/رمادي */
-    color: var(--text-color); /* أبيض */
-}
-
-/* [إصلاح] تحديد خلفية حقول الإدخال لتكون بيضاء */
-input[type="text"], select, .chip-input-container, .chip-container-static {
-    background-color: var(--text-color); /* أبيض */
-    color: var(--border-color-dark) !important; /* أسود */
-}
-
-button:hover, .btn:hover {
+button:hover, .btn:hover, .switch-toggle[data-active="true"]:hover {
     background-color: var(--button-bg-hover);
     transform: translateY(-1px); 
 }
 
-button:active, .btn:active {
+button:active, .btn:active, .switch-toggle[data-active="true"]:active {
     background-color: var(--button-bg-active);
     transform: translateY(1px); 
-    /* [إزالة] لا حاجة لعكس الحدود */
+    /* عكس الحدود عند الضغط (Bevel In) */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 /* --- [2] تخصيص الأزرار --- */
 .mode-btn {
+    background-color: var(--accent-color);
+    color: var(--border-color);
     flex-grow: 1;
 }
-/* [إزالة] .mode-btn.active لم يعد موجوداً في HTML الجديد */
-
+.mode-btn.active {
+    /* [تعديل] تغيير اللون النشط من الأحمر إلى البنفسجي ليطابق الصورة */
+    background-color: var(--player-o-color); /* تغيير من --player-x-color */
+    color: var(--text-color);
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
+}
+.mode-btn:hover:not(.active) {
+    background-color: var(--player-o-color);
+    color: var(--text-color);
+}
 .btn-danger {
     background-color: var(--player-x-color);
     color: var(--text-color);
 }
 .btn-warning {
     background-color: var(--primary-color);
-    color: var(--border-color-dark); /* [تصميم] النص أسود على الأزرار الصفراء */
+    color: var(--border-color);
 }
 .btn-success {
     background-color: #4CAF50;
     color: var(--text-color);
-    border-color: var(--border-color-dark); /* ضمان الحد الأسود */
+    border-top: var(--border-width) solid #66bb6a;
+    border-left: var(--border-width) solid #66bb6a;
+    border-bottom: var(--border-width) solid #388e3c;
+    border-right: var(--border-width) solid #388e3c;
 }
 .btn-success:hover { background-color: #66bb6a; }
 .btn-success:active { background-color: #388e3c; }
@@ -83,13 +91,14 @@ button:active, .btn:active {
 }
 .btn-group-bottom .btn {
     flex-grow: 1;
-    max-width: 350px; /* [تعديل] زيادة العرض */
+    max-width: 250px;
 }
 
 
 /* --- [3] حقول الإدخال والشرائح (Chips) --- */
 
 .form-group {
+    /* *NEW*: إضافة تباعد سفلي موحد للمجموعات */
     margin-bottom: 20px; 
 }
 .form-group label {
@@ -98,16 +107,26 @@ button:active, .btn:active {
     color: var(--text-color);
     text-shadow: 1px 1px #00000080;
     text-align: right; 
+    /* *NEW*: إضافة تباعد سفلي صغير ليفصل عن حقل الإدخال */
     margin-bottom: 5px; 
     display: block;
 }
 
-input[type="text"] {
+input[type="text"], select {
+    /* *FIX*: تعيين ارتفاع ثابت لتوحيد المظهر مع حقل الشريحة */
     height: 50px; 
+    
+    background-color: var(--text-color); 
+    /* [إصلاح حاسم للون]: ضمان وضوح لون النص المدخل (أسود) */
+    color: var(--border-color) !important;
     padding: 10px;
     width: 100%;
     font-size: 1.1rem;
-    /* [إزالة] الحدود الغائرة لم تعد مستخدمة */
+    /* حدود ثلاثية الأبعاد غائرة (Inset) */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 input[type="text"]::placeholder {
@@ -115,124 +134,171 @@ input[type="text"]::placeholder {
     opacity: 1;
 }
 
-/* [جديد] تخصيص قوائم الاختيار <select> لتطابق التصميم */
-select.custom-select {
-    height: 50px;
-    width: 100%;
-    font-size: 1.1rem;
-    padding: 10px 15px;
+/* [تعديل]: الحاوية الخارجية لإدخال الشرائح والزر */
+.chip-input-control {
+    display: flex; 
+    align-items: stretch; 
+    gap: 5px; 
+    width: 100%; 
+    border: none !important; 
+    padding: 0 !important;
+    background: transparent !important;
+    /* [FIX 4] إزالة الارتفاع الثابت والسماح بالنمو */
+    min-height: 50px;
+    height: auto; 
     
-    /* إخفاء السهم الافتراضي */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    
-    /* إضافة سهم بكسل مخصص (SVG) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' fill='none'%3E%3Cpath fill='%23000' d='M0 0h3v3H0V0Zm3 3h3v3H3V3Zm3 3h3v3H6V6Zm3 3h3v3H9V9Zm3-3h3V3h-3v3Zm3-3h3V0h-3v3Z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    /* (ملاحظة: dir="rtl" ستضع السهم على اليسار تلقائياً) */
-    background-position: left 15px center; 
-    background-size: 16px 10px;
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    border-right: none;
 }
 
-/* [جديد] حاوية الشرائح الثابتة (من التصميم) */
-.chip-container-static {
+.chip-input-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px;
+    gap: 5px;
+    background-color: var(--text-color);
+    /* [FIX] يجب أن يكون الـ padding الداخلي أقل لترك مساحة كافية للـ chip-input */
+    padding: 5px; 
+    /* [FIX 4] إزالة الارتفاع الثابت والسماح بالنمو */
+    min-height: 50px; /* لضمان محاذاة الارتفاع الأولي */
+    height: auto; 
     width: 100%;
-    min-height: 50px; 
+    align-items: center;
+    flex-grow: 1;
+    align-self: stretch; 
+    
+    /* حدود غائرة (Inset) */
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
+}
+.chip-input {
+    flex-grow: 1;
+    border: none !important; 
+    background: transparent !important; 
+    padding: 5px !important;
+    min-width: 100px;
+    font-size: 1.1rem !important;
+    /* [إصلاح حاسم للون]: ضمان وضوح لون النص المدخل (أسود) */
+    color: var(--border-color) !important; 
+    
+    box-shadow: none !important; 
+    border-radius: 0 !important; 
 }
 
 .chip {
-    background-color: var(--color-logo-purple); /* اللون البنفسجي من التصميم */
+    background-color: var(--player-o-color);
     color: var(--text-color);
+    border-top: 2px solid var(--border-color-light);
+    border-left: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-light);
     padding: 5px 10px;
     font-size: 0.9rem;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-weight: bold;
-    height: 36px; /* [جديد] ارتفاع موحد */
 }
 
 .chip-remove {
-    background-color: transparent;
+    background-color: var(--player-x-color);
     color: var(--text-color);
-    border: none;
+    border-top: 2px solid var(--border-color-light);
+    border-left: 2px solid var(--border-color-light);
+    border-bottom: 2px solid var(--border-color-dark);
+    border-right: 2px solid var(--border-color-light);
     padding: 0 5px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1;
     font-weight: bold;
-    min-width: unset;
-    height: 100%;
-}
-.chip-remove:hover {
-    background-color: #00000030;
 }
 .chip-remove:active {
-    transform: none;
-    color: var(--player-x-color);
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
-
-/* [إزالة] إخفاء عناصر إدخال الشرائح القديمة لأنها لا تطابق التصميم */
-.chip-input-control {
-    display: none; 
+.btn-add-chip {
+    padding: 10px;
+    min-width: 50px;
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    line-height: 1;
+    /* *FIX 4*: السماح للزر بالتمدد مع الحاوية */
+    height: 100%; 
+    align-self: stretch; 
 }
 
 /* --- [4] مفاتيح التبديل (Switches) --- */
-/* [إصلاح شامل] إعادة تصميم مفتاح التبديل ليطابق التصميم */
-
-.form-group-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-.form-group-toggle label {
-    margin-bottom: 0;
-    font-size: 1.1rem;
-}
-
 .switch-toggle {
-    width: 60px; /* عرض الحاوية */
-    height: 30px; /* ارتفاع الحاوية */
-    padding: 0; /* إزالة الحشو الداخلي */
-    background-color: var(--text-color); /* الخلفية بيضاء */
-    position: relative;
-    justify-content: flex-start; /* محاذاة لليمين (بداية RTL) */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    justify-content: space-between;
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
+}
+
+.switch-toggle[data-active="true"] {
+    background-color: var(--player-o-color); 
+    color: var(--text-color);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
+}
+
+.switch-toggle .switch-text {
+    font-size: 1rem;
+    font-weight: bold;
+}
+.switch {
+    width: 44px;
+    height: 24px;
+    background: var(--border-color);
+    border-top: 1px solid var(--border-color-dark);
+    border-left: 1px solid var(--border-color-dark);
+    border-bottom: 1px solid var(--border-color-light);
+    border-right: 1px solid var(--border-color-light);
+    padding: 2px;
 }
 .switch-slider {
-    width: 24px; /* عرض الزر المنزلق */
-    height: 24px; /* ارتفاع الزر المنزلق */
-    background: var(--color-button-grey); /* لون الزر رمادي/بنفسجي */
-    border: var(--border-width) solid var(--border-color-dark);
-    position: absolute;
-    top: 0px;
-    /* [RTL] الوضع الافتراضي (اليمين) */
-    right: 0px; 
-    transition: right 0.2s ease;
-    /* [إزالة] إزالة التحويل transform */
+    width: 16px;
+    height: 16px;
+    background: var(--text-color);
+    transition: transform 0.2s ease;
+    border-top: 1px solid var(--border-color-light);
+    border-left: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-dark);
+    border-right: 1px solid var(--border-color-light);
+    /* [FIX 2] تعيين الوضع "Off" (اليمين) كافتراضي لـ RTL */
+    transform: translateX(20px);
+}
+.switch-toggle[data-active="true"] .switch {
+    background: var(--primary-color);
 }
 .switch-toggle[data-active="true"] .switch-slider {
-    /* [RTL] الوضع النشط (اليسار) */
-    right: calc(100% - 24px); 
-    background-color: var(--primary-color); /* اللون أصفر عند التفعيل */
+    /* [FIX 2] تعيين الوضع "On" (اليسار) كنشط لـ RTL */
+    transform: translateX(0);
 }
-/* [إزالة] .switch و .switch-text القديمة */
-
 
 /* --- [5] مكونات شاشة اللعب (Game Screen Components) --- */
 .score-tag {
-    background-color: var(--container-bg-color);
+    background-color: var(--background-color);
     color: var(--text-color);
     padding: 8px 12px;
     font-size: 0.9rem;
     font-weight: bold;
-    text-shadow: 1px 1px var(--border-color-dark);
-    border-color: var(--border-color-dark);
+    text-shadow: 1px 1px var(--border-color);
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 .score-tag.score-x { color: var(--player-x-color); }
 .score-tag.score-o { color: var(--player-o-color); }
@@ -240,14 +306,17 @@ select.custom-select {
 #round-info {
     font-size: 1rem;
     color: var(--text-color);
-    text-shadow: 1px 1px var(--border-color-dark);
+    text-shadow: 1px 1px var(--border-color);
     background-color: #00000030;
     padding: 8px 12px;
-    border: var(--border-width) solid var(--border-color-dark);
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 
 .player-tag {
-    background-color: var(--container-bg-color);
+    background-color: var(--background-color);
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -259,7 +328,10 @@ select.custom-select {
     position: relative;
     transition: all 0.2s ease;
     opacity: 0.6;
-    border-color: var(--border-color-dark);
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
 
 .player-tag.active {
@@ -277,7 +349,7 @@ select.custom-select {
 
 .player-tag .player-name-text {
     font-weight: bold;
-    text-shadow: 1px 1px var(--border-color-dark);
+    text-shadow: 1px 1px var(--border-color);
 }
 .player-tag .player-tag-details {
     font-size: 0.9rem;
@@ -291,9 +363,12 @@ select.custom-select {
     padding: 8px 12px;
     text-align: center;
     margin-bottom: 5px;
-    text-shadow: 1px 1px var(--border-color-dark);
+    text-shadow: 1px 1px var(--border-color);
     font-weight: bold;
-    border-color: var(--border-color-dark);
+    border-top: 2px solid var(--border-color-dark);
+    border-left: 2px solid var(--border-color-dark);
+    border-bottom: 2px solid var(--border-color-light);
+    border-right: 2px solid var(--border-color-light);
 }
 
 #timer-hint {
@@ -306,7 +381,7 @@ select.custom-select {
 .board-cell .cell-letter {
     font-size: 2.5rem; 
     font-family: var(--main-font); 
-    text-shadow: 2px 2px var(--border-color-dark);
+    text-shadow: 2px 2px var(--border-color);
     line-height: 1.1;
 }
 
@@ -357,7 +432,7 @@ select.custom-select {
     z-index: 10;
     transform-origin: 0% 50%;
     box-shadow: 0 0 10px var(--text-color);
-    border: 2px solid var(--border-color-dark);
+    border: 2px solid var(--border-color);
 }
 
 #game-controls {
@@ -403,15 +478,16 @@ select.custom-select {
 }
 
 .modal-content {
-    background-color: var(--container-bg-color); /* [تصميم] */
-    padding: 40px 50px; 
+    background-color: var(--background-color);
+    /* [FIX/NEW]: زيادة الحشو الداخلي لتقليل تداخل النص */
+    padding: 40px 50px; /* زيادة الحشو لـ 40px من أعلى/أسفل و 50px من الجوانب */
     text-align: center;
     position: relative;
+    /* *FIX*: زيادة العرض الأقصى لاستيعاب النصوص الكبيرة */
     max-width: 600px;
     width: 90%;
     animation: modalPopIn 0.2s forwards;
     border-radius: 0 !important; 
-    border-color: var(--border-color-dark); /* [تصميم] */
 }
 
 @keyframes modalPopIn {
@@ -423,7 +499,7 @@ select.custom-select {
     font-size: 2rem;
     color: var(--primary-color);
     margin-bottom: 20px;
-    text-shadow: 2px 2px var(--border-color-dark);
+    text-shadow: 2px 2px var(--border-color);
 }
 
 .modal-content p {
@@ -444,14 +520,13 @@ select.custom-select {
 .modal-close-btn {
     position: absolute;
     top: 5px;
-    right: 5px; /* [RTL] */
+    right: 5px;
     background-color: var(--player-x-color);
     color: var(--text-color);
     padding: 5px 10px;
     font-size: 1.2rem;
     line-height: 1;
     min-width: unset; 
-    border-color: var(--border-color-dark);
 }
 
 /* نافذة الإجابة */
@@ -459,16 +534,17 @@ select.custom-select {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    /* *FIX*: زيادة التباعد بين الحرف والفئة */
     gap: 30px;
     align-items: center;
-    margin-bottom: 30px; 
+    margin-bottom: 30px; /* زيادة التباعد السفلي */
     padding-bottom: 20px; 
     border-bottom: 3px solid var(--border-color-dark);
 }
 #answer-letter {
     font-size: 5rem; 
     color: var(--primary-color);
-    text-shadow: 3px 3px var(--border-color-dark);
+    text-shadow: 3px 3px var(--border-color);
     font-family: var(--arabic-pixel-font); 
     font-weight: normal; 
     line-height: 1;
@@ -493,12 +569,11 @@ select.custom-select {
 }
 #answer-timer-bar-wrapper { 
     width: 100%;
+    /* *FIX*: تعيين ارتفاع ثابت لشريط المؤقت */
     height: 20px;
     margin-bottom: 25px; 
     position: relative;
     overflow: hidden;
-    background-color: var(--text-color); /* [تصميم] خلفية بيضاء */
-    border-color: var(--border-color-dark);
 }
 #answer-timer-bar {
     height: 100%;
@@ -511,17 +586,14 @@ select.custom-select {
     content: '';
     position: absolute;
     top: 0;
-    /* [RTL] */
-    right: 0; 
+    left: 0;
     height: 100%;
     width: 100%;
     background-color: var(--primary-color);
-    /* [RTL] */
-    transform-origin: right center; 
+    transform-origin: left center;
     animation: timerCountdown var(--timer-duration, 10s) linear forwards;
 }
 
-/* [RTL] عكس اتجاه الأنيميشن */
 @keyframes timerCountdown {
     from { transform: scaleX(1); background-color: #4CAF50; }
     50% { background-color: var(--primary-color); }
@@ -558,12 +630,11 @@ select.custom-select {
     color: var(--primary-color);
     text-align: center;
     margin-top: 5px;
-    text-shadow: 2px 2px var(--border-color-dark);
+    text-shadow: 2px 2px var(--border-color);
     font-family: var(--arabic-pixel-font);
     padding: 10px;
     background-color: #00000030;
     display: none; 
-    border-color: var(--border-color-dark);
 }
 #round-winner-message[style*="var(--player-x-color)"] {
     border-color: var(--player-x-color);
@@ -579,11 +650,18 @@ select.custom-select {
         gap: 10px;
     }
 
-    /* [إزالة] مكرر من layout.css
-    #player-turn-bar { ... }
-    .player-tag { ... }
-    #timer-display { ... }
-    */
+    #player-turn-bar {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    .player-tag {
+        width: 100%;
+        order: 2;
+    }
+    #timer-display {
+        order: 1;
+        width: 100%;
+    }
 
     .board-cell .cell-letter {
         font-size: 2rem;
