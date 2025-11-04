@@ -18,7 +18,6 @@
 }
 
 .screen {
-    /* [مهم] القاعدة الافتراضية: إخفاء جميع الشاشات */
     display: none; 
     width: 100%;
     flex-direction: column;
@@ -38,9 +37,7 @@
     to { opacity: 1; }
 }
 
-/* [تعديل] قواعد إظهار الشاشة النشطة */
 #app-container[data-view="home"] #screen-home { 
-    /* هذه القاعدة هي الوحيدة المسؤولة عن إظهار شاشة البداية */
     display: flex; 
 }
 #app-container[data-view="game"] #screen-game { 
@@ -50,13 +47,12 @@
 /* --- [2] هيكل شاشة البداية (Screen Home Layout) --- */
 
 #screen-home {
-    /* [تصحيح] تم حذف 'display: flex' من هنا ليتم التحكم به من data-view */
     flex-direction: column;
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* الهامش العلوي ليترك مسافة للوقو */
-    padding-top: 150px; 
+    /* [تصحيح] زيادة المسافة العلوية لترك مساحة كافية للوقو */
+    padding-top: 180px; /* كانت 150px */
     margin-top: 0; 
 }
 
@@ -71,7 +67,6 @@
     border-bottom: none;
     text-align: center;
     
-    /* تحديد موقع اللوجو في الأعلى */
     position: absolute; 
     top: 0;
     left: 50%;
@@ -128,24 +123,20 @@
     gap: 20px;
 }
 
-/* [جديد] تنسيق الشبكة الداخلية للصناديق */
 .settings-grid {
     display: grid;
-    grid-template-columns: 1fr; /* عمود واحد افتراضياً (للموبايل) */
+    grid-template-columns: 1fr; 
     gap: 20px;
     width: 100%;
 }
 
-/* للشاشات الأكبر من 800px */
 @media (min-width: 800px) {
     .settings-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 أعمدة للشاشات الكبيرة */
+        grid-template-columns: repeat(3, 1fr); 
         align-items: flex-start;
     }
     
-    /* تنسيق خاص للشبكة العلوية (اللاعبين) */
     .settings-grid-top {
-        /* توزيع الأعمدة 1.2 / 0.6 / 1.2 */
         grid-template-columns: 1.2fr 0.6fr 1.2fr;
     }
     .settings-grid .settings-column-middle {
@@ -159,12 +150,10 @@
 
 /* --- [4] هيكل شاشة اللعب (Screen Game Layout) --- */
 #screen-game {
-    /* [تصحيح] تم حذف 'display: flex' من هنا */
     gap: 20px;
     width: 100%;
     padding: 15px;
     margin-top: 0; 
-    /* تعديل المسافة العلوية لصفحة اللعب */
     padding-top: 100px; 
 }
 
@@ -179,7 +168,6 @@
     border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
     
-    /* تثبيت رأس اللعبة في الأعلى */
     position: absolute; 
     top: 0;
     left: 50%;
@@ -265,9 +253,6 @@
 
 /* --- [6] تعديلات الاستجابة (Responsive) للهيكل --- */
 @media (max-width: 800px) {
-    /* (قواعد الميديا لـ 800 بكسل موجودة مسبقاً في .settings-grid) */
-    
-    /* تغيير تنسيق رأس اللعبة للموبايل */
      #game-header {
         flex-direction: column;
         text-align: center;
@@ -288,15 +273,15 @@
     }
     .screen {
         padding: 10px;
-        padding-top: 150px; /* الحفاظ على المسافة للوقو */
+        /* [تصحيح] زيادة المسافة للموبايل أيضاً */
+        padding-top: 180px; /* كانت 150px */
     }
     #screen-game {
-        padding-top: 100px; /* الحفاظ على المسافة لرأس اللعبة */
+        padding-top: 100px; 
     }
 
-    /* تعديل الهيكل الأفقي للشاشات الصغيرة */
     .settings-grid {
-        grid-template-columns: 1fr !important; /* فرض عمود واحد دائماً */
+        grid-template-columns: 1fr !important; 
     }
 
 
@@ -321,3 +306,4 @@
         border-width: 3px;
     }
 }
+
