@@ -12,14 +12,11 @@
 .content-wrapper {
     max-width: 1200px; 
     margin: 0 auto;
-    /* [تعديل] إزالة الهامش السلبي، التدفق الآن طبيعي */
     margin-top: 0; 
     position: relative; 
     padding-top: 0; 
     width: 100%; 
 }
-
-/* [محذوف] تم حذف #absolute-header-container لأنه لم يعد موجوداً */
 
 .screen {
     position: relative; 
@@ -27,13 +24,14 @@
     left: 0;
     transform: none; 
     
+    /* [FIX] إخفاء جميع الشاشات افتراضيًا */
     display: none; 
     width: 100%;
     flex-direction: column;
     align-items: center;
     padding: 15px;
     
-    /* [تعديل] جعل الحاوية الرئيسية شفافة */
+    /* [FIX] جعل الحاوية الرئيسية شفافة */
     background-color: transparent;
     border: none;
     animation: pixel-fade-in 0.3s forwards;
@@ -44,12 +42,11 @@
     to { opacity: 1; }
 }
 
-/* [تعديل] شاشة البداية أصبحت flex (عمودي) */
-/* [تعديل] إخفاء/إظهار الشاشات بناءً على data-view */
+/* [FIX] إظهار الشاشة النشطة فقط */
 #app-container[data-view="home"] #screen-home { display: flex; }
 #app-container[data-view="game"] #screen-game { display: flex; }
 
-/* [جديد] إخفاء اللوجو الكبير في شاشة اللعب */
+/* إخفاء اللوجو الكبير في شاشة اللعب */
 #app-container[data-view="game"] .screen-header {
     display: none;
 }
@@ -59,18 +56,14 @@
 
 #screen-home {
     gap: 20px;
-    /* [تعديل] تغييرها إلى flex عمودي */
-    display: none; /* يتم التحكم به من #app-container */
+    /* display: none;  <-- [FIX] إزالة القاعدة المتعارضة */
     flex-direction: column;
     align-items: center;
     
-    /* [FIX] زيادة الهامش العلوي للوجو */
+    /* [FIX] زيادة الهامش العلوي للوجو (250 + 20) */
     padding-top: 270px; 
     margin-top: 0; 
 }
-
-/* [محذوف] تم حذف قواعد الـ Grid القديمة لشاشة البداية */
-
 
 /* --- [3] تنسيق الصناديق (Box Styles & Grid Areas) --- */
 
@@ -79,11 +72,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* [تعديل] زيادة الهامش السفلي للوجو */
     margin-bottom: 20px;
     border-bottom: none;
     text-align: center;
-    /* [تعديل] جعل اللوجو يطفو فوق الخلفية الشفافة */
+    /* [FIX] جعل اللوجو يطفو فوق الخلفية الشفافة */
     position: absolute; 
     top: 0;
     left: 50%;
@@ -110,7 +102,7 @@
     display: none; 
 }
 
-/* قواعد إظهار/إخفاء اللوجو (لم تتغير) */
+/* قواعد إظهار/إخفاء اللوجو */
 #screen-home .game-logo.large { display: block; }
 #screen-home .game-logo.small { display: none; }
 #screen-game .game-logo.large { display: none !important; }
@@ -118,24 +110,16 @@
 
 
 .settings-box {
-IAmAString: This is where I will make the edits
     /* [FIX] تطبيق لون الخلفية الصلب المطلوب */
     background-color: #312d3f; 
     width: 100%;
     
-    /* [NEW BORDER] إزالة الحدود ثلاثية الأبعاد القديمة */
-    /* border-top: var(--border-width) solid var(--border-color-light); */
-    /* border-left: var(--border-width) solid var(--border-color-light); */
-    /* border-bottom: var(--border-width) solid var(--border-color-dark); */
-    /* border-right: var(--border-width) solid var(--border-color-dark); */
-
-    /* [NEW BORDER] تطبيق الحدود المزدوجة المطلوبة */
+    /* [FIX] تطبيق الحدود المزدوجة المطلوبة */
     border: 3px solid #000000; /* 1. الإطار الأسود الخارجي */
     box-shadow: inset 0 0 0 3px #60347c; /* 2. الإطار البنفسجي الداخلي */
 }
 .settings-box-header {
     padding: 10px;
-    /* [NEW] تعديل الحدود لتتناسب مع سماكة الصندوق */
     /* [FIX] تغيير الحد ليتناسب مع النمط الجديد */
     border-bottom: 3px solid #000000;
     box-shadow: inset 0 -3px 0 0 #60347c;
@@ -154,26 +138,22 @@ IAmAString: This is where I will make the edits
     gap: 20px;
 }
 
-/* [جديد] تنسيق الشبكة الداخلية للصناديق */
+/* تنسيق الشبكة الداخلية للصناديق */
 .settings-grid {
     display: grid;
-    /* الافتراضي: عمود واحد للموبايل */
     grid-template-columns: 1fr;
     gap: 20px;
 }
 
-/* [جديد] تطبيق 3 أعمدة للشاشات الأكبر (مثل 900px) */
+/* تطبيق 3 أعمدة للشاشات الأكبر */
 @media (min-width: 900px) {
     .settings-grid {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 30px; /* تباعد أكبر على الشاشات الكبيرة */
+        gap: 30px; 
     }
 }
 
-/* [محذوف] تم حذف كل قواعد grid-area القديمة */
-
-.btn-group-bottom { 
-    /* [تعديل] إزالة grid-area */
+.btn-group-bottom {
     margin-top: 10px; 
     display: flex;
     gap: 10px;
@@ -188,8 +168,8 @@ IAmAString: This is where I will make the edits
     width: 100%;
     padding: 15px;
     margin-top: 0; 
-    /* [FIX] إعطاء مساحة علوية لرأس اللعبة */
-    display: none; /* يتم التحكم به من #app-container */
+    /* display: none;  <-- [FIX] إزالة القاعدة المتعارضة */
+    /* [FIX] القيمة الصحيحة للهامش العلوي */
     padding-top: 250px; 
 }
 
@@ -201,13 +181,14 @@ IAmAString: This is where I will make the edits
     gap: 15px;
     flex-wrap: wrap;
     width: 100%;
-    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-bottom: 3px solid var(--border-color-dark); /* [FIX] استخدام 3px متغيرة */
     padding-bottom: 15px;
     
-    /* [تعديل] جعل رأس اللعبة يطفو أيضاً */
+    /* [FIX] جعل رأس اللعبة يطفو أيضاً */
     position: absolute; 
     top: 0;
     left: 50%;
+  D-8;
     transform: translateX(-50%);
     width: calc(100% - 30px); /* (100% - padding * 2) */
     max-width: 1200px;
@@ -242,30 +223,6 @@ IAmAString: This is where I will make the edits
 
 #player-turn-bar {
     display: grid;
-  .settings-box {
-    /* [FIX] تطبيق لون الخلفية الصلب المطلوب */
-    background-color: #312d3f; 
-    width: 100%;
-    
-    /* [NEW BORDER] إزالة الحدود ثلاثية الأبعاد القديمة */
-    /* --border-width: 6px; */ /* إزالة السماكة الزائدة */
-    /* border-top: var(--border-width) solid var(--border-color-light); */
-    /* border-left: var(--border-width) solid var(--border-color-light); */
-    /* border-bottom: var(--border-width) solid var(--border-color-dark); */
-    /* border-right: var(--border-width) solid var(--border-color-dark); */
-
-    /* [NEW BORDER] تطبيق الحدود المزدوجة المطلوبة */
-    border: 3px solid #000000; /* 1. الإطار الأسود الخارجي */
-    box-shadow: inset 0 0 0 3px #60347c; /* 2. الإطار البنفسجي الداخلي */
-}
-.settings-box-header {
-    padding: 10px;
-    /* [NEW] تعديل الحدود لتتناسب مع سماكة الصندوق */
-    /* [FIX] تغيير الحد ليتناسب مع النمط الجديد */
-    border-bottom: 3px solid #000000;
-    box-shadow: inset 0 -3px 0 0 #60347c;
-    background-color: var(--color-logo-purple); 
-}
     grid-template-columns: 1fr auto 1fr;
     gap: 15px;
     width: 100%;
@@ -284,7 +241,6 @@ IAmAString: This is where I will make the edits
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    /* [تعديل] زيادة الفواصل لحل مشكلة تداخل الحروف */
     gap: 15px; 
     width: 100%;
     max-width: 450px;
@@ -293,29 +249,15 @@ IAmAString: This is where I will make the edits
     position: relative;
     overflow: hidden;
     
-  S (Game Board) --- */
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    /* [تعديل] زيادة الفواصل لحل مشكلة تداخل الحروف */
-    gap: 15px; 
-    width: 100%;
-    max-width: 450px;
-    aspect-ratio: 1 / 1;
-    margin: 10px auto;
-    position: relative;
-    overflow: hidden;
-    
-    background-color: #1a142c; 
-    border-top: var(--border-width) solid var(--border-color-dark);
-    border-left: var(--border-width) solid var(--border-color-dark);
-    border-bottom: var(--border-width) solid var(--border-color-light);
-    border-right: var(--border-width) solid var(--border-color-light);
+    background-color: #1a142c;D-8;
+    /* [FIX] استخدام 3px متغيرة */
+    border-top: 3px solid var(--border-color-dark);
+    border-left: 3px solid var(--border-color-dark);
+    border-bottom: 3px solid var(--border-color-light);
+    border-right: 3px solid var(--border-color-light);
 }
 
 .board-cell {
-    /* [تعديل] زيادة الحشو الداخلي لمنع تداخل الحروف مع حدود الخلية */
     padding: 10px; 
     width: 100%;
     height: 100%;
@@ -325,6 +267,7 @@ IAmAString: This is where I will make the edits
     align-items: center;
     background-color: #1a142c;
     border: none;
+D-8;
     cursor: pointer;
     transition: background-color 0.1s ease;
     position: relative;
@@ -351,14 +294,13 @@ IAmAString: This is where I will make the edits
         padding-top: 270px;
     }
     #screen-game {
+    D-8;
         padding-top: 250px;
     }
     
     #game-header {
         width: calc(100% - 20px); /* (100% - padding * 2) */
     }
-
-    /* [محذوف] تم حذف قواعد الاستجابة القديمة لـ #screen-home */
 
     #game-header {
         flex-direction: column;
@@ -388,7 +330,6 @@ IAmAString: This is where I will make the edits
         max-width: none;
         height: auto;
         /* [تعديل] فواصل أصغر للموبايل */
-IAmAString: This is where I will make the edits
         gap: 5px; 
         border-width: 3px;
     }
