@@ -99,17 +99,17 @@
 #screen-home .game-logo.large { display: block; }
 #screen-home .game-logo.small { display: none; }
 #screen-game .game-logo.large { display: none !important; } 
-#screen-game .game-logo.small { display: block !important; }
+#screen-game .game-logo.small { display: block !importanf; }
 
 
 .settings-box {
-    /* [تصحيح] جعل الخلفية أغمق (كانت 20) */
+    /* [تصحيح] جعل الخلفية أغمق (كانت 60) */
     background-color: #00000095; 
     width: 100%;
     
-    /* [تصحيح] تطبيق "الدبل خط" (بنفسجي فاتح وأسود) */
-    border: var(--border-width) solid var(--border-color-light); /* الخط الخارجي البنفسجي */
-    box-shadow: inset 0 0 0 var(--border-width) var(--border-color-dark); /* الخط الداخلي الأسود */
+    /* [تصحيح] تطبيق "الدبل خط" (أسود للخارج، بنفسجي للداخل) */
+    border: var(--border-width) solid var(--border-color-dark); /* الخط الخارجي الأسود */
+    box-shadow: inset 0 0 0 var(--border-width) var(--border-color-light); /* الخط الداخلي البنفسجي */
 }
 .settings-box-header {
     padding: 10px;
