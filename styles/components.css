@@ -22,7 +22,7 @@ button, .btn, input[type="text"], select, .chip, .switch-toggle, .chip-input-con
     border-radius: 0 !important;
     
     /* حدود ثلاثية الأبعاد بارزة (Bevel Out) */
-    --border-width: 3px; /* [FIX] إعادة السماكة الافتراضية للمكونات */
+    background-color: var(--primary-color);
     border-top: var(--border-width) solid var(--border-color-light);
     border-left: var(--border-width) solid var(--border-color-light);
     border-bottom: var(--border-width) solid var(--border-color-dark);
@@ -276,13 +276,15 @@ input[type="text"]::placeholder {
     border-left: 1px solid var(--border-color-light);
     border-bottom: 1px solid var(--border-color-dark);
     border-right: 1px solid var(--border-color-light);
+    /* [FIX 2] تعيين الوضع "Off" (اليمين) كافتراضي لـ RTL */
+    transform: translateX(20px);
 }
 .switch-toggle[data-active="true"] .switch {
     background: var(--primary-color);
 }
 .switch-toggle[data-active="true"] .switch-slider {
-    /* [FIX 2] تغيير الاتجاه لـ RTL */
-    transform: translateX(-20px);
+    /* [FIX 2] تعيين الوضع "On" (اليسار) كنشط لـ RTL */
+    transform: translateX(0);
 }
 
 /* --- [5] مكونات شاشة اللعب (Game Screen Components) --- */
@@ -411,11 +413,12 @@ input[type="text"]::placeholder {
     background-position: center;
     background-repeat: no-repeat;
 }
+/* (المسارات صحيحة كما هي في مستودعك) */
 .board-cell.owned.player-x {
-    background-image: url('assets/player-x.png'); 
+    background-image: url('../assets/player-x.png'); 
 }
 .board-cell.owned.player-o {
-    background-image: url('assets/player-o.png'); 
+    background-image: url('../assets/player-o.png'); 
 }
 .board-cell.owned .cell-letter,
 .board-cell.owned .cell-category {
@@ -676,4 +679,3 @@ input[type="text"]::placeholder {
     #answer-category { font-size: 1.5rem; }
     #answer-buttons .btn { font-size: 1.1rem; padding: 10px;}
 }
-
