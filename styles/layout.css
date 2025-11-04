@@ -44,6 +44,12 @@
     display: flex; 
 }
 
+/* [تصحيح] إخفاء رأس اللوقو (الكبير) عندما لا نكون في الصفحة الرئيسية */
+#app-container[data-view="game"] .screen-header {
+    display: none;
+}
+
+
 /* --- [2] هيكل شاشة البداية (Screen Home Layout) --- */
 
 #screen-home {
@@ -51,8 +57,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* [تصحيح] زيادة المسافة العلوية لترك مساحة كافية للوقو */
-    padding-top: 250px; /* كانت 150px */
+    /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
+    padding-top: 250px; /* تم التعديل من 180px */
     margin-top: 0; 
 }
 
@@ -273,8 +279,8 @@
     }
     .screen {
         padding: 10px;
-        /* [تصحيح] زيادة المسافة للموبايل أيضاً */
-        padding-top: 250px; /* كانت 150px */
+        /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
+        padding-top: 250px; /* تم التعديل من 180px */
     }
     #screen-game {
         padding-top: 100px; 
