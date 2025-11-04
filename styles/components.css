@@ -412,12 +412,10 @@ input[type="text"]::placeholder {
     background-repeat: no-repeat;
 }
 .board-cell.owned.player-x {
-    /* [FIX] Use placeholder for local asset */
-    background-image: url('https://placehold.co/100x100/ff675c/ffffff?text=X'); 
+    background-image: url('assets/player-x.png'); 
 }
 .board-cell.owned.player-o {
-    /* [FIX] Use placeholder for local asset */
-    background-image: url('https://placehold.co/100x100/6733f6/ffffff?text=O');
+    background-image: url('assets/player-o.png'); 
 }
 .board-cell.owned .cell-letter,
 .board-cell.owned .cell-category {
