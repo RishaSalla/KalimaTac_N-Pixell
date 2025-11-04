@@ -122,6 +122,8 @@
     background-color: #312d3f; 
     width: 100%;
     /* [FIX] الإبقاء على الحدود ثلاثية الأبعاد (Pixelated) */
+    /* [NEW] زيادة سماكة الحدود لجعلها أوضح */
+    --border-width: 6px; /* زيادة السماكة من 3px إلى 6px */
     border-top: var(--border-width) solid var(--border-color-light);
     border-left: var(--border-width) solid var(--border-color-light);
     border-bottom: var(--border-width) solid var(--border-color-dark);
@@ -129,7 +131,8 @@
 }
 .settings-box-header {
     padding: 10px;
-    border-bottom: var(--border-width) solid var(--border-color-dark);
+    /* [NEW] تعديل الحدود لتتناسب مع سماكة الصندوق */
+    border-bottom: 6px solid var(--border-color-dark);
     background-color: var(--color-logo-purple); 
 }
 .settings-box-header h3 {
