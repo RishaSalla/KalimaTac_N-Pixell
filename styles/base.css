@@ -1,6 +1,6 @@
 /* --- [0] الأساسيات: الخطوط، الألوان، الخلفية (Base: Fonts, Colors, Background) --- */
 
-/* ربط خط البكسل المحلي للعربية */
+/* ربط خط البكسل المحلي للعربية (المسار يفترض أنه صحيح في مستودعك) */
 @font-face {
     font-family: 'PixelAE';
     src: url('../assets/PixelAE-Bold.ttf') format('truetype');
@@ -41,10 +41,9 @@
     --button-bg-hover: var(--color-logo-red);        /* خلفية الأزرار عند التحويم */
     --button-bg-active: var(--color-xo-pink);        /* خلفية الأزرار عند الضغط */
 
-    /* تطبيق الخطوط */
+    /* [تعديل] دمج الخطوط لضمان مظهر بكسلي كامل */
     --main-font: "Press Start 2P", 'PixelAE', sans-serif; /* الخط الرئيسي (للاتينية أولاً) */
-    /* [FIX] دمج الخطوط لضمان مظهر بكسلي متسق */
-    --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif;
+    --arabic-pixel-font: 'PixelAE', "Press Start 2P", sans-serif; /* الخط الأساسي للعربية (مع fallback) */
 }
 
 /* --- Global Reset & Box Sizing: إعدادات البكسل --- */
@@ -53,8 +52,7 @@
     margin: 0;
     padding: 0;
     /* قواعد لضمان مظهر البكسل النظيف */
-    /* [FIX] إزالة هذه القاعدة للسماح بالحدود الجديدة */
-    /* box-shadow: none !important; */
+    box-shadow: none !important;
     border-radius: 0 !important;
     image-rendering: pixelated; 
     -webkit-font-smoothing: none;
@@ -73,11 +71,10 @@ html, body {
 
 /* --- الخلفية البكسلية الاحترافية (Custom Pixel Background) --- */
 body {
-    /* [تعديل]: استخدام الصورة pixel_background.png */
+    /* [تعديل] استخدام تكرار الخلفية بدلاً من تغطية الشاشة */
+    /* المسار يفترض أنه صحيح في مستودعك */
     background-image: url('../assets/pixel_background.png'); 
-    /* [FIX] تغيير إلى 'repeat' ليطابق نمط البكسل */
-    background-size: auto;
-    background-position: center center; 
-    background-repeat: repeat; /* تكرار النمط */
-    background-attachment: fixed;    
+    background-repeat: repeat;       /* تغيير من no-repeat */
+    background-attachment: fixed;    /* لتثبيت الخلفية عند التمرير */
+    /* (تم حذف background-size: cover و background-position) */
 }
