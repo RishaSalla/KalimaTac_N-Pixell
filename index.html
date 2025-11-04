@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -9,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
+    <!-- المسارات تفترض أنها صحيحة في مستودعك -->
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/components.css">
@@ -18,20 +20,22 @@
     <div id="app-container" data-view="home">
         <div class="content-wrapper">
             
+            <!-- [هيكل جديد] شاشة البداية -->
             <section id="screen-home" class="screen">
                 
+                <!-- اللوجو -->
                 <header class="screen-header">
                     <img src="assets/logo.png" alt="شعار كلمتاك" class="game-logo large" onerror="this.style.display='none'; document.getElementById('header-title-text').style.display='block';" />
                     <h1 id="header-title-text" style="display: none;">كلمتاك</h1>
                 </header>
 
+                <!-- [جديد] الصندوق العلوي: إعدادات اللاعبين -->
                 <div class="settings-box player-settings-box">
                     <div class="settings-box-content">
                         <div class="settings-grid settings-grid-top">
                             
+                            <!-- العمود الأيمن: اللاعب X -->
                             <div class="settings-column settings-column-right">
-                                <h3 class="settings-column-title">إعدادات اللاعب X</h3>
-                                
                                 <div class="team-name-group">
                                     <div class="form-group">
                                         <label for="player-name-x">اسم اللاعب X</label>
@@ -49,18 +53,16 @@
                                 </div>
                             </div>
                             
+                            <!-- العمود الأوسط: وضع اللعب -->
                             <div class="settings-column settings-column-middle">
-                                <h3 class="settings-column-title">وضع اللعب</h3>
-                                
                                 <div id="mode-selector-wrapper">
                                     <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team">فريق</button>
                                     <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual">فردي</button>
                                 </div>
                             </div>
                             
+                            <!-- العمود الأيسر: اللاعب O -->
                             <div class="settings-column settings-column-left">
-                                <h3 class="settings-column-title">إعدادات اللاعب O</h3>
-                                
                                 <div class="team-name-group">
                                     <div class="form-group">
                                         <label for="player-name-o">اسم اللاعب O</label>
@@ -82,16 +84,16 @@
                     </div>
                 </div>
 
+                <!-- [جديد] الصندوق السفلي: إعدادات اللعبة -->
                 <div class="settings-box game-options-box">
                     <div class="settings-box-content">
                         <div class="settings-grid settings-grid-bottom">
 
+                            <!-- العمود الأيمن: المؤقت والجولات -->
                             <div class="settings-column settings-column-right">
-                                <h3 class="settings-column-title">إعدادات الجولات</h3>
-                                
                                 <div class="form-group">
                                     <label for="settings-timer-home">مدة المؤقت (ثوانٍ)</label>
-                                    <select id="settings-timer-home" class="form-select custom-select">
+                                    <select id="settings-timer-home" class="form-select">
                                         <option value="5">5</option>
                                         <option value="7">7</option>
                                         <option value="10" selected>10</option>
@@ -101,7 +103,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="settings-rounds-home">عدد الجولات (Best-of)</label>
-                                    <select id="settings-rounds-home" class="form-select custom-select">
+                                    <select id="settings-rounds-home" class="form-select">
                                         <option value="1">1 (جولة واحدة)</option>
                                         <option value="3" selected>3 (الأفضل من 3)</option>
                                         <option value="5">5 (الأفضل من 5)</option>
@@ -110,20 +112,17 @@
                                 </div>
                             </div>
                             
+                            <!-- العمود الأوسط: (فارغ حالياً، يمكن إضافة إعدادات لاحقاً) -->
                             <div class="settings-column settings-column-middle">
-                                 <h3 class="settings-column-title">إعدادات إضافية</h3>
-                                 </div>
+                                <!-- يمكنك إضافة إعدادات هنا مستقبلاً -->
+                            </div>
 
+                            <!-- العمود الأيسر: الأصوات والفئات -->
                             <div class="settings-column settings-column-left">
-                                <h3 class="settings-column-title">إعدادات أخرى</h3>
-
-                                <div class="form-group form-group-toggle">
+                                <div class="form-group">
                                     <label>الأصوات</label>
-                                    <div id="toggle-sounds-home" class="switch-toggle" data-active="true">
-                                        <div class="switch-slider"></div>
-                                        </div>
+                                    <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
                                 </div>
-                                
                                 <div class="form-group">
                                     <label>إضافة فئات</label>
                                     <div class="chip-input-control">
@@ -139,10 +138,11 @@
                     </div>
                 </div>
                 
+                <!-- [تعديل] تغيير الأزرار لتطابق التصميم -->
                 <div class="btn-group-bottom">
-                    <button id="start-game-btn" class="btn btn-warning">ابدأ</button> 
+                    <button id="start-game-btn" class="btn btn-warning">ابدأ</button> <!-- أصفر -->
                     <button id="resume-game-btn" class="btn" style="display: none;">استئناف اللعبة</button>
-                    <button id="open-instructions-home-btn" class="btn">تعليمات</button> 
+                    <button id="open-instructions-home-btn" class="btn btn-warning">تعليمات</button> <!-- أصفر -->
                 </div>
             </section>
 
@@ -150,6 +150,7 @@
             <section id="screen-game" class="screen">
                 <header id="game-header">
                     <div id="game-title-info">
+                        <!-- اللوجو الصغير (small) يظهر هنا فقط -->
                         <img src="assets/logo.png" alt="شعار كلمتاك" class="game-logo small" onerror="this.style.display='none';" />
                         <div id="game-scores">
                             <span id="round-info">الجولة 1</span>
@@ -192,8 +193,10 @@
         <div id="modal-confirm-restart" class="modal-overlay"><div class="modal-content" style="text-align: center;"><div class="modal-header"><h2>تأكيد إعادة الجولة</h2><button class="modal-close-btn" data-modal="modal-confirm-restart">&times;</button></div><div class="modal-body"><p>هل أنت متأكد من إعادة هذه الجولة؟ (سيتم الاحتفاظ بعدد مرات الفوز الإجمالية)</p></div><div class="modal-footer" style="justify-content: center; gap: 1rem;"><button id="confirm-restart-btn" class="btn btn-danger">نعم، أعد الجولة</button><button class="btn modal-close-btn" data-modal="modal-confirm-restart">إلغاء</button></div></div></div>
     </div>
     
+    <!-- المسارات تفترض أنها صحيحة في مستودعك -->
     <script src="scripts/state.js" type="module"></script>
     <script src="scripts/main.js" type="module"></script>
 
 </body>
 </html>
+
