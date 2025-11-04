@@ -52,7 +52,7 @@
     width: 100%;
     padding: 15px;
     /* [تصحيح] زيادة المسافة العلوية لترك مساحة كافية للوقو */
-    padding-top: 180px; /* كانت 150px */
+    padding-top: 250px; /* كانت 150px */
     margin-top: 0; 
 }
 
@@ -274,7 +274,7 @@
     .screen {
         padding: 10px;
         /* [تصحيح] زيادة المسافة للموبايل أيضاً */
-        padding-top: 180px; /* كانت 150px */
+        padding-top: 250px; /* كانت 150px */
     }
     #screen-game {
         padding-top: 100px; 
