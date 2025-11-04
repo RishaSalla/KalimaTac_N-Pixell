@@ -24,7 +24,7 @@
     align-items: center;
     padding: 15px;
     
-    /* [ثابت] الحاوية الرئيسية شفافة */
+    /* [تصحيح] جعل الحاوية الرئيسية شفافة وإزالة حدودها */
     background-color: transparent;
     border: none;
     
@@ -56,8 +56,8 @@
     gap: 20px;
     width: 100%;
     padding: 15px;
-    /* [FIX] إزالة الحشو العلوي، سيعتمد الهيكل على التدفق الطبيعي */
-    padding-top: 15px; 
+    /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته */
+    padding-top: 250px; 
     margin-top: 0; 
 }
 
@@ -68,17 +68,16 @@
     flex-direction: column;
     align-items: center;
     padding: 10px 0 0 0;
-    margin-bottom: 20px; /* [تعديل] إضافة هامش سفلي للفصل */
+    margin-bottom: 20px;
     border-bottom: none;
     text-align: center;
     
-    /* [FIX] إزالة التموضع المطلق للسماح بالتدفق الطبيعي */
-    /* position: absolute;  <-- REMOVED */
-    /* top: 0; <-- REMOVED */
-    /* left: 50%; <-- REMOVED */
-    /* transform: translateX(-50%); <-- REMOVED */
+    position: absolute; 
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
-    /* z-index: 10; <-- REMOVED */
+    z-index: 10; 
 }
 
 .game-logo {
@@ -104,49 +103,30 @@
 
 
 .settings-box {
-    /* [FIX 1] هذا هو لون خلفية الصندوق الصحيح من التصميم */
-    background-color: var(--container-bg-color); 
+    background-color: #00000020; 
     width: 100%;
-    
-    /* [FIX 1] إزالة الحدود المشطوفة. التصميم لا يحتوي على حدود للصناديق */
-    border: none;
-    box-shadow: none;
+    border-top: var(--border-width) solid var(--border-color-light);
+    border-left: var(--border-width) solid var(--border-color-light);
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    border-right: var(--border-width) solid var(--border-color-dark);
 }
-
-/* [FIX] إزالة هذا القسم بالكامل. العناوين أصبحت داخل الأعمدة */
-/* .settings-box-header { ... } <-- REMOVED */
-
-
+.settings-box-header {
+    padding: 10px;
+    border-bottom: var(--border-width) solid var(--border-color-dark);
+    background-color: var(--color-logo-purple); 
+}
+.settings-box-header h3 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-shadow: 2px 2px var(--border-color-dark);
+    margin-bottom: 0;
+}
 .settings-box-content {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-
-/* [NEW] إضافة تنسيق للأعمدة */
-.settings-column {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* تباعد بين العناصر داخل العمود */
-}
-
-/* [NEW] تنسيق العناوين الجديدة التي أضفناها (Player X, النموذج...) */
-.settings-column-title {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    text-shadow: 2px 2px #00000080;
-    margin-bottom: 5px;
-    padding-bottom: 10px;
-    /* [تصميم] إضافة الحد الأسود السفلي كما في التصميم */
-    border-bottom: var(--border-width) solid var(--border-color-dark);
-    text-align: right; /* مناسب لـ RTL */
-}
-/* [تصميم] العنوان الأوسط في التصميم متمركز */
-.settings-column-middle .settings-column-title {
-    text-align: center;
-}
-
 
 .settings-grid {
     display: grid;
@@ -159,17 +139,14 @@
     .settings-grid {
         grid-template-columns: repeat(3, 1fr); 
         align-items: flex-start;
-        /* [تصميم] زيادة الفجوة لتطابق التصميم بشكل أفضل */
-        gap: 30px; 
     }
     
     .settings-grid-top {
-        /* [ثابت] هذا التقسيم ممتاز ويطابق التصميم */
         grid-template-columns: 1.2fr 0.6fr 1.2fr;
     }
     .settings-grid .settings-column-middle {
         align-items: center;
-        justify-content: flex-start; /* تغيير من center */
+        justify-content: center;
         display: flex;
         height: 100%;
     }
@@ -182,8 +159,8 @@
     width: 100%;
     padding: 15px;
     margin-top: 0; 
-    /* [FIX] إزالة الحشو العلوي، سيعتمد الهيكل على التدفق الطبيعي */
-    padding-top: 15px; 
+    /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته لصفحة اللعب */
+    padding-top: 250px; 
 }
 
 #game-header {
@@ -197,16 +174,14 @@
     border-bottom: var(--border-width) solid var(--border-color-dark);
     padding-bottom: 15px;
     
-    /* [FIX] إزالة التموضع المطلق للسماح بالتدفق الطبيعي */
-    /* position: absolute; <-- REMOVED */
-    /* top: 0; <-- REMOVED */
-    /* left: 50%; <-- REMOVED */
-    /* transform: translateX(-50%); <-- REMOVED */
+    position: absolute; 
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     padding-top: 10px;
-    /* [FIX] الخلفية يجب أن تكون شفافة لوراثة خلفية الصفحة */
-    background-color: transparent; 
-    /* z-index: 5; <-- REMOVED */
+    background-color: var(--background-color);
+    z-index: 5;
 }
 
 #game-title-info {
@@ -258,9 +233,10 @@
     overflow: hidden;
     
     background-color: #1a142c; 
-    
-    /* [FIX] استبدال الحدود المشطوفة بحد أسود بسيط */
-    border: var(--border-width) solid var(--border-color-dark);
+    border-top: var(--border-width) solid var(--border-color-dark);
+    border-left: var(--border-width) solid var(--border-color-dark);
+    border-bottom: var(--border-width) solid var(--border-color-light);
+    border-right: var(--border-width) solid var(--border-color-light);
 }
 
 .board-cell {
@@ -303,17 +279,17 @@
     }
     .screen {
         padding: 10px;
-        /* [FIX] إزالة الحشو العلوي */
-        padding-top: 10px; 
+        padding-top: 250px; 
     }
     #screen-game {
-        /* [FIX] إزالة الحشو العلوي */
-        padding-top: 10px; 
+        /* [تصحيح] تطبيق المقاس الصحيح الذي وجدته لصفحة اللعب (موبايل) */
+        padding-top: 250px; 
     }
 
     .settings-grid {
         grid-template-columns: 1fr !important; 
     }
+
 
     #player-turn-bar {
         grid-template-columns: 1fr;
