@@ -34,16 +34,15 @@
                                 
                                 <div class="team-name-group">
                                     <div class="form-group">
-                                        <input type="text" id="player-name-x" class="form-input" placeholder="Player X">
+                                        <input type="text" id="player-name-x" class="form-input" placeholder="اسم اللاعب X">
                                     </div>
                                     <div class="form-group team-members-group">
-                                       <div class="chip-container-static">
-                                            <span class="chip" style="background-color: #62347c;">حصان <button class="chip-remove">&times;</button></span>
-                                            <span class="chip" style="background-color: #62347c;">ثعبان <button class="chip-remove">&times;</button></span>
-                                            <span class="chip" style="background-color: #f2bc24; color: #000;">قرمز <button class="chip-remove" style="color: #000;">&times;</button></span>
-                                            <span class="chip" style="background-color: #62347c;">النيص <button class="chip-remove">&times;</button></span>
-                                            <span class="chip" style="background-color: #62347c;">التحلة <button class="chip-remove">&times;</button></span>
-                                        </div>
+                                       <div class="chip-input-control">
+                                            <div id="chip-container-x-home" class="chip-input-container home-chip-container">
+                                                <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                            </div>
+                                            <button type="button" class="btn-add-chip" id="add-chip-x-home">+</button>
+                                       </div>
                                     </div>
                                 </div>
                             </div>
@@ -52,10 +51,8 @@
                                 <h3 class="settings-column-title">النموذج</h3>
                                 
                                 <div id="mode-selector-wrapper">
-                                    <button type="button" class="btn">تبديل</button>
-                                    <button type="button" class="btn" style="background-color: #f2bc24; color: #000;">قرمز</button>
-                                    <button type="button" class="btn">فمل</button>
-                                    <button type="button" class="btn">الكنب العنصل</button>
+                                    <button type="button" class="btn mode-btn active" id="mode-team-home" data-mode="team">فريق</button>
+                                    <button type="button" class="btn mode-btn" id="mode-individual-home" data-mode="individual">فردي</button>
                                 </div>
                             </div>
                             
@@ -64,15 +61,15 @@
                                 
                                 <div class="team-name-group">
                                     <div class="form-group">
-                                        <input type="text" id="player-name-o" class="form-input" placeholder="Player O">
+                                        <input type="text" id="player-name-o" class="form-input" placeholder="اسم اللاعب O">
                                     </div>
                                     <div class="form-group team-members-group">
-                                        <div class="chip-container-static">
-                                            <span class="chip" style="background-color: #62347c;">حصان <button class="chip-remove">&times;</button></span>
-                                            <span class="chip" style="background-color: #62347c;">النملة <button class="chip-remove">&times;</button></span>
-                                            <span class="chip" style="background-color: #f2bc24; color: #000;">قرمز <button class="chip-remove" style="color: #000;">&times;</button></span>
-                                            <span class="chip" style="background-color: #62347c;">النحلة <button class="chip-remove">&times;</button></span>
-                                        </div>
+                                       <div class="chip-input-control">
+                                            <div id="chip-container-o-home" class="chip-input-container home-chip-container">
+                                                <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                            </div>
+                                            <button type="button" class="btn-add-chip" id="add-chip-o-home">+</button>
+                                       </div>
                                     </div>
                                 </div>
                             </div>
@@ -90,43 +87,44 @@
                                 
                                 <div class="form-group">
                                     <select id="settings-timer-home" class="form-select custom-select">
-                                        <option value="10">نمر 10</option>
-                                        <option value="5">نمر 5</option>
-                                        <option value="15">نمر 15</option>
+                                        <option value="5">5</option>
+                                        <option value="7">7</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <select id="settings-rounds-home" class="form-select custom-select">
-                                        <option value="3">تصدر 3</option>
-                                        <option value="1">تصدر 1</option>
-                                        <option value="5">تصدر 5</option>
+                                        <option value="1">1 (جولة واحدة)</option>
+                                        <option value="3" selected>3 (الأفضل من 3)</option>
+                                        <option value="5">5 (الأفضل من 5)</option>
+                                        <option value="7">7 (الأفضل من 7)</option>
                                     </select>
                                 </div>
                             </div>
                             
                             <div class="settings-column settings-column-middle">
-                                <h3 class="settings-column-title">صاير</h3>
-                                <div class="form-group">
-                                    <input type="text" class="form-input" placeholder="تحدسد">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-input" placeholder="تصدر 3">
-                                </div>
-                            </div>
+                                 <h3 class="settings-column-title">صاير</h3>
+                                 </div>
 
                             <div class="settings-column settings-column-left">
                                 <h3 class="settings-column-title">سعا<ل عر<ل</h3>
 
                                 <div class="form-group form-group-toggle">
-                                    <label>سعا<ل عر<ل</label>
-                                    <div class="switch-toggle" data-active="true">
+                                    <label>الأصوات</label>
+                                    <div id="toggle-sounds-home" class="switch-toggle" data-active="true">
                                         <div class="switch-slider"></div>
                                     </div>
                                 </div>
-                                <div class="form-group form-group-toggle">
-                                    <label>النكلة</label>
-                                    <div class="switch-toggle" data-active="false">
-                                        <div class="switch-slider"></div>
+                                
+                                <div class="form-group">
+                                    <label>إضافة فئات</label>
+                                    <div class="chip-input-control">
+                                        <div id="chip-container-cats-home" class="chip-input-container home-chip-container">
+                                            <input type="text" id="input-cats-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                        </div>
+                                        <button type="button" class="btn-add-chip" id="add-chip-cats-home">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -136,14 +134,58 @@
                 </div>
                 
                 <div class="btn-group-bottom">
-                    <button id="start-game-btn" class="btn btn-warning">كلمتاك</button> <button id="open-instructions-home-btn" class="btn">الكليل</button> </div>
+                    <button id="start-game-btn" class="btn btn-warning">كلمتاك</button> 
+                    <button id="resume-game-btn" class="btn" style="display: none;">استئناف اللعبة</button>
+                    <button id="open-instructions-home-btn" class="btn">الكليل</button> 
+                </div>
             </section>
 
 
             <section id="screen-game" class="screen">
-                </section>
+                <header id="game-header">
+                    <div id="game-title-info">
+                        <img src="assets/logo.png" alt="شعار كلمتاك" class="game-logo small" onerror="this.style.display='none';" />
+                        <div id="game-scores">
+                            <span id="round-info">الجولة 1</span>
+                            <span class="score-tag score-x">X: 0 فوز</span>
+                            <span class="score-tag score-o">O: 0 فوز</span>
+                        </div>
+                    </div>
+                    <div id="game-controls-container">
+                        <span id="round-winner-message"></span>
+                        <div id="game-controls" class="btn-group" style="justify-content: flex-end; width: 100%;">
+                            <button id="open-instructions-game-btn" class="btn">تعليمات</button>
+                            <button id="restart-round-btn" class="btn btn-danger">إعادة الجولة</button>
+                            <button id="end-match-btn" class="btn btn-danger">إنهاء اللعبة</button>
+                            <button id="new-round-btn" class="btn btn-warning">جولة جديدة</button>
+                        </div>
+                    </div>
+                </header>
+                
+                <div id="player-turn-bar">
+                    <div id="player-tag-x" class="player-tag">
+                        <span class="player-name-text">فريق X</span>
+                        <div class="player-tag-details" id="player-x-member"></div>
+                    </div>
+                    <div id="timer-display">
+                        <span id="timer-text">دور X</span>
+                        <span id="timer-hint">10 ث</span>
+                    </div>
+                    <div id="player-tag-o" class="player-tag">
+                        <span class="player-name-text">فريق O</span>
+                        <div class="player-tag-details" id="player-o-member"></div>
+                    </div>
+                </div>
+                <div id="game-board"></div>
+            </section>
         </div>
-        </div>
+
+        <div id="modal-answer" class="modal-overlay"></div>
+        <div id="modal-instructions" class="modal-overlay"></div>
+        <div id="modal-final-score" class="modal-overlay"></div>
+        <div id="modal-confirm-restart" class="modal-overlay"></div>
+
+    </div>
     
     <script src="scripts/state.js" type="module"></script>
     <script src="scripts/main.js" type="module"></script>
