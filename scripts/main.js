@@ -52,7 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const answerTimerBar = $("#answer-timer-bar");
     const answerTurnHint = $("#answer-turn-hint"); 
     const answerCorrectBtn = $("#answer-correct-btn");
-    const answerWrongBtn = $("#answer-wrong-btn"); 
+    const answerWrongBtn = $("#answer-wrong-btn");
+    // [جديد] زر الاعتراض
+    const answerChallengeBtn = $("#answer-challenge-btn");
     
     const finalWinnerText = $("#final-winner-text");
     const finalWinsX = $("#final-wins-x");
@@ -69,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerOMemberDisplay = $("#player-o-member");
 
     // --- [2] نظام الصوت (Audio Engine) ---
-    // ... (لا تغيير هنا)
     let audioCtx;
     const sounds = { 
         click: () => {}, success: () => {}, fail: () => {}, 
@@ -127,8 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
         oscillator.start(audioCtx.currentTime + delay); 
         oscillator.stop(audioCtx.currentTime + delay + duration);
     }
+
     // --- [3] إدارة شرائح الإدخال (Chips Management) ---
-    // ... (لا تغيير هنا)
     function createChip(name, team) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -155,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderChips(team) {
         const container = (team === 'X' ? chipContainerXHome : chipContainerOHome);
-        
         if (!container) return;
         
         const inputId = `input-team-${team.toLowerCase()}-home`;
@@ -177,7 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function handleChipInput(event, team, isButton = false) {
         const inputEl = event ? event.target : document.getElementById(`input-team-${team.toLowerCase()}-home`);
         
-        // منطق الحصول على العنصر عند الضغط على الزر
         if (isButton && !event) {
              const inputId = `input-team-${team.toLowerCase()}-home`;
              const button = document.getElementById(`add-chip-${team.toLowerCase()}-home`);
@@ -209,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- [4] إدارة شرائح الفئات (Category Chips) ---
-    // ... (لا تغيير هنا)
     function createChipCategory(name) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -301,8 +299,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         $$('.team-members-group').forEach(group => group.style.display = isTeam ? 'flex' : 'none');
         
-        // [تصحيح] تعديل هذا الجزء ليعمل مع الهيكل الجديد
-        // ليس لدينا <label> رئيسي، بل نستخدم <input placeholder>
         $$('.team-name-group').forEach(group => {
             const isX = group.querySelector('#player-name-x');
             const nameInput = isX ? playerNameXInput : playerNameOInput;
@@ -346,10 +342,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const active = getState().settings.sounds; 
         if (soundsToggleHome) {
             soundsToggleHome.setAttribute("data-active", active); 
-            
-            // [ --- [!!] تم حذف هذا السطر [!!] --- ]
-            // لم يعد لدينا .switch-text داخل المبدل، بل label خارجه
-            // if (soundsToggleHome.querySelector(".switch-text")) { ... }
         }
     }
 
@@ -362,14 +354,13 @@ document.addEventListener("DOMContentLoaded", () => {
         saveStateToLocalStorage();
     }
     
-    // ... (لا تغيير من هنا حتى نهاية الملف) ...
-    
     function updateScoreboard() { 
         const state = getState(); 
-        const totalRounds = state.match.totalRounds || 3;
-        if (roundInfo) roundInfo.textContent = `الجولة ${state.match.round} (الأفضل من ${totalRounds})`; 
-        if (scoreXDisplay) scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X} فوز`; 
-        if (scoreODisplay) scoreODisplay.textContent = `${state.settings.playerNames.O}: ${state.match.totalScore.O} فوز`;
+        // [تعديل] عرض النقاط المطلوبة للفوز بدلاً من عدد الجولات
+        const targetWins = state.match.targetWins || 3;
+        if (roundInfo) roundInfo.textContent = `الجولة ${state.match.round} (الهدف: ${targetWins} فوز)`; 
+        if (scoreXDisplay) scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X}`; 
+        if (scoreODisplay) scoreODisplay.textContent = `${state.settings.playerNames.O}: ${state.match.totalScore.O}`;
     }
     
     function updateTeamMemberDisplay() {
@@ -473,7 +464,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const state = getState(); 
         state.settings.secs = parseInt(timerSelectHome.value, 10); 
-        state.match.totalRounds = parseInt(roundsSelectHome.value, 10);
+        
+        // [تعديل] تخزين هدف الفوز بدلاً من عدد الجولات
+        state.match.targetWins = parseInt(roundsSelectHome.value, 10);
+        state.match.totalRounds = 3; // قيمة افتراضية لم تعد مستخدمة في منطق الفوز
         
         const activeModeBtn = document.querySelector('#mode-selector-wrapper .mode-btn.active');
         state.settings.playMode = activeModeBtn ? activeModeBtn.getAttribute('data-mode') : 'team';
@@ -490,7 +484,8 @@ document.addEventListener("DOMContentLoaded", () => {
         state.settings.playerNames.O = nameO; 
         
         resetState(); 
-        getState().match.totalRounds = parseInt(roundsSelectHome.value, 10); 
+        // إعادة تعيين هدف الفوز بعد تصفير الحالة
+        getState().match.targetWins = parseInt(roundsSelectHome.value, 10); 
 
         if (timerHint) timerHint.textContent = `${getState().settings.secs} ثوانٍ`; 
         initNewRound(); 
@@ -519,7 +514,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateScoreboard(); 
         updateTurnUI(); 
         
-        // التأكد من ظهور أزرار التحكم في اللعبة النشطة
         if (newRoundBtn) newRoundBtn.style.display = 'none'; 
         if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex'; 
         if (endMatchBtn) endMatchBtn.style.display = 'inline-flex'; 
@@ -543,7 +537,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderBoardAvailability(currentPlayer) { 
         $$(".board-cell").forEach((cellEl, index) => { 
             const cell = getState().roundState.board[index]; 
-            // تحديد الخلايا المتاحة للنقر (عندما تكون اللعبة نشطة ولا يوجد دور حالي)
             if (cell.owner || cell.revealed) { 
                 cellEl.classList.remove("available"); 
                 cellEl.classList.add("unavailable"); 
@@ -624,8 +617,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (answerLetter) answerLetter.textContent = cell.letter; 
         if (answerCategory) answerCategory.textContent = cell.category; 
         if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`; 
+        
+        // إعادة تعيين حالة زر الاعتراض (إذا كان مضغوطاً سابقاً)
+        if (answerTimerBar) answerTimerBar.style.opacity = "1";
+        
         toggleModal("modal-answer"); 
         startAnswerTimer();
+    }
+
+    // [جديد] وظيفة زر الاعتراض
+    function handleChallenge() {
+        stopTimer(); // إيقاف المؤقت فوراً
+        
+        // تأثير بصري بسيط (شفافية لشريط الوقت)
+        if (answerTimerBar) answerTimerBar.style.opacity = "0.3"; 
+        
+        // تغيير النص لتوضيح الحالة
+        if (answerTurnHint) {
+            answerTurnHint.textContent = "⏸️ الوقت متوقف مؤقتاً (بحث/اعتراض)";
+        }
+        
+        if (getState().settings.sounds) sounds.click();
     }
 
     function handleAnswer(isCorrect) { 
@@ -663,6 +675,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateTurnUI(); 
                 if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`;
                 closeModalNow = false; 
+                
+                // إعادة تشغيل المؤقت للخصم
+                if (answerTimerBar) answerTimerBar.style.opacity = "1";
                 startAnswerTimer(); 
             } else {
                 cell.revealed = false; 
@@ -744,15 +759,14 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateScoreboard(); 
 
-        const totalRounds = state.match.totalRounds || 3;
-        const roundsToWin = Math.ceil(totalRounds / 2);
+        // [تعديل هام] منطق الفوز بالمباراة (Race to Wins)
+        const targetWins = state.match.targetWins || 3;
         
-        const matchWinner = (state.match.totalScore.X === roundsToWin) ? 'X' : (state.match.totalScore.O === roundsToWin) ? 'O' : null;
+        const matchWinner = (state.match.totalScore.X >= targetWins) ? 'X' : (state.match.totalScore.O >= targetWins) ? 'O' : null;
 
         if (matchWinner) {
             if (roundWinnerMessage) roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
             
-            // إخفاء أزرار التحكم باللعبة عند الفوز بالمباراة
             if (newRoundBtn) newRoundBtn.style.display = 'none';
             if (restartRoundBtn) restartRoundBtn.style.display = 'none';
             if (endMatchBtn) endMatchBtn.style.display = 'none';
@@ -763,10 +777,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } else {
             state.match.round++; 
-            // إظهار زر جولة جديدة فقط
             if (newRoundBtn) newRoundBtn.style.display = 'inline-flex'; 
             if (restartRoundBtn) restartRoundBtn.style.display = 'none'; 
-            if (endMatchBtn) endMatchBtn.style.display = 'inline-flex'; // لإتاحة إنهاء المباراة
+            if (endMatchBtn) endMatchBtn.style.display = 'inline-flex'; 
         }
         
         saveStateToLocalStorage();
@@ -797,10 +810,14 @@ document.addEventListener("DOMContentLoaded", () => {
         resetState(); 
         const state = getState(); 
         
+        // [تعديل] الحفاظ على الأسماء المحفوظة في الحالة، وعدم مسحها
         if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X;
         if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O;
+        
         if (timerSelectHome) timerSelectHome.value = state.settings.secs;
-        if (roundsSelectHome) roundsSelectHome.value = state.match.totalRounds || 3;
+        
+        // استرجاع القيمة الافتراضية للفوز
+        if (roundsSelectHome) roundsSelectHome.value = state.match.targetWins || 3;
         
         renderChipsCategories(); 
         
@@ -812,8 +829,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updatePlayerInputLabels(state.settings.playMode);
 
-        if (playerNameXInput) playerNameXInput.value = ""; 
-        if (playerNameOInput) playerNameOInput.value = ""; 
+        // [تم الحذف] أزلنا أسطر تصفير قيمة input.value هنا للحفاظ على الأسماء
         
         localStorage.removeItem("ticTacCategoriesGameState"); 
         if (resumeGameBtn) resumeGameBtn.style.display = "none";
@@ -863,10 +879,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const state = getState(); 
         const stateToSave = JSON.parse(JSON.stringify(state)); 
         
-        // إزالة حالة المؤقت النشط قبل الحفظ
         stateToSave.timer = DEFAULT_STATE.timer; 
         
-        // إزالة حالة الدور النشط قبل الحفظ
         stateToSave.roundState.activeCell = null; 
         stateToSave.roundState.phase = null; 
         stateToSave.roundState.teamMemberIndex = state.roundState.teamMemberIndex;
@@ -890,21 +904,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const savedState = localStorage.getItem("ticTacCategoriesGameState"); 
         if (savedState) { 
             try { 
-                const loadedState = JSON.parse(savedState); 
+                const loadedState = JSON.parse(savedState); // [إصلاح التسمية هنا]
                 const mergedState = JSON.parse(JSON.stringify(DEFAULT_STATE)); 
                 
-                // التأكد من تحميل playMode و teamMembers بشكل صحيح
                 mergedState.settings.playMode = loadedState.settings.playMode || DEFAULT_STATE.settings.playMode;
                 mergedState.settings.teamMembers = loadedState.settings.teamMembers || DEFAULT_STATE.settings.teamMembers;
                 
-                // دمج باقي الإعدادات
                 Object.assign(mergedState.settings, loadedState.settings); 
-                Object.assign(mergedState.match, loaded.match); 
+                // [إصلاح قاتل] استخدام loadedState بدلاً من loaded
+                Object.assign(mergedState.match, loadedState.match); 
                 Object.assign(mergedState.roundState, loadedState.roundState); 
                 
                 mergedState.match.usedCombinations = loadedState.match.usedCombinations || [];
 
-                // تحويل مصفوفات tried إلى كائنات Set
                 mergedState.roundState.board.forEach(cell => { cell.tried = new Set(cell.tried || []); }); 
                 mergedState.roundState.teamMemberIndex = loadedState.roundState.teamMemberIndex || DEFAULT_STATE.roundState.teamMemberIndex; 
                 
@@ -941,24 +953,19 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (timerHint) timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
         
-        // تحديث ظهور الأزرار بناءً على حالة الاستئناف
         if (state.roundState.gameActive) {
-            // اللعبة نشطة، عرض إعادة الجولة وإنهاء المباراة
             if (newRoundBtn) newRoundBtn.style.display = 'none';
             if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex';
             if (endMatchBtn) endMatchBtn.style.display = 'inline-flex';
         } else {
-            // اللعبة متوقفة (جولة منتهية)، فحص ما إذا كانت المباراة قد انتهت
-            const totalRounds = state.match.totalRounds || 3;
-            const roundsToWin = Math.ceil(totalRounds / 2);
-            const matchOver = (state.match.totalScore.X === roundsToWin || state.match.totalScore.O === roundsToWin);
+            // [تعديل] منطق فحص انتهاء المباراة عند الاستئناف
+            const targetWins = state.match.targetWins || 3;
+            const matchOver = (state.match.totalScore.X >= targetWins || state.match.totalScore.O >= targetWins);
 
             if (matchOver) {
-                // المباراة انتهت، عرض النتيجة النهائية
                 if (newRoundBtn) newRoundBtn.style.display = 'none';
                 toggleModal("modal-final-score"); 
             } else {
-                // المباراة لم تنتهِ، عرض زر جولة جديدة
                 if (newRoundBtn) newRoundBtn.style.display = 'inline-flex';
             }
             if (restartRoundBtn) restartRoundBtn.style.display = 'none';
@@ -982,6 +989,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
         if (answerCorrectBtn) answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
         if (answerWrongBtn) answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
+        
+        // [جديد] ربط حدث زر الاعتراض
+        if (answerChallengeBtn) answerChallengeBtn.addEventListener("click", handleChallenge);
         
         if (newMatchBtn) newMatchBtn.addEventListener("click", endMatchAndStartNew); 
         
@@ -1012,11 +1022,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }); 
         });
         
-        // ربط أحداث أزرار وضع اللعب
         if (modeBtnTeamHome) modeBtnTeamHome.addEventListener("click", () => togglePlayMode('team'));
         if (modeBtnIndividualHome) modeBtnIndividualHome.addEventListener("click", () => togglePlayMode('individual'));
 
-        // ربط أحداث إضافة الشرائح (Chips)
         const chipBtnX = document.getElementById("add-chip-x-home");
         if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput({target: inputTeamXHome, key: 'Enter'}, 'X', false));
 
@@ -1026,7 +1034,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const chipBtnCats = document.getElementById("add-chip-cats-home");
         if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
 
-        // ربط أحداث الإدخال للشرائح (Enter و Blur)
         if (inputTeamXHome) inputTeamXHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'X', false); });
         if (inputTeamXHome) inputTeamXHome.addEventListener('blur', (e) => handleChipInput(e, 'X', false));
         if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'O', false); });
@@ -1045,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O; 
             
             if (timerSelectHome) timerSelectHome.value = state.settings.secs; 
-            if (roundsSelectHome) roundsSelectHome.value = state.match.totalRounds || 3;
+            if (roundsSelectHome) roundsSelectHome.value = state.match.targetWins || 3;
             
             if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
             if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
