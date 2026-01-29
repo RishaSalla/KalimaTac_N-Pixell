@@ -12,12 +12,41 @@
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/components.css">
+
+    <style>
+        /* إضافة سريعة لتفعيل ظهور شاشة الدخول */
+        #app-container[data-view="login"] #screen-login { display: flex; }
+        /* إخفاء الهيدر في شاشة الدخول لأنه موجود بداخلها */
+        #app-container[data-view="login"] > .screen-header { display: none; }
+    </style>
 </head>
 <body>
     
-    <div id="app-container" data-view="home">
+    <div id="app-container" data-view="login">
         <div class="content-wrapper">
             
+            <section id="screen-login" class="screen">
+                <header class="screen-header">
+                    <img src="assets/logo.png" alt="شعار كلمتاك" class="game-logo large" onerror="this.style.display='none';" />
+                </header>
+
+                <div class="settings-box" style="max-width: 400px; margin: 0 auto;">
+                    <div class="settings-box-header">
+                        <h3>بوابة الدخول</h3>
+                    </div>
+                    <div class="settings-box-content">
+                        <div class="form-group">
+                            <label for="login-input-code">ادخل كود التفعيل</label>
+                            <input type="password" id="login-input-code" class="form-input" placeholder="اكتب الكود هنا..." style="text-align: center; direction: ltr;">
+                        </div>
+                        
+                        <button id="login-btn-enter" class="btn btn-warning" style="width: 100%;">دخول</button>
+                        
+                        <p id="login-error-msg" style="color: var(--player-x-color); display: none; margin-top: 10px; font-size: 0.9rem;">الكود غير صحيح او انتهت صلاحيته</p>
+                    </div>
+                </div>
+            </section>
+
             <section id="screen-home" class="screen">
                 
                 <header class="screen-header">
@@ -36,10 +65,10 @@
                                         <input type="text" id="player-name-x" class="form-input" placeholder="اسم اللاعب X">
                                     </div>
                                     <div class="form-group team-members-group" style="display: flex;">
-                                       <label>أعضاء الفريق X</label>
+                                       <label>اعضاء الفريق X</label>
                                        <div class="chip-input-control">
                                             <div id="chip-container-x-home" class="chip-input-container home-chip-container">
-                                                <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                                <input type="text" id="input-team-x-home" class="chip-input" placeholder="اضغط Enter او +">
                                             </div>
                                             <button type="button" class="btn-add-chip" id="add-chip-x-home">+</button>
                                        </div>
@@ -61,10 +90,10 @@
                                         <input type="text" id="player-name-o" class="form-input" placeholder="اسم اللاعب O">
                                     </div>
                                     <div class="form-group team-members-group" style="display: flex;">
-                                       <label>أعضاء الفريق O</label>
+                                       <label>اعضاء الفريق O</label>
                                        <div class="chip-input-control">
                                             <div id="chip-container-o-home" class="chip-input-container home-chip-container">
-                                                <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                                <input type="text" id="input-team-o-home" class="chip-input" placeholder="اضغط Enter او +">
                                             </div>
                                             <button type="button" class="btn-add-chip" id="add-chip-o-home">+</button>
                                        </div>
@@ -82,7 +111,7 @@
 
                             <div class="settings-column settings-column-right">
                                 <div class="form-group">
-                                    <label for="settings-timer-home">مدة المؤقت (ثوانٍ)</label>
+                                    <label for="settings-timer-home">مدة المؤقت (ثوان)</label>
                                     <select id="settings-timer-home" class="form-select">
                                         <option value="5">5</option>
                                         <option value="7">7</option>
@@ -107,14 +136,14 @@
 
                             <div class="settings-column settings-column-left">
                                 <div class="form-group">
-                                    <label>الأصوات</label>
+                                    <label>الاصوات</label>
                                     <div id="toggle-sounds-home" class="switch-toggle"><div class="switch"><div class="switch-slider"></div></div><span class="switch-text">مفعلة</span></div>
                                 </div>
                                 <div class="form-group">
-                                    <label>إضافة فئات</label>
+                                    <label>اضافة فئات</label>
                                     <div class="chip-input-control">
                                         <div id="chip-container-cats-home" class="chip-input-container home-chip-container">
-                                            <input type="text" id="input-cats-home" class="chip-input" placeholder="اضغط Enter أو +">
+                                            <input type="text" id="input-cats-home" class="chip-input" placeholder="اضغط Enter او +">
                                         </div>
                                         <button type="button" class="btn-add-chip" id="add-chip-cats-home">+</button>
                                     </div>
@@ -147,8 +176,8 @@
                         <span id="round-winner-message"></span>
                         <div id="game-controls" class="btn-group" style="justify-content: flex-end; width: 100%;">
                             <button id="open-instructions-game-btn" class="btn">تعليمات</button>
-                            <button id="restart-round-btn" class="btn btn-danger">إعادة الجولة</button>
-                            <button id="end-match-btn" class="btn btn-danger">إنهاء اللعبة</button>
+                            <button id="restart-round-btn" class="btn btn-danger">اعادة الجولة</button>
+                            <button id="end-match-btn" class="btn btn-danger">انهاء اللعبة</button>
                             <button id="new-round-btn" class="btn btn-warning">جولة جديدة</button>
                         </div>
                     </div>
@@ -185,7 +214,7 @@
                 <div class="modal-footer">
                     <div id="answer-buttons">
                         <button id="answer-correct-btn" class="btn btn-success">✓ صح</button>
-                        <button id="answer-challenge-btn" class="btn btn-warning">✋ اعتراض</button>
+                        <button id="answer-challenge-btn" class="btn btn-warning">✋ اعتراض / بحث</button>
                         <button id="answer-wrong-btn" class="btn btn-danger">✗ خطأ</button>
                     </div>
                 </div>
@@ -199,15 +228,15 @@
                     <button class="modal-close-btn" data-modal="modal-instructions">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>الهدف هو تكوين خط من 3 رموز (X أو O) عن طريق الإجابة شفهيًا.</p>
+                    <p>الهدف هو تكوين خط من 3 رموز (X او O) عن طريق الاجابة شفهيا.</p>
                     <ul>
                         <li>اضغط على خانة فارغة لبدء المؤقت وكشف الحرف والفئة.</li>
                         <li>اذكر كلمة مناسبة قبل انتهاء الوقت.</li>
-                        <li><strong>الحكم:</strong> اللاعبون هم الحكم. اضغط "صح" لاحتساب النقطة، أو "خطأ" لنقل الدور.</li>
-                        <li><strong>الاعتراض:</strong> استخدم زر "اعتراض / بحث" لإيقاف الوقت مؤقتاً والبحث في جوجل عند الشك في صحة الكلمة.</li>
-                        <li><strong>سرقة الدور:</strong> إذا فشل اللاعب الأول، ينتقل الدور للخصم لنفس السؤال!</li>
-                        <li><strong>الفوز بالمباراة:</strong> يفوز من يصل أولاً لعدد النقاط المحدد (مثلاً أول من يحصل على 3 انتصارات).</li>
-                        <li><strong>التعادل:</strong> في حال تعادل الجولة، تُعاد الجولة حتى يفوز أحدهم.</li>
+                        <li><strong>الحكم:</strong> اللاعبون هم الحكم. اضغط "صح" لاحتساب النقطة، او "خطأ" لنقل الدور.</li>
+                        <li><strong>الاعتراض:</strong> استخدم زر "اعتراض / بحث" لايقاف الوقت مؤقتا والبحث في جوجل عند الشك في صحة الكلمة.</li>
+                        <li><strong>سرقة الدور:</strong> اذا فشل اللاعب الاول، ينتقل الدور للخصم لنفس السؤال!</li>
+                        <li><strong>الفوز بالمباراة:</strong> يفوز من يصل اولا لعدد النقاط المحدد (مثلا اول من يحصل على 3 انتصارات).</li>
+                        <li><strong>التعادل:</strong> في حال تعادل الجولة، تعاد الجولة حتى يفوز احدهم.</li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -219,10 +248,10 @@
         <div id="modal-final-score" class="modal-overlay">
             <div class="modal-content" style="text-align: center;">
                 <div class="modal-header" style="justify-content: center;">
-                    <h2 id="final-winner-text">إنهاء اللعبة</h2>
+                    <h2 id="final-winner-text">انهاء اللعبة</h2>
                 </div>
                 <div class="modal-body">
-                    <p>النتيجة الإجمالية:</p>
+                    <p>النتيجة الاجمالية:</p>
                     <div id="final-scores-display">
                         <span id="final-wins-x" class="score-tag score-x">X: 0 فوز</span>
                         <span id="final-wins-o" class="score-tag score-o">O: 0 فوز</span>
@@ -239,15 +268,15 @@
         <div id="modal-confirm-restart" class="modal-overlay">
             <div class="modal-content" style="text-align: center;">
                 <div class="modal-header">
-                    <h2>تأكيد إعادة الجولة</h2>
+                    <h2>تأكيد اعادة الجولة</h2>
                     <button class="modal-close-btn" data-modal="modal-confirm-restart">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>هل أنت متأكد من إعادة هذه الجولة؟ (لن يتم احتساب فائز)</p>
+                    <p>هل انت متأكد من اعادة هذه الجولة؟ (لن يتم احتساب فائز)</p>
                 </div>
                 <div class="modal-footer" style="justify-content: center; gap: 1rem;">
-                    <button id="confirm-restart-btn" class="btn btn-danger">نعم، أعد الجولة</button>
-                    <button class="btn modal-close-btn" data-modal="modal-confirm-restart">إلغاء</button>
+                    <button id="confirm-restart-btn" class="btn btn-danger">نعم، اعد الجولة</button>
+                    <button class="btn modal-close-btn" data-modal="modal-confirm-restart">الغاء</button>
                 </div>
             </div>
         </div>
