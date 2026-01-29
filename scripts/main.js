@@ -9,6 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const $$ = (selector) => document.querySelectorAll(selector);
     
     const appContainer = $("#app-container");
+    
+    // عناصر الدخول (Login)
+    const loginInputCode = $("#login-input-code");
+    const loginBtnEnter = $("#login-btn-enter");
+    const loginErrorMsg = $("#login-error-msg");
+
+    // عناصر الإعدادات واللعبة
     const playerNameXInput = $("#player-name-x"); 
     const playerNameOInput = $("#player-name-o");
     
@@ -53,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const answerTurnHint = $("#answer-turn-hint"); 
     const answerCorrectBtn = $("#answer-correct-btn");
     const answerWrongBtn = $("#answer-wrong-btn");
-    // [جديد] زر الاعتراض
     const answerChallengeBtn = $("#answer-challenge-btn");
     
     const finalWinnerText = $("#final-winner-text");
@@ -70,15 +76,103 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerXMemberDisplay = $("#player-x-member");
     const playerOMemberDisplay = $("#player-o-member");
 
-    // --- [2] نظام الصوت (Audio Engine) ---
+    // --- [2] نظام التشفير والدخول (Login System) ---
+    
+    // دالة مساعدة لتحويل النص إلى SHA-256 Hash
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function handleLogin() {
+        if (!loginInputCode) return;
+        
+        const code = loginInputCode.value.trim();
+        if (!code) return;
+
+        // إظهار حالة التحميل (اختياري)
+        loginBtnEnter.textContent = "...";
+        loginErrorMsg.style.display = 'none';
+
+        try {
+            // جلب ملف الإعدادات
+            const response = await fetch('config.json?t=' + new Date().getTime()); // إضافة وقت لمنع الكاش
+            if (!response.ok) throw new Error("Config not found");
+            
+            const config = await response.json();
+            const hashedCode = await sha256(code);
+
+            // التحقق من الكود
+            if (config.valid_hashes.includes(hashedCode)) {
+                // دخول ناجح
+                localStorage.setItem("risha_access_token", hashedCode); // حفظ التوكن
+                loadGameInterface(); // تحميل واجهة اللعبة
+            } else {
+                // كود خاطئ
+                loginErrorMsg.style.display = 'block';
+                loginErrorMsg.textContent = "الكود غير صحيح او انتهت صلاحيته";
+                if (state.settings.sounds) sounds.fail();
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            loginErrorMsg.style.display = 'block';
+            loginErrorMsg.textContent = "خطأ في الاتصال، حاول مرة اخرى";
+        } finally {
+            loginBtnEnter.textContent = "دخول";
+        }
+    }
+
+    // دالة لتحميل واجهة اللعبة الحقيقية بعد الدخول الناجح
+    function loadGameInterface() {
+        // إذا كان هناك حالة محفوظة، حملها، وإلا اذهب للرئيسية
+        if (loadStateFromLocalStorage()) {
+            const state = getState();
+            if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex";
+            if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X;
+            if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O;
+            if (timerSelectHome) timerSelectHome.value = state.settings.secs;
+            if (roundsSelectHome) roundsSelectHome.value = state.match.targetWins || 3;
+            
+            if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
+            if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
+
+            updatePlayerInputLabels(state.settings.playMode);
+            renderChips('X'); 
+            renderChips('O'); 
+            renderChipsCategories();
+            
+            // إذا كانت اللعبة نشطة، اذهب للعبة مباشرة
+            if (state.roundState.gameActive || state.match.round > 1) {
+                switchView("home"); // نبدأ بالرئيسية ليقرر المستخدم الاستئناف
+            } else {
+                switchView("home");
+            }
+        } else {
+            if (modeBtnTeamHome) modeBtnTeamHome.classList.add('active'); 
+            updatePlayerInputLabels(DEFAULT_STATE.settings.playMode);
+            renderChipsCategories(); 
+            switchView("home");
+        }
+        
+        // تشغيل الأصوات
+        updateSoundToggles();
+        if (state.settings.sounds) sounds.click();
+    }
+
+
+    // --- [3] نظام الصوت (Audio Engine) ---
     let audioCtx;
     const sounds = { 
         click: () => {}, success: () => {}, fail: () => {}, 
         win: () => {}, draw: () => {}, timerTick: () => {} 
     };
+    
+    // تم تعريف state في النطاق العام لاستخدامه في الدوال
+    const state = getState();
 
     function initAudio() {
-        const state = getState();
         if (audioCtx || !state.settings.sounds) return;
         try {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -112,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function playSound(freq, gain, duration, type = "sine", delay = 0) { 
-        if (!audioCtx || !getState().settings.sounds) return; 
+        if (!audioCtx || !state.settings.sounds) return; 
         const oscillator = audioCtx.createOscillator(); 
         const gainNode = audioCtx.createGain(); 
         
@@ -129,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         oscillator.stop(audioCtx.currentTime + delay + duration);
     }
 
-    // --- [3] إدارة شرائح الإدخال (Chips Management) ---
+    // --- [4] إدارة شرائح الإدخال (Chips) ---
     function createChip(name, team) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -139,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
         removeBtn.classList.add('chip-remove');
         removeBtn.textContent = '×';
         removeBtn.onclick = () => {
-            const state = getState(); 
             const index = state.settings.teamMembers[team].indexOf(name);
             if (index > -1) {
                 state.settings.teamMembers[team].splice(index, 1);
@@ -163,15 +256,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.querySelectorAll('.chip').forEach(chip => chip.remove());
         
-        getState().settings.teamMembers[team].forEach(name => { 
+        state.settings.teamMembers[team].forEach(name => { 
             if (inputEl) {
                 container.insertBefore(createChip(name, team), inputEl);
             }
         });
-        
-        if (document.activeElement === inputEl) {
-             inputEl.focus();
-        }
     }
 
     function handleChipInput(event, team, isButton = false) {
@@ -187,9 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         if (!inputEl) return; 
-        
         const name = inputEl.value.trim();
-        const state = getState(); 
 
         if (isButton || (event && (event.key === 'Enter' || event.type === 'blur'))) {
             if (event) event.preventDefault();
@@ -207,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- [4] إدارة شرائح الفئات (Category Chips) ---
+    // --- [5] إدارة شرائح الفئات ---
     function createChipCategory(name) {
         const chip = document.createElement('span');
         chip.classList.add('chip');
@@ -217,7 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
         removeBtn.classList.add('chip-remove');
         removeBtn.textContent = '×';
         removeBtn.onclick = () => {
-            const state = getState(); 
             const index = state.settings.extraCats.indexOf(name);
             if (index > -1) {
                 state.settings.extraCats.splice(index, 1);
@@ -226,33 +312,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (state.settings.sounds) sounds.click();
             }
         };
-        
         chip.appendChild(removeBtn);
         return chip;
     }
 
     function renderChipsCategories() {
         if (!chipContainerCatsHome) return;
-        
         const inputEl = chipContainerCatsHome.querySelector('#input-cats-home');
         chipContainerCatsHome.querySelectorAll('.chip').forEach(chip => chip.remove());
         
-        getState().settings.extraCats.forEach(name => { 
+        state.settings.extraCats.forEach(name => { 
             if (inputEl) {
                 chipContainerCatsHome.insertBefore(createChipCategory(name), inputEl);
             }
         });
-        
-        if (document.activeElement === inputEl) {
-             inputEl.focus();
-        }
     }
 
     function handleChipInputCategories(isButton = false, event = null) {
         const inputEl = $("#input-cats-home");
         if (!inputEl) return;
         const name = inputEl.value.trim();
-        const state = getState(); 
 
         if (isButton || (event && (event.key === 'Enter' || event.type === 'blur'))) {
             if (event) event.preventDefault();
@@ -269,8 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-    // --- [5] إدارة الحالة والواجهة (State & UI Management) ---
-    
+    // --- [6] إدارة الواجهة ---
     function switchView(viewName) { 
         window.scrollTo(0, 0); 
         appContainer.setAttribute("data-view", viewName); 
@@ -288,38 +366,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function loadFinalScores() { 
-        const state = getState(); 
-        if (finalWinnerText) finalWinnerText.textContent = "إنهاء اللعبة"; 
+        if (finalWinnerText) finalWinnerText.textContent = "انهاء اللعبة"; 
         if (finalWinsX) finalWinsX.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X} فوز`; 
         if (finalWinsO) finalWinsO.textContent = `${state.settings.playerNames.O}: ${state.match.totalScore.O} فوز`;
     }
     
     function updatePlayerInputLabels(mode) {
         const isTeam = mode === 'team';
-        
         $$('.team-members-group').forEach(group => group.style.display = isTeam ? 'flex' : 'none');
-        
         $$('.team-name-group').forEach(group => {
             const isX = group.querySelector('#player-name-x');
             const nameInput = isX ? playerNameXInput : playerNameOInput;
             const placeholderText = isX 
                 ? (isTeam ? 'اسم فريق X' : 'اسم لاعب X') 
                 : (isTeam ? 'اسم فريق O' : 'اسم لاعب O');
-            
             if (nameInput) nameInput.placeholder = placeholderText;
         });
-        
         renderChips('X'); 
         renderChips('O'); 
     }
     
     function togglePlayMode(specificMode = null) {
         initAudio(); 
-
         const teamBtn = document.getElementById('mode-team-home');
         const individualBtn = document.getElementById('mode-individual-home');
         
-        const state = getState(); 
         const currentMode = state.settings.playMode;
         const newMode = specificMode || (currentMode === 'team' ? 'individual' : 'team');
         
@@ -327,9 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         state.settings.playMode = newMode; 
         
-        [teamBtn, individualBtn].forEach(btn => {
-             if (btn) btn.classList.remove('active');
-        });
+        [teamBtn, individualBtn].forEach(btn => { if (btn) btn.classList.remove('active'); });
         if (newMode === 'team' && teamBtn) teamBtn.classList.add('active');
         if (newMode === 'individual' && individualBtn) individualBtn.classList.add('active');
         
@@ -339,14 +408,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function updateSoundToggles() { 
-        const active = getState().settings.sounds; 
+        const active = state.settings.sounds; 
         if (soundsToggleHome) {
             soundsToggleHome.setAttribute("data-active", active); 
         }
     }
 
     function toggleSounds() { 
-        const state = getState(); 
         initAudio(); 
         state.settings.sounds = !state.settings.sounds; 
         updateSoundToggles(); 
@@ -355,8 +423,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function updateScoreboard() { 
-        const state = getState(); 
-        // [تعديل] عرض النقاط المطلوبة للفوز بدلاً من عدد الجولات
         const targetWins = state.match.targetWins || 3;
         if (roundInfo) roundInfo.textContent = `الجولة ${state.match.round} (الهدف: ${targetWins} فوز)`; 
         if (scoreXDisplay) scoreXDisplay.textContent = `${state.settings.playerNames.X}: ${state.match.totalScore.X}`; 
@@ -364,14 +430,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function updateTeamMemberDisplay() {
-        const state = getState(); 
         const isTeam = state.settings.playMode === 'team';
         if (!isTeam) {
             if (playerXMemberDisplay) playerXMemberDisplay.textContent = "";
             if (playerOMemberDisplay) playerOMemberDisplay.textContent = "";
             return;
         }
-        
         const memberX = state.settings.teamMembers.X[state.roundState.teamMemberIndex.X] || '';
         const memberO = state.settings.teamMembers.O[state.roundState.teamMemberIndex.O] || '';
 
@@ -380,15 +444,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updatePlayerTags() { 
-        const state = getState(); 
         if (playerTagX && playerTagX.querySelector('.player-name-text')) playerTagX.querySelector('.player-name-text').textContent = state.settings.playerNames.X; 
         if (playerTagO && playerTagO.querySelector('.player-name-text')) playerTagO.querySelector('.player-name-text').textContent = state.settings.playerNames.O; 
-        
         updateTeamMemberDisplay();
     }
 
     function updateTurnUI() { 
-        const state = getState(); 
         const currentPlayer = state.roundState.phase || state.roundState.starter; 
         const teamName = state.settings.playerNames[currentPlayer]; 
         
@@ -407,12 +468,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (playerTagO) playerTagO.classList.toggle("active", currentPlayer === "O"); 
         
         updateTeamMemberDisplay(); 
-        
         renderBoardAvailability(currentPlayer);
     }
     
     function advanceTeamMember(player) {
-        const state = getState(); 
         const members = state.settings.teamMembers[player];
         if (members && members.length > 0) {
             let currentIndex = state.roundState.teamMemberIndex[player];
@@ -423,11 +482,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-    // --- [6] منطق اللعبة الأساسي (Game Logic) ---
-    
+    // --- [7] منطق اللعبة (Game Logic) ---
     function getNewCombination(retries = 50) {
-        const state = getState(); 
         if (!state.match.usedCombinations) state.match.usedCombinations = [];
         
         const allCats = [...BASE_CATEGORIES, ...state.settings.extraCats];
@@ -435,7 +491,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         for (let i = 0; i < retries; i++) {
             const letter = ARABIC_LETTERS[Math.floor(Math.random() * ARABIC_LETTERS.length)];
-            
             let availableCats = [...new Set(allCats)];
             if (['ض', 'ظ'].includes(letter)) {
                 availableCats = availableCats.filter(cat => cat !== 'نبات');
@@ -443,7 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (availableCats.length === 0) availableCats = ['إنسان', 'حيوان', 'جماد', 'بلاد'];
             
             const category = availableCats[Math.floor(Math.random() * availableCats.length)];
-            
             const comboKey = `${letter}|${category}`;
             
             if (!state.match.usedCombinations.includes(comboKey)) {
@@ -451,23 +505,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return { letter, category };
             }
         }
-        
-        console.warn("Fallback: Could not find unique combination.");
         const letter = ARABIC_LETTERS[Math.floor(Math.random() * ARABIC_LETTERS.length)];
         const category = allCats[Math.floor(Math.random() * allCats.length)];
         return { letter, category };
     }
 
-
     function startNewMatch() { 
         initAudio(); 
-        
-        const state = getState(); 
         state.settings.secs = parseInt(timerSelectHome.value, 10); 
-        
-        // [تعديل] تخزين هدف الفوز بدلاً من عدد الجولات
         state.match.targetWins = parseInt(roundsSelectHome.value, 10);
-        state.match.totalRounds = 3; // قيمة افتراضية لم تعد مستخدمة في منطق الفوز
+        state.match.totalRounds = 3; 
         
         const activeModeBtn = document.querySelector('#mode-selector-wrapper .mode-btn.active');
         state.settings.playMode = activeModeBtn ? activeModeBtn.getAttribute('data-mode') : 'team';
@@ -484,10 +531,9 @@ document.addEventListener("DOMContentLoaded", () => {
         state.settings.playerNames.O = nameO; 
         
         resetState(); 
-        // إعادة تعيين هدف الفوز بعد تصفير الحالة
-        getState().match.targetWins = parseInt(roundsSelectHome.value, 10); 
+        state.match.targetWins = parseInt(roundsSelectHome.value, 10); 
 
-        if (timerHint) timerHint.textContent = `${getState().settings.secs} ثوانٍ`; 
+        if (timerHint) timerHint.textContent = `${state.settings.secs} ثوان`; 
         initNewRound(); 
         updatePlayerTags(); 
         switchView("game"); 
@@ -496,7 +542,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initNewRound(isRestart = false) { 
         stopTimer(); 
-        const state = getState(); 
         if (roundWinnerMessage) roundWinnerMessage.style.display = 'none'; 
         if (!isRestart) { state.roundState.starter = (state.match.round % 2 === 1) ? "X" : "O"; } 
         state.roundState.phase = null; 
@@ -522,10 +567,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function generateBoard() { 
-        getState().roundState.board = []; 
+        state.roundState.board = []; 
         for (let i = 0; i < 9; i++) { 
             const { letter, category } = getNewCombination(); 
-            getState().roundState.board.push({ 
+            state.roundState.board.push({ 
                 letter: letter, 
                 category: category, 
                 owner: null, 
@@ -536,12 +581,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function renderBoardAvailability(currentPlayer) { 
         $$(".board-cell").forEach((cellEl, index) => { 
-            const cell = getState().roundState.board[index]; 
+            const cell = state.roundState.board[index]; 
             if (cell.owner || cell.revealed) { 
                 cellEl.classList.remove("available"); 
                 cellEl.classList.add("unavailable"); 
             } else { 
-                if (getState().roundState.phase === null) { 
+                if (state.roundState.phase === null) { 
                     cellEl.classList.add("available"); 
                     cellEl.classList.remove("unavailable"); 
                 } else { 
@@ -555,10 +600,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderBoard() { 
         if (!gameBoard) return;
         gameBoard.innerHTML = ''; 
-        const oldWinLine = gameBoard.querySelector('.win-line'); 
-        if (oldWinLine) oldWinLine.remove(); 
-        
-        const state = getState(); 
         
         state.roundState.board.forEach((cell, index) => { 
             const cellEl = document.createElement('div'); 
@@ -594,7 +635,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function onCellClick(e) { 
-        const state = getState(); 
         if (!state.roundState.gameActive || state.roundState.phase !== null) { 
             if (state.settings.sounds) sounds.fail(); 
             return; 
@@ -618,31 +658,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (answerCategory) answerCategory.textContent = cell.category; 
         if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`; 
         
-        // إعادة تعيين حالة زر الاعتراض (إذا كان مضغوطاً سابقاً)
         if (answerTimerBar) answerTimerBar.style.opacity = "1";
         
         toggleModal("modal-answer"); 
         startAnswerTimer();
     }
 
-    // [جديد] وظيفة زر الاعتراض
     function handleChallenge() {
-        stopTimer(); // إيقاف المؤقت فوراً
-        
-        // تأثير بصري بسيط (شفافية لشريط الوقت)
+        stopTimer(); 
         if (answerTimerBar) answerTimerBar.style.opacity = "0.3"; 
-        
-        // تغيير النص لتوضيح الحالة
         if (answerTurnHint) {
-            answerTurnHint.textContent = "⏸️ الوقت متوقف مؤقتاً (بحث/اعتراض)";
+            answerTurnHint.textContent = "⏸️ الوقت متوقف مؤقتا (بحث/اعتراض)";
         }
-        
-        if (getState().settings.sounds) sounds.click();
+        if (state.settings.sounds) sounds.click();
     }
 
     function handleAnswer(isCorrect) { 
         stopTimer(); 
-        const state = getState(); 
         const cellIndex = state.roundState.activeCell;
         if (cellIndex === null || !state.roundState.board[cellIndex]?.revealed) return; 
         const cell = state.roundState.board[cellIndex];
@@ -675,13 +707,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateTurnUI(); 
                 if (answerTurnHint) answerTurnHint.textContent = `دور ${state.settings.playerNames[state.roundState.phase]}.`;
                 closeModalNow = false; 
-                
-                // إعادة تشغيل المؤقت للخصم
                 if (answerTimerBar) answerTimerBar.style.opacity = "1";
                 startAnswerTimer(); 
             } else {
                 cell.revealed = false; 
-                
                 const oldComboKey = `${cell.letter}|${cell.category}`;
                 if (state.match.usedCombinations) {
                     state.match.usedCombinations = state.match.usedCombinations.filter(c => c !== oldComboKey);
@@ -691,11 +720,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 cell.category = newCategory;
 
                 cell.tried.clear(); 
-                
                 if (state.settings.playMode === 'team') {
                      advanceTeamMember(state.roundState.starter);
                 }
-
                 state.roundState.starter = (currentPlayer === "X") ? "O" : "X";
                 turnOver = true; 
             }
@@ -715,7 +742,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function checkWinCondition() { 
-        const board = getState().roundState.board; 
+        const board = state.roundState.board; 
         const winLines = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]; 
         for (const line of winLines) { 
             const [a, b, c] = line; 
@@ -724,12 +751,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return { isWin: false, line: null };
     }
     function checkDrawCondition() { 
-        return getState().roundState.board.every(cell => cell.owner); 
+        return state.roundState.board.every(cell => cell.owner); 
     }
     
     function endRound(winner, line = null) { 
         stopTimer(); 
-        const state = getState(); 
         state.roundState.gameActive = false; 
         
         if (winner) { 
@@ -759,22 +785,15 @@ document.addEventListener("DOMContentLoaded", () => {
         
         updateScoreboard(); 
 
-        // [تعديل هام] منطق الفوز بالمباراة (Race to Wins)
         const targetWins = state.match.targetWins || 3;
-        
         const matchWinner = (state.match.totalScore.X >= targetWins) ? 'X' : (state.match.totalScore.O >= targetWins) ? 'O' : null;
 
         if (matchWinner) {
             if (roundWinnerMessage) roundWinnerMessage.textContent = `🏆 الفائز بالمباراة: ${state.settings.playerNames[matchWinner]}! 🏆`;
-            
             if (newRoundBtn) newRoundBtn.style.display = 'none';
             if (restartRoundBtn) restartRoundBtn.style.display = 'none';
             if (endMatchBtn) endMatchBtn.style.display = 'none';
-            
-            setTimeout(() => {
-                toggleModal("modal-final-score");
-            }, 2500);
-
+            setTimeout(() => { toggleModal("modal-final-score"); }, 2500);
         } else {
             state.match.round++; 
             if (newRoundBtn) newRoundBtn.style.display = 'inline-flex'; 
@@ -808,19 +827,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function endMatchAndStartNew() { 
         toggleModal(null); 
         resetState(); 
-        const state = getState(); 
         
-        // [تعديل] الحفاظ على الأسماء المحفوظة في الحالة، وعدم مسحها
         if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X;
         if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O;
-        
         if (timerSelectHome) timerSelectHome.value = state.settings.secs;
-        
-        // استرجاع القيمة الافتراضية للفوز
         if (roundsSelectHome) roundsSelectHome.value = state.match.targetWins || 3;
         
         renderChipsCategories(); 
-        
         updateSoundToggles(); 
         switchView("home"); 
         
@@ -828,8 +841,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
 
         updatePlayerInputLabels(state.settings.playMode);
-
-        // [تم الحذف] أزلنا أسطر تصفير قيمة input.value هنا للحفاظ على الأسماء
         
         localStorage.removeItem("ticTacCategoriesGameState"); 
         if (resumeGameBtn) resumeGameBtn.style.display = "none";
@@ -841,32 +852,31 @@ document.addEventListener("DOMContentLoaded", () => {
         if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex";
     }
 
-    // --- [7] نظام المؤقت (Timer System) ---
+    // --- [8] المؤقت ---
     function startAnswerTimer() { 
         stopTimer(); 
-        const duration = getState().settings.secs * 1000; 
-        getState().timer.deadline = Date.now() + duration; 
+        const duration = state.settings.secs * 1000; 
+        state.timer.deadline = Date.now() + duration; 
         if (answerTimerBar) { 
-            answerTimerBar.style.setProperty('--timer-duration', `${getState().settings.secs}s`); 
+            answerTimerBar.style.setProperty('--timer-duration', `${state.settings.secs}s`); 
             answerTimerBar.classList.remove("animating"); 
             void answerTimerBar.offsetWidth; 
             answerTimerBar.classList.add("animating"); 
         } 
-        getState().timer.intervalId = setInterval(() => { 
-            const remaining = getState().timer.deadline - Date.now(); 
+        state.timer.intervalId = setInterval(() => { 
+            const remaining = state.timer.deadline - Date.now(); 
             if (remaining <= 0) { 
                 stopTimer(); 
                 if (modalAnswer && modalAnswer.classList.contains("visible")) { 
-                    if (getState().settings.sounds) sounds.fail(); 
+                    if (state.settings.sounds) sounds.fail(); 
                     handleAnswer(false); 
                 } 
             } else if (remaining <= 3000 && (remaining % 1000 < 100)) { 
-                if (getState().settings.sounds) sounds.timerTick(); 
+                if (state.settings.sounds) sounds.timerTick(); 
             } 
         }, 100);
     }
     function stopTimer() { 
-        const state = getState(); 
         if (state.timer.intervalId) { 
             clearInterval(state.timer.intervalId); 
             state.timer.intervalId = null; 
@@ -874,13 +884,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (answerTimerBar) answerTimerBar.classList.remove("animating");
     }
     
-    // --- [8] الحفظ والاستئناف (Persistence) ---
+    // --- [9] الحفظ والاستئناف ---
     function saveStateToLocalStorage() { 
-        const state = getState(); 
         const stateToSave = JSON.parse(JSON.stringify(state)); 
-        
         stateToSave.timer = DEFAULT_STATE.timer; 
-        
         stateToSave.roundState.activeCell = null; 
         stateToSave.roundState.phase = null; 
         stateToSave.roundState.teamMemberIndex = state.roundState.teamMemberIndex;
@@ -890,28 +897,24 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             stateToSave.match.usedCombinations = [];
         }
-        
         stateToSave.roundState.board.forEach(cell => { 
-            if (cell.tried instanceof Set) { 
-                cell.tried = Array.from(cell.tried); 
-            } else { 
-                cell.tried = []; 
-            } 
+            if (cell.tried instanceof Set) { cell.tried = Array.from(cell.tried); } 
+            else { cell.tried = []; } 
         }); 
         localStorage.setItem("ticTacCategoriesGameState", JSON.stringify(stateToSave));
     }
+    
     function loadStateFromLocalStorage() { 
         const savedState = localStorage.getItem("ticTacCategoriesGameState"); 
         if (savedState) { 
             try { 
-                const loadedState = JSON.parse(savedState); // [إصلاح التسمية هنا]
+                const loadedState = JSON.parse(savedState);
                 const mergedState = JSON.parse(JSON.stringify(DEFAULT_STATE)); 
                 
                 mergedState.settings.playMode = loadedState.settings.playMode || DEFAULT_STATE.settings.playMode;
                 mergedState.settings.teamMembers = loadedState.settings.teamMembers || DEFAULT_STATE.settings.teamMembers;
                 
                 Object.assign(mergedState.settings, loadedState.settings); 
-                // [إصلاح قاتل] استخدام loadedState بدلاً من loaded
                 Object.assign(mergedState.match, loadedState.match); 
                 Object.assign(mergedState.roundState, loadedState.roundState); 
                 
@@ -920,9 +923,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mergedState.roundState.board.forEach(cell => { cell.tried = new Set(cell.tried || []); }); 
                 mergedState.roundState.teamMemberIndex = loadedState.roundState.teamMemberIndex || DEFAULT_STATE.roundState.teamMemberIndex; 
                 
-                if (!mergedState.match.totalScore) { 
-                     mergedState.match.totalScore = { X: 0, O: 0 }; 
-                } 
+                if (!mergedState.match.totalScore) { mergedState.match.totalScore = { X: 0, O: 0 }; } 
                 loadState(mergedState); 
                 return true; 
             } catch (e) { 
@@ -934,90 +935,62 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    function resumeGame() { 
-        initAudio(); 
-        updateSoundToggles(); 
+    // --- [10] تهيئة اللعبة (Initialization) ---
+    function initializeGame() {
+        // [تعديل] التحقق من التوكن أولاً
+        const accessToken = localStorage.getItem("risha_access_token");
         
-        const state = getState(); 
-        
-        if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
-        if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
-
-        updatePlayerInputLabels(state.settings.playMode);
-        
-        updatePlayerTags(); 
-        updateScoreboard(); 
-        renderBoard(); 
-        updateTurnUI(); 
-        updateTeamMemberDisplay();
-        
-        if (timerHint) timerHint.textContent = `${state.settings.secs} ثوانٍ`; 
-        
-        if (state.roundState.gameActive) {
-            if (newRoundBtn) newRoundBtn.style.display = 'none';
-            if (restartRoundBtn) restartRoundBtn.style.display = 'inline-flex';
-            if (endMatchBtn) endMatchBtn.style.display = 'inline-flex';
+        if (!accessToken) {
+            // لا يوجد توكن -> اعرض شاشة الدخول
+            switchView("login");
         } else {
-            // [تعديل] منطق فحص انتهاء المباراة عند الاستئناف
-            const targetWins = state.match.targetWins || 3;
-            const matchOver = (state.match.totalScore.X >= targetWins || state.match.totalScore.O >= targetWins);
-
-            if (matchOver) {
-                if (newRoundBtn) newRoundBtn.style.display = 'none';
-                toggleModal("modal-final-score"); 
-            } else {
-                if (newRoundBtn) newRoundBtn.style.display = 'inline-flex';
-            }
-            if (restartRoundBtn) restartRoundBtn.style.display = 'none';
-            if (endMatchBtn) endMatchBtn.style.display = 'inline-flex';
+            // يوجد توكن -> حمل اللعبة
+            loadGameInterface();
         }
-        
-        switchView("game"); 
-        if (state.settings.sounds) sounds.click();
     }
-    
-    // --- [9] ربط الأحداث (Event Listeners) ---
+
+    // --- [11] ربط الأحداث ---
     function initEventListeners() { 
+        if (loginBtnEnter) loginBtnEnter.addEventListener("click", handleLogin);
+        if (loginInputCode) {
+            loginInputCode.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleLogin();
+            });
+        }
+
         if (startGameBtn) startGameBtn.addEventListener("click", startNewMatch); 
-        if (resumeGameBtn) resumeGameBtn.addEventListener("click", resumeGame); 
+        if (resumeGameBtn) resumeGameBtn.addEventListener("click", () => {
+             // عند استئناف اللعبة، فقط قم بتحميل الواجهة
+             loadGameInterface(); 
+        });
         if (soundsToggleHome) soundsToggleHome.addEventListener("click", toggleSounds); 
-        if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
+        if (instructionsBtnHome) instructionsBtnHome.addEventListener("click", () => { initAudio(); if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
         
-        if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { initAudio(); if (getState().settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
-        if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.click(); initNewRound(false); }); 
-        if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
-        if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (getState().settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
+        if (instructionsBtnGame) instructionsBtnGame.addEventListener("click", () => { initAudio(); if (state.settings.sounds) sounds.click(); toggleModal("modal-instructions"); }); 
+        if (newRoundBtn) newRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.click(); initNewRound(false); }); 
+        if (restartRoundBtn) restartRoundBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-confirm-restart"); }); 
+        if (endMatchBtn) endMatchBtn.addEventListener("click", () => { if (state.settings.sounds) sounds.fail(); toggleModal("modal-final-score"); }); 
         if (answerCorrectBtn) answerCorrectBtn.addEventListener("click", () => handleAnswer(true)); 
         if (answerWrongBtn) answerWrongBtn.addEventListener("click", () => handleAnswer(false)); 
-        
-        // [جديد] ربط حدث زر الاعتراض
         if (answerChallengeBtn) answerChallengeBtn.addEventListener("click", handleChallenge);
         
         if (newMatchBtn) newMatchBtn.addEventListener("click", endMatchAndStartNew); 
+        if (backToHomeBtn) backToHomeBtn.addEventListener("click", backToHomeWithSave);
         
-        if (backToHomeBtn) {
-            backToHomeBtn.addEventListener("click", backToHomeWithSave);
-        }
-        
-        if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (getState().settings.sounds) sounds.click(); initNewRound(true); }); 
+        if (confirmRestartBtn) confirmRestartBtn.addEventListener("click", () => { toggleModal(null); if (state.settings.sounds) sounds.click(); initNewRound(true); }); 
         
         modalCloseBtns.forEach(btn => { 
             btn.addEventListener("click", (e) => { 
                 const modalId = e.currentTarget.dataset.modal; 
-                if (modalId) { 
-                    toggleModal(null); 
-                    if (getState().settings.sounds) sounds.click(); 
-                } 
+                if (modalId) { toggleModal(null); if (state.settings.sounds) sounds.click(); } 
             }); 
         }); 
         
         $$(".modal-overlay").forEach(modal => { 
             modal.addEventListener("click", (e) => { 
-                if (e.target === modal) { 
-                    if (modal.id !== 'modal-answer') { 
-                        toggleModal(null); 
-                        if (getState().settings.sounds) sounds.click(); 
-                    } 
+                if (e.target === modal && modal.id !== 'modal-answer') { 
+                    toggleModal(null); 
+                    if (state.settings.sounds) sounds.click(); 
                 } 
             }); 
         });
@@ -1027,10 +1000,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const chipBtnX = document.getElementById("add-chip-x-home");
         if (chipBtnX) chipBtnX.addEventListener("click", () => handleChipInput({target: inputTeamXHome, key: 'Enter'}, 'X', false));
-
         const chipBtnO = document.getElementById("add-chip-o-home");
         if (chipBtnO) chipBtnO.addEventListener("click", () => handleChipInput({target: inputTeamOHome, key: 'Enter'}, 'O', false));
-        
         const chipBtnCats = document.getElementById("add-chip-cats-home");
         if (chipBtnCats) chipBtnCats.addEventListener("click", () => handleChipInputCategories(true, null));
 
@@ -1038,40 +1009,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (inputTeamXHome) inputTeamXHome.addEventListener('blur', (e) => handleChipInput(e, 'X', false));
         if (inputTeamOHome) inputTeamOHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInput(e, 'O', false); });
         if (inputTeamOHome) inputTeamOHome.addEventListener('blur', (e) => handleChipInput(e, 'O', false));
-
         if (inputCatsHome) inputCatsHome.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChipInputCategories(false, e); });
         if (inputCatsHome) inputCatsHome.addEventListener('blur', (e) => handleChipInputCategories(false, e));
     }
 
-    // --- [10] بدء تشغيل اللعبة (Initialization) ---
-    function initializeGame() { 
-        if (loadStateFromLocalStorage()) { 
-            const state = getState(); 
-            if (resumeGameBtn) resumeGameBtn.style.display = "inline-flex"; 
-            if (playerNameXInput) playerNameXInput.value = state.settings.playerNames.X; 
-            if (playerNameOInput) playerNameOInput.value = state.settings.playerNames.O; 
-            
-            if (timerSelectHome) timerSelectHome.value = state.settings.secs; 
-            if (roundsSelectHome) roundsSelectHome.value = state.match.targetWins || 3;
-            
-            if (modeBtnTeamHome) modeBtnTeamHome.classList.toggle('active', state.settings.playMode === 'team');
-            if (modeBtnIndividualHome) modeBtnIndividualHome.classList.toggle('active', state.settings.playMode === 'individual');
-
-            updatePlayerInputLabels(state.settings.playMode);
-            
-            renderChips('X'); 
-            renderChips('O'); 
-            renderChipsCategories(); 
-            
-        } else {
-            if (modeBtnTeamHome) modeBtnTeamHome.classList.add('active'); 
-            updatePlayerInputLabels(DEFAULT_STATE.settings.playMode);
-            renderChipsCategories(); 
-        }
-        
-        updateSoundToggles(); 
-        updatePlayerTags(); 
-        initEventListeners(); 
-    }
+    // بدء التطبيق
+    initEventListeners();
     initializeGame();
 });
